@@ -69,9 +69,38 @@ REMINDER:
 ![alt text](./confusion_matrix.png)
 
 Using the folowing metric:  
-- Accuracy: the proportion of predicted true results (both true positives and true negatives) in the
-population, that is $$\frac{TP+TN}{TP+TN+FP+FN}$$
-- Precision: the proportion of predicted positive cases that are indeed real positive, that is $$\frac{TP}{TP+FP}$$
-- Recall (or also Sensitivity): the proportion of real positive cases that are indeed predicted positive,
-that is $$\frac{TP}{TP+FN}$$
-- F-Measure: the harmonic mean of precision and recall, namely $$\frac{2·precision·recall}{precision+recall}$$
+- Accuracy: the proportion of predicted true results (both true positives and true negatives) in the population, that is   $$\frac{TP+TN}{TP+TN+FP+FN}$$
+- Precision: the proportion of predicted positive cases that are indeed real positive, that is   $$\frac{TP}{TP+FP}$$
+- Recall (or also Sensitivity): the proportion of real positive cases that are indeed predicted positive, that is   $$\frac{TP}{TP+FN}$$
+- F-Measure: the harmonic mean of precision and recall, namely   $$\frac{2·precision·recall}{precision+recall}$$
+- Matthew Correlation Coefficient (MCC from now on) [37]: the estimator of the correlation betweenthe predicted class and the real class of the samples, defined as:  
+$$\frac{TP·TN-FP·FN}{\sqrt{(TP+FN)(TP+FP)(TN+FP)(TN+FN)}}
+
+In addition to these they also measured two additional metrics:
+- Information Gain (Igain): the information gain considers a more general dependence, leveraging probability densities. It is a measure about the in-
+formativeness of a feature with respect to the predicting class
+- Pearson Correlation Coefficient(PCC): the Pearson correlation coefficient can detect linear dependencies between a feature and the target class. It is a measure of the strength of the linear relationship between two random variables X and Y.
+
+
+### Evaluation of CC algorithm
+![alt text](./CC_predicitions.png)
+Not very good at detecting bots, but decent job with humans.
+### Individual rules evaluation
+Here they analyzed the effectiveness of each individual rule.
+![alt text](./rules_evaluation.png)
+
+## Fake detection based on feature
+Classification using 2 sets of features extracted from spam accounts.
+Important: features extracted from spammers but used for fake followers. 
+To extract these features, they used classifiers producing glass-box(white-box) and black-box models.
+### Spammers detection in social networks.
+Use of Random Forest which results in classification but also features:  
+![alt text](./features_random_forest.png)
+
+### Evolving twitter spammers detection
+Since spammers are changing their behavior to avoid detection here are a set of features to still detect them even when using evasion systems:  
+![alt text](./evasion_features.png)
+
+### Evaluation of these features
+
+![alt text](./features_evaluation.png)
