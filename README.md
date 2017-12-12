@@ -56,4 +56,5 @@ This rule set doesn't focuses on the account but on the tweets emitted. The rule
 Important: because temporal isn't available and twitter's API limitation rule 6&7 were not applied.
 
 ### Socialbakers’ FakeFollowerCheck
-Fakeness classification tool based on 8 criteria: 
+Fakeness classification tool based on 8 criteria:  
+![alt text](./FFC_rule_set.png)
