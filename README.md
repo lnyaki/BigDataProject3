@@ -58,3 +58,20 @@ Important: because temporal isn't available and twitter's API limitation rule 6&
 ### Socialbakers’ FakeFollowerCheck
 Fakeness classification tool based on 8 criteria:  
 ![alt text](./FFC_rule_set.png)
+
+### Evaluation methodology
+The 3 methods were tested on our human dataset and fake followers. We used the confusion matrix as standard indication of accuracy:  
+REMINDER:  
+- True Positive (TP): the number of those fake followers recognized by the rule as fake followers;
+- True Negative (TN): the number of those human followers recognized by the rule as human followers;
+- False Positive (FP): the number of those human followers recognized by the rule as fake followers;
+- False Negative (FN): the number of those fake followers recognized by the rule as human followers.
+![alt text](./confusion_matrix.png)
+
+Using the folowing metric:  
+- Accuracy: the proportion of predicted true results (both true positives and true negatives) in the
+population, that is $\frac{TP+TN}{TP+TN+FP+FN}$
+- Precision: the proportion of predicted positive cases that are indeed real positive, that is $\frac{TP}{TP+FP}$
+- Recall (or also Sensitivity): the proportion of real positive cases that are indeed predicted positive,
+that is $\frac{TP}{TP+FN}$
+- F-Measure: the harmonic mean of precision and recall, namely $\frac{2·precision·recall}{precision+recall}$
