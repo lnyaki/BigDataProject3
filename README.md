@@ -53,4 +53,7 @@ This website proposed the following rule set:
 ![alt text](./SOS_rule_set.png)
 
 This rule set doesn't focuses on the account but on the tweets emitted. The rules looking for similarities are done over the dataset.  
-Important
+Important: because temporal isn't available and twitter's API limitation rule 6&7 were not applied.
+
+### Socialbakers’ FakeFollowerCheck
+Fakeness classification tool based on 8 criteria: 
