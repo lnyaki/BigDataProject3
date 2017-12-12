@@ -123,5 +123,39 @@ The average neighbor's tweets features is lower for spammers than for fake follo
 Fake followers appear to be more passive compared to spammers and they do not make use of automated mechanisms.
 
 #### overfitting
+Usual problem of classification is to be suited too much for the training dataset and not for new data. To avoid overfitting the best idea is to keep a simple classifier.  
+For decision tree algorithms reducing the number of nodes and the height of the tree helps.  
+For trees, common practice is to adopt an aggressive pruning strategy -> using the reduce-error pruning with small test sets. This results in simpler trees(less features) but maintaining good performances.
+![alt text](./reduced_overfitting.png)  
 
-test
+#### Bidirectional link radio
+This is the feature with the most information gain. To test out its importance in detecting the fake from humans, we retry the classifiers excluding this feature and see how they compare with the classifiers trained with the bidirectional link radio feature.
+
+From the previous table we realize that the feature isn't essential but greatly effective.
+
+## An efficient and lightweight classifier
+![alt text](./featur_test.png)
+As we notice, classifiers based on features sets perform better than rule sets. To further improve the classifier we analyse their cost.
+
+### Crawling cost
+We divide the type of data to crawl into 3 categories:  
+- profile (Class A)
+- timeline (Class B)
+- relationship (Class C)
+  
+These categories are directly related to the amount of data that needs to be downloaded for a category of feature. To do so we compare the amount of data to be downloaded for each category (best and worst case scenarios -> best is 1 API call and worst is for the biggest account possible)  
+We also take into account the maximum amount of calls allowed by the twitter API which defines our max threshold of calls.  
+Parameters of the table: 
+- $f$ : number of followers of the target account;
+- $t_i$ : number of tweets of the i -th follower of the target account;
+- $\phi_i$ : number of friends of the i -th follower of the target account;
+- $f_i$ : number of followers of the i -th follower of the target account.
+![alt text](./crawling_cost.png)  
+ 
+Important: It is important to notice that calls download all the information available for the account, therefore obtaining the data for the different classes concurrently.
+
+### Class A classifier
+
+![alt text](./classifier_A_vs_C.png)  
+
+
