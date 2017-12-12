@@ -70,8 +70,8 @@ REMINDER:
 
 Using the folowing metric:  
 - Accuracy: the proportion of predicted true results (both true positives and true negatives) in the
-population, that is $\frac{TP+TN}{TP+TN+FP+FN}$
-- Precision: the proportion of predicted positive cases that are indeed real positive, that is $\frac{TP}{TP+FP}$
+population, that is $$\frac{TP+TN}{TP+TN+FP+FN}$$
+- Precision: the proportion of predicted positive cases that are indeed real positive, that is $$\frac{TP}{TP+FP}$$
 - Recall (or also Sensitivity): the proportion of real positive cases that are indeed predicted positive,
-that is $\frac{TP}{TP+FN}$
-- F-Measure: the harmonic mean of precision and recall, namely $\frac{2·precision·recall}{precision+recall}$
+that is $$\frac{TP}{TP+FN}$$
+- F-Measure: the harmonic mean of precision and recall, namely $$\frac{2·precision·recall}{precision+recall}$$
