@@ -83,7 +83,7 @@ formativeness of a feature with respect to the predicting class
 
 
 ### Evaluation of CC algorithm
-![alt text](./CC_predicitions.png)
+![alt text](./CC_predictions.png)
 Not very good at detecting bots, but decent job with humans.
 ### Individual rules evaluation
 Here they analyzed the effectiveness of each individual rule.
@@ -158,4 +158,34 @@ Important: It is important to notice that calls download all the information ava
 
 ![alt text](./classifier_A_vs_C.png)  
 
+The classifiers belong to the class of the most expensive feature.
+Here we experiment the results obtained with the cheapest classifier working with class A features.  
+  
+The classifiers are tested on 2 features sets: the class features and all the features.
+We can see some classifiers improving and others slightly dropping in performance.
 
+### Validation of the Class A classifier
+Two experiments:
+- Using our baseline dataset as training
+- Using Obama's followers as training
+
+![alt text](./class_A_classifier_evaluation.png)
+
+For each of these experiments we tested the classifiers with these testing datasets:  
+- human accounts 
+- 1401 fake followers not included in the BAS dataset
+
+For this validation we can see notable differences between the approaches.
+We can also see the the random sample was more correctly labeled then the Obama's sample meaning the Obama's dataset introduces previously unknown features from the training sets.
+
+### Assessing Class A features
+
+To assess the importance of the features used in Class A features we used an information fusion-based sensitivity analysis.   
+Information fusion is a technique aimed at leveraging the predictive power of several different models in order to achieve a combined prediction accuracy which is better than the predictions of the single models.  
+Sensitivity analysis, instead, aims at assessing the relative importance of the
+different features used to build a classification model.  
+  
+By combining them we can estimate the importance of certain features used in different classifiers with a common classification task.
+
+To do so  we have to retrain the classifiers of the 8 class A classifiers with our baseline dataset and remove one feature at a time.  
+Each of the trained classifiers is then tested with our test dataset.
