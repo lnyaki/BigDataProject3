@@ -102,5 +102,24 @@ Since spammers are changing their behavior to avoid detection here are a set of 
 ![alt text](./evasion_features.png)
 
 ### Evaluation of these features
-
+Single features evaluation:   
 ![alt text](./features_evaluation.png)
+
+Features evaluation using them with classifiers:  
+![alt text](./features_classifiers_evaluation.png)
+The results are very good, the classification accuracy is really high for all the classifiers.  
+The features-based classifiers are way more accurate then CC-algorithm to predict and detect fake followers.
+
+### Discussion of the results
+By analysing the classifiers we extracted the most effective features:  
+- for decision Trees, the features close to the root
+- Decorate, AdaBoost, and Random Forest are based on Decision tress but they are a composition of trees and therefore are harder to analyse.
+
+#### Differences between fake followers and spammers
+URL ratio is higher for fake followers (72%) and only 14% for humans.  
+API ratio is higher for spammers then humans. For fake followers it is lower than 0.0001 for 78%.  
+The average neighbor's tweets features is lower for spammers than for fake followers.  
+  
+Fake followers appear to be more passive compared to spammers and they do not make use of automated mechanisms.
+
+#### overfitting
