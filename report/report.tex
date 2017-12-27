@@ -1,0 +1,41 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{lmodern}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{lightgray}{rgb}{0.9,0.9,0.9}
+\definecolor{darkgray}{rgb}{0.4,0.4,0.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\usepackage{url}
+\usepackage[top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry}
+
+\title{UNamur\\
+	ICYBM201 Big Data and Computer Security : Fame for sale, efficient detection of fake Twitter
+followers}
+
+\author{TIO NOGUERAS Gérard, NYAKI Loïc}
+
+\begin{document}
+\maketitle
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+\section{Data extraction}
+\subsection{Available data}
+
+\subsection{Table 1 creation}
+In this section we are going to create the base dataset that we will use throughout the project.
+We have 5 available datasets: 
+We are going to create 1 final dataset. The BAS dataset constituted of 1950 human twitter accounts and 1950 fake accounts.\\ The human accounts are simply the sum of the human datasets we had available.\\
+For the fake accounts, we randomly undersampled the 3 datasets available to obtain the same number of accounts as the normal ones.\\
+After undersampling the users, we used the ids of these users to collect the rest of the data in the other files.
+\bibliography{bibliography}
+\bibliographystyle{plain}
+\end{document}
