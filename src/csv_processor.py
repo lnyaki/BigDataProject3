@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np 
 import sklearn
 import random
+import linecache
 import matplotlib.pyplot as plt 
 
 def get_dataframe(filename):
@@ -59,12 +60,23 @@ def file_merging(folder1,folder2,folder3,result_folder,percent):
 	folder_list = [folder1,folder2,folder3]
 	files = ["users.csv","followers.csv","friends.csv","tweets.csv"]
 
+	# flag to check if the header has already been added.
+	# [users","followers","friends","tweets"]
+	# 0 -> no header
+	# 1 -> header already added
+	head_flags = [0,0,0,0]
+
 	for folder in folder_list:
+		# List for the user's ids randomly picked (reset for each folder)
+		list_of_ids = []
+
 		for file in files:
 			f = open(folder+file,"r", errors="ignore")
 			r = open(result_folder+file,"w",errors="ignore")
 			
-			len_file = len(f.readlines())
+			lines = f.readlines()
+
+			len_file = len(lines)
 			print("length file: "+str(len_file))
 
 			# choosing the number of lines we'll keep
@@ -75,21 +87,54 @@ def file_merging(folder1,folder2,folder3,result_folder,percent):
 			# 
 			# This works to select the percent of users we are interested but 
 			# for the other files we have to select the corresponding data.
-			
-			list_of_ids = []
 
-			if file == "users":
-				for lines in random.sample(range(1,len_file+1), number_lines):
-					list_of_ids.append(lines.split(",")[0])
-					r.write(lines)
-			else:
+			if file == "users.csv":
+				for line in random.sample(range(1+head_flags[0],len_file), number_lines):
+					print("line: "+str(line)+" length: "+str(len_file))
+					#print("id: "+str(lines[line]))
+					list_of_ids.append(lines[line].split(",")[0])
+					r.write(line)
+					pass
+				linecache.clearcache()
+				# no need for conditional check, just make sure that the flag is at 1 after header added
+				head_flags[0] = 1
+				print(list_of_ids)
+
 			# So after selecting the percent of users we want, we have to fetch the ids 
 			# and collect the corresponding data in the other files.
-				# for tweets.csv the id is the [3] element
-				# for friends.csv the id is the [0] element
-				# and for followers.csv the id is the [1] element
-				for lines in f1.readlines()[1:]:
-					if lines.split(",")[]
+			# for tweets.csv the id is the [3] element
+			# for friends.csv the id is the [0] element
+			# and for followers.csv the id is the [1] element
+			elif file == "followers.csv":
+				# header check
+				if head_flags[1] == 0:
+					r.write(lines[0])
+					head_flags[1] = 1
+
+				# id check
+				for line in lines:
+					if line.split(",")[1] in list_of_ids:
+						r.write(line)
+
+			elif file == "friends.csv":
+				if head_flags[2] == 0:
+					r.write(lines[0])
+					head_flags[2] = 1
+
+				for line in lines:
+					if line.split(",")[0] in list_of_ids:
+						r.write(line)
+
+			elif file == "tweets.csv":
+				if head_flags[3] == 0:
+					r.write(lines[0])
+					head_flags[3] = 1
+
+				for line in lines:
+					if line.split(",")[3] in list_of_ids:
+						r.write(line)
+			f.close()
+			r.close()
 
 if(__name__ == "__main__"):
 	#HUM_creator("../data/E13/","../data/TFP/","../data/HUM/")
