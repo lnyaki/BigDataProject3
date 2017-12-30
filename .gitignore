@@ -102,3 +102,9 @@ ENV/
 
 # data
 data/* 
+
+# latex
+report/*.aux
+report/*.pdf
+report/*.synctex.gz
+report/*.toc

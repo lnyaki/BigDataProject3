@@ -29,13 +29,31 @@ followers}
 
 \section{Data extraction}
 \subsection{Available data}
-
+The researchers responsible for the paper Fame for sale, made their 5 basic datasets available for future researchers.\\ Since we are trying to replicate the work they have done to practice our skills and understand more deeply the meaning of data and the proper way to analyse data
 \subsection{Table 1 creation}
 In this section we are going to create the base dataset that we will use throughout the project.
 We have 5 available datasets: 
 We are going to create 1 final dataset. The BAS dataset constituted of 1950 human twitter accounts and 1950 fake accounts.\\ The human accounts are simply the sum of the human datasets we had available.\\
 For the fake accounts, we randomly undersampled the 3 datasets available to obtain the same number of accounts as the normal ones.\\
-After undersampling the users, we used the ids of these users to collect the rest of the data in the other files.
+After undersampling the users, we used the ids of these users to collect the rest of the data in the other files.\\\\
+Small differences due to the randomness of the users choice:
+We encountered a significant drop first with the number of tweets averaging 92k followers which far from the 118k from the paper. We later realized that our parser had and issue with the tweets containing commas and was missing them because of that error.\\
+
+\begin{tabular}{lcccccc}
+dataset & accounts & tweets & followers & friends & total relationships \\
+\hline
+TFP & 469 & 563,693 & 258,494 & 241,710 & 500,204 \\
+E13 & 1481 & 2,068,037 & 1,526,944 & 667,225 & 2,194,169 \\
+FSF & 1169 & 22,910 & 11,893 & 253,026 & 264,919 \\
+INT & 1337 & 58925 & 23173 & 517485 & 540658 \\
+TWT & 845 & 114192 & 28588 & 729839 & 758427 \\
+\hline
+HUM & 1950 & 2,631,730 & 1,785,438 & 908,935 & 2,694,373 \\
+FAK & 1950 & 107,031 & 35,404 & 873,494 & 908,898 \\
+\hline
+BAS & 3900 & 2,738,761 & 1,820,842 & 1,782,429 & 3,603,271 \\
+\end{tabular}
+
 \bibliography{bibliography}
 \bibliographystyle{plain}
 \end{document}
