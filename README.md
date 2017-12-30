@@ -134,7 +134,8 @@ This is the feature with the most information gain. To test out its importance i
 From the previous table we realize that the feature isn't essential but greatly effective.
 
 ## An efficient and lightweight classifier
-![alt text](./img/featur_test.png)
+
+![alt text](./img/feature_test.png)
 As we notice, classifiers based on features sets perform better than rule sets. To further improve the classifier we analyse their cost.
 
 ### Crawling cost
