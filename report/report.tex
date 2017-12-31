@@ -26,8 +26,27 @@ followers}
 \newpage
 
 \section{Introduction}
+\paragraph{}
+The objective of this project is to partially reproduce the results presented in a 2015 paper titled  \textit{Fame for sale: effective detection of fake twitter followers}, by Cresci \textit{et al.}\\
+
+In the paper various classification rules and features proposed by academics, \textit{technology bloggers} and companies specialized in fake twitter users detection are enumerated and assessed. Rule-based classification is shown to be perform more poorly than feature-based classification. Therefore, rule-based classification is dropped, and the 19 features responsible for the most information gain, and the smallest calculation cost are selected as the \textit{feature set}.\\
+
+The resulting classifier shows an accuracy of up to 97.5\% on randomly sampled account, while being solely based on data readily available on the profile of the twitter users.
+
+\subsection{Objectives}
+In this project, we focus on reproducing the final results of Cresci \textit{et al.}, by implementing various classifiers based on the feature set presented in that paper.\\
+
+First we describe the 19 features that will be part of the feature set. Then, we introduce the datasets on which the classifiers will be trained. Later we describe how the features will be extracted from these datasets as well as our planned procedure for training classifier. Each type of classifier is then described along with their parameters, and results are presented for each classifier. Finally, we summarize the results argue on the difference between the results presented in Cresci \textit{et al.}, and the results we managed to obtain.
+
+
+\section{Features set}
+TODO:
+Je choisi de présenter les features avant les données, afin qu'une fois les données brutes présentées, on puisse enchainer avec l'extraction et pre-processing.
+
+Comme on connait déjà les features, ça marche assez bien si on fait les choses dans cet ordre là, je trouve.
 
 \section{Data extraction}
+
 \subsection{Available data}
 The researchers responsible for the paper Fame for sale, made their 5 basic datasets available for future researchers.\\ Since we are trying to replicate the work they have done to practice our skills and understand more deeply the meaning of data and the proper way to analyse data
 \subsection{Table 1 creation}
@@ -53,6 +72,11 @@ FAK & 1950 & 107,031 & 35,404 & 873,494 & 908,898 \\
 \hline
 BAS & 3900 & 2,738,761 & 1,820,842 & 1,782,429 & 3,603,271 \\
 \end{tabular}
+
+
+\section{Data Pre-Processing}
+
+
 
 \bibliography{bibliography}
 \bibliographystyle{plain}
