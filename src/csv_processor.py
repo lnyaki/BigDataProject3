@@ -149,6 +149,6 @@ def file_merging(folder1,folder2,folder3,result_folder,percent):
 			r.close()
 
 if(__name__ == "__main__"):
-	#HUM_creator("../data/E13/","../data/TFP/","../data/HUM/")
+	HUM_creator("../data/E13/","../data/TFP/","../data/HUM/")
 	#FAK_creator("../data/FSF/","../data/INT/","../data/TWT/","../data/FAK/")
 	#BAS_creator("../data/HUM/","../data/FAK/","../data/BAS/")
