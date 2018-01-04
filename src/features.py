@@ -4,20 +4,20 @@
 ###########
 
 # Camisani-Calzolari
-HAS_NAME = 'has_name'
-HAS_IMAGE = 'has_image'
-HAS_ADDRESS = 'has_address'
-HAS_BIO = 'has_bio'
-HAS_30_FOLLOWERS ='has_30_followers'
-BELONGS_TO_A_LIST = 'belongs_to_a_list'
-HAS_50_TWEETS = 'has_50_tweets'
-URL_IN_PROFILE = 'url_in_profile'
-FOLLOWERS_TO_FRIENDS_RATIO_OVER_2 = 'followers_to_friends_ration_over_2'
+HAS_NAME 							= 'has_name'
+HAS_IMAGE 							= 'has_image'
+HAS_ADDRESS 						= 'has_address'
+HAS_BIO 							= 'has_bio'
+HAS_30_FOLLOWERS 					='has_30_followers'
+BELONGS_TO_A_LIST 					= 'belongs_to_a_list'
+HAS_50_TWEETS 						= 'has_50_tweets'
+URL_IN_PROFILE 						= 'url_in_profile'
+FOLLOWERS_TO_FRIENDS_RATIO_OVER_2 	= 'followers_to_friends_ration_over_2'
 
 # State of search
-BOT_IN_BIO = 'bot_in_bio'
-FRIENDS_TO_FOLLOWERS_RATIO_IS_100 = 'friends_to_followers_ratio_is_100'
-DUPLICATE_PROFILE_PICTURE = 'duplicate_profile_picture'
+BOT_IN_BIO 							= 'bot_in_bio'
+FRIENDS_TO_FOLLOWERS_RATIO_IS_100 	= 'friends_to_followers_ratio_is_100'
+DUPLICATE_PROFILE_PICTURE 			= 'duplicate_profile_picture'
 
 # Socialbakers 
 HAS_50_FOLLOWERS 	= 'has_50_followers'
@@ -28,36 +28,36 @@ HAS_100_FRIENDS 	= 'has_100_friends'
 HAS_NO_TWEETS 		= 'has_no_tweets'
 
 # Stringhini et al.
-NUMBER_OF_FRIENDS = 'number_of_friends'
-NUMBER_OF_FRIENDS_TWEETS = 'number_of_friends_tweets'
-FRIENDS_TO_FOLLOWERS_RATIO = 'friends_to_followers_ratio'
+NUMBER_OF_FRIENDS 			= 'number_of_friends'
+NUMBER_OF_FRIENDS_TWEETS 	= 'number_of_friends_tweets'
+FRIENDS_TO_FOLLOWERS_RATIO 	= 'friends_to_followers_ratio'
 
 # Yang et al.
-AGE = 'age'
-FOLLOWING_RATE 		= 'following_rate'
+AGE 			= 'age'
+FOLLOWING_RATE 	= 'following_rate'
 
 ###########
 # Class B #
 ###########
 
 # Camisani-Calzolari
-GEOLOCALIZED = 'geolocalized'
-IS_FAVORITE = 'is_favorite'
-USES_PUNCTUATION = 'uses_punctuation'
-USES_HASHTAG = 'uses_hashtag'
-USES_IPHONE = 'uses_iphone'
-USES_ANDROID = 'uses_android'
-USES_FOURSQUARE = 'uses_foursquare'
-USES_INSTAGRAM = 'uses_instagram'
-USES_TWITTERDOTCOM 'uses_twitterdotcom'
-USERID_IN_TWEET = 'userid_in_tweet'
-TWEETS_WITH_URL = 'tweets_with_url'
-RETWEET_OVER_1 = 'retweet_over_1'
-USES_DIFFERENT_CLIENTS = 'uses_different_clients'
+GEOLOCALIZED 			= 'geolocalized'
+IS_FAVORITE 			= 'is_favorite'
+USES_PUNCTUATION 		= 'uses_punctuation'
+USES_HASHTAG 			= 'uses_hashtag'
+USES_IPHONE 			= 'uses_iphone'
+USES_ANDROID 			= 'uses_android'
+USES_FOURSQUARE 		= 'uses_foursquare'
+USES_INSTAGRAM 			= 'uses_instagram'
+USES_TWITTERDOTCOM 		= 'uses_twitterdotcom'
+USERID_IN_TWEET 		= 'userid_in_tweet'
+TWEETS_WITH_URL 		= 'tweets_with_url'
+RETWEET_OVER_1 			= 'retweet_over_1'
+USES_DIFFERENT_CLIENTS 	= 'uses_different_clients'
 
 #State of Search
 DUPLICATE_SENTENCES_ACROSS_ACCOUNTS = 'duplicate_sentences_across_accounts'
-API_TWEETS = 'api_tweets'
+API_TWEETS 							= 'api_tweets'
 
 # Socialbakers
 HAS_DUPLICATE_TWEETS 	= 'has_duplicate_tweets'
@@ -69,8 +69,8 @@ TWEET_SIMILARITY 	= 'tweet_similarity'
 URL_RATIO 			= 'url_ratio'
 
 # Yang et al.
-API_RATIO 			= 'api_ratio'
-API_URL_RATIO 		= 'api_url_ratio'
+API_RATIO 				= 'api_ratio'
+API_URL_RATIO 			= 'api_url_ratio'
 API_TWEET_SIMILARITY 	= 'api_tweet_similarity'
 
 
@@ -85,53 +85,53 @@ AVERAGE_NEIGHBORS_FOLLOWERS = 'average_neighbors_followers'
 AVERAGE_NEIGHBORS_TWEETS 	= 'average_neighbors_tweets'
 FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS = 'followings_to_median_neighbors_followers'
 
-def get_camisani_features():
+def get_camisani_features(data):
 	features = {}
 
 	# class A
-	features[HAS_NAME] 							= has_name()
-	features[HAS_IMAGE] 						= has_image()
-	features[HAS_ADDRESS] 						= has_address()
-	features[HAS_BIO] 							= has_bio()
-	features[HAS_30_FOLLOWERS] 					= has_30_followers()
-	features[BELONGS_TO_A_LIST] 				= belongs_to_a_list()
-	features[HAS_50_TWEETS] 					= has_50_tweets()
-	features[URL_IN_PROFILE] 					= url_in_profile()
-	features[FOLLOWERS_TO_FRIENDS_RATIO_OVER_2] = followers_to_friends_ration_over_2()
+	features[HAS_NAME] 							= has_name(data)
+	features[HAS_IMAGE] 						= has_image(data)
+	features[HAS_ADDRESS] 						= has_address(data)
+	features[HAS_BIO] 							= has_bio(data)
+	features[HAS_30_FOLLOWERS] 					= has_30_followers(data)
+	features[BELONGS_TO_A_LIST] 				= belongs_to_a_list(data)
+	features[HAS_50_TWEETS] 					= has_50_tweets(data)
+	features[URL_IN_PROFILE] 					= url_in_profile(data)
+	features[FOLLOWERS_TO_FRIENDS_RATIO_OVER_2] = followers_to_friends_ration_over_2(data)
 
 	# class B
-	features[GEOLOCALIZED] 				= geolocalized()
-	features[IS_FAVORITE] 				= is_favorite()
-	features[USES_PUNCTUATION] 			= uses_punctuation()
-	features[USES_HASHTAG] 				= uses_hashtag()
-	features[USES_IPHONE] 				= uses_iphone()
-	features[USES_ANDROID] 				= uses_android()
-	features[USES_FOURSQUARE] 			= uses_foursquare()
-	features[USES_INSTAGRAM] 			= uses_instagram()
-	features[USES_TWITTERDOTCOM] 		= uses_twitterdotcom()
-	features[USERID_IN_TWEET] 			= userid_in_tweet()
-	features[TWEETS_WITH_URL] 			= tweets_with_url()
-	features[RETWEET_OVER_1] 			= retweet_over_1()
-	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients()
+	features[GEOLOCALIZED] 				= geolocalized(data)
+	features[IS_FAVORITE] 				= is_favorite(data)
+	features[USES_PUNCTUATION] 			= uses_punctuation(data)
+	features[USES_HASHTAG] 				= uses_hashtag(data)
+	features[USES_IPHONE] 				= uses_iphone(data)
+	features[USES_ANDROID] 				= uses_android(data)
+	features[USES_FOURSQUARE] 			= uses_foursquare(data)
+	features[USES_INSTAGRAM] 			= uses_instagram(data)
+	features[USES_TWITTERDOTCOM] 		= uses_twitterdotcom(data)
+	features[USERID_IN_TWEET] 			= userid_in_tweet(data)
+	features[TWEETS_WITH_URL] 			= tweets_with_url(data)
+	features[RETWEET_OVER_1] 			= retweet_over_1(data)
+	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients(data)
 
 	return features
 
-def get_state_of_search_features():
+def get_state_of_search_features(data):
 	features = {}
 
 	# class A
-	features[BOT_IN_BIO] 						= bot_in_bio()
-	features[FRIENDS_TO_FOLLOWERS_RATIO_IS_100] = friends_to_followers_ratio_is_100()
-	features[DUPLICATE_PROFILE_PICTURE] 		= duplicate_profile_picture()
+	features[BOT_IN_BIO] 						= bot_in_bio(data)
+	features[FRIENDS_TO_FOLLOWERS_RATIO_IS_100] = friends_to_followers_ratio_is_100(data)
+	features[DUPLICATE_PROFILE_PICTURE] 		= duplicate_profile_picture(data)
 	
 	# class B
-	features[DUPLICATE_SENTENCES_ACROSS_ACCOUNTS] 	= duplicate_sentences_across_accounts()
-	features[API_TWEETS] 							= api_tweets()
+	features[DUPLICATE_SENTENCES_ACROSS_ACCOUNTS] 	= duplicate_sentences_across_accounts(data)
+	features[API_TWEETS] 							= api_tweets(data)
 
 
 	return features
 
-def get_socialbakers_features():
+def get_socialbakers_features(data):
 	'''
 	Class A : followers ≥ 50, default image after 2
 		months, no bio, no location, friends ≥100, 0 tweets 
@@ -143,12 +143,12 @@ def get_socialbakers_features():
 	features = {}
 
 	#Class A
-	features[HAS_50_FOLLOWERS] 	= has_50_followers()
+	features[HAS_50_FOLLOWERS] 	= has_50_followers(data)
 	features[HAS_DEFAULT_IMAGE] = has_default_image(60)
-	features[HAS_NO_BIO] 		= has_no_bio()
-	features[HAS_NO_LOCATION] 	= has_no_location()
-	features[HAS_100_FRIENDS] 	= has_100_friends()
-	features[HAS_NO_TWEETS] 	= has_no_tweets()
+	features[HAS_NO_BIO] 		= has_no_bio(data)
+	features[HAS_NO_LOCATION] 	= has_no_location(data)
+	features[HAS_100_FRIENDS] 	= has_100_friends(data)
+	features[HAS_NO_TWEETS] 	= has_no_tweets(data)
 
 	#Class B
 	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(3)
@@ -159,7 +159,7 @@ def get_socialbakers_features():
 
 	return features
 
-def get_stringhini_features():
+def get_stringhini_features(data):
 	'''
 	Class A : number of friends, number of friends tweets, friends/(followersˆ2)
 
@@ -178,7 +178,7 @@ def get_stringhini_features():
 
 	return features
 
-def get_yang_features():
+def get_yang_features(data):
 	'''
 	class A : age, following rate
 
@@ -214,40 +214,40 @@ TODO: create functions that retrieve each individual feature, below
 
 # Class A features
 
-def has_name():
+def has_name(data):
 	pass
 
-def has_image():
+def has_image(data):
 	pass
 
-def has_address():
+def has_address(data):
 	pass
 
-def has_bio():
+def has_bio(data):
 	pass
 
-def has_30_followers():
+def has_30_followers(data):
 	pass
 
-def belongs_to_a_list():
+def belongs_to_a_list(data):
 	pass
 
-def has_50_tweets():
+def has_50_tweets(data):
 	pass
 
-def url_in_profile():
+def url_in_profile(data):
 	pass
 
-def followers_to_friends_ration_over_2():
+def followers_to_friends_ration_over_2(data):
 	pass
 
-def bot_in_bio():
+def bot_in_bio(data):
 	pass
 
-def friends_to_followers_ratio_is_100():
+def friends_to_followers_ratio_is_100(data):
 	pass
 
-def duplicate_profile_picture():
+def duplicate_profile_picture(data):
 	pass
 
 def get_age(data):
@@ -286,48 +286,48 @@ def has_no_tweets(data):
 
 # Class B features
 
-def geolocalized():
+def geolocalized(data):
 	pass
-def is_favorite():
-	pass
-
-def uses_punctuation():
+def is_favorite(data):
 	pass
 
-def uses_hashtag():
+def uses_punctuation(data):
 	pass
 
-def uses_iphone():
+def uses_hashtag(data):
 	pass
 
-def uses_android():
+def uses_iphone(data):
 	pass
 
-def uses_foursquare():
+def uses_android(data):
 	pass
 
-def uses_instagram():
+def uses_foursquare(data):
 	pass
 
-def uses_twitterdotcom():
+def uses_instagram(data):
 	pass
 
-def userid_in_tweet():
+def uses_twitterdotcom(data):
 	pass
 
-def tweets_with_url():
+def userid_in_tweet(data):
 	pass
 
-def retweet_over_1():
+def tweets_with_url(data):
 	pass
 
-def uses_different_clients():
+def retweet_over_1(data):
 	pass
 
-def duplicate_sentences_across_accounts():
+def uses_different_clients(data):
 	pass
 
-def api_tweets():
+def duplicate_sentences_across_accounts(data):
+	pass
+
+def api_tweets(data):
 	pass
 
 def get_api_ratio(data):
