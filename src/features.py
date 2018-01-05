@@ -4,14 +4,14 @@
 ###########
 
 # Camisani-Calzolari
-HAS_NAME 							= 'has_name'
-HAS_IMAGE 							= 'has_image'
-HAS_ADDRESS 						= 'has_address'
-HAS_BIO 							= 'has_bio'
-HAS_30_FOLLOWERS 					='has_30_followers'
-BELONGS_TO_A_LIST 					= 'belongs_to_a_list'
-HAS_50_TWEETS 						= 'has_50_tweets'
-URL_IN_PROFILE 						= 'url_in_profile'
+HAS_NAME 			= 'has_name'
+HAS_IMAGE 			= 'has_image'
+HAS_ADDRESS 		= 'has_address'
+HAS_BIO 			= 'has_bio'
+HAS_30_FOLLOWERS 	='has_30_followers'
+BELONGS_TO_A_LIST 	= 'belongs_to_a_list'
+HAS_50_TWEETS 		= 'has_50_tweets'
+URL_IN_PROFILE 		= 'url_in_profile'
 FOLLOWERS_TO_FRIENDS_RATIO_OVER_2 	= 'followers_to_friends_ration_over_2'
 
 # State of search
@@ -80,23 +80,23 @@ API_TWEET_SIMILARITY 	= 'api_tweet_similarity'
 ###########
 
 # Yang et al.
-BILINK_RATIO = 'bi-link_ratio'
+BILINK_RATIO 				= 'bi-link_ratio'
 AVERAGE_NEIGHBORS_FOLLOWERS = 'average_neighbors_followers'
 AVERAGE_NEIGHBORS_TWEETS 	= 'average_neighbors_tweets'
-FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS = 'followings_to_median_neighbors_followers'
+FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS 	= 'followings_to_median_neighbors_followers'
 
 def get_camisani_features(data):
 	features = {}
 
 	# class A
-	features[HAS_NAME] 							= has_name(data)
-	features[HAS_IMAGE] 						= has_image(data)
-	features[HAS_ADDRESS] 						= has_address(data)
-	features[HAS_BIO] 							= has_bio(data)
-	features[HAS_30_FOLLOWERS] 					= has_30_followers(data)
-	features[BELONGS_TO_A_LIST] 				= belongs_to_a_list(data)
-	features[HAS_50_TWEETS] 					= has_50_tweets(data)
-	features[URL_IN_PROFILE] 					= url_in_profile(data)
+	features[HAS_NAME] 			= has_name(data)
+	features[HAS_IMAGE] 		= has_image(data)
+	features[HAS_ADDRESS] 		= has_address(data)
+	features[HAS_BIO] 			= has_bio(data)
+	features[HAS_30_FOLLOWERS] 	= has_30_followers(data)
+	features[BELONGS_TO_A_LIST] = belongs_to_a_list(data)
+	features[HAS_50_TWEETS] 	= has_50_tweets(data)
+	features[URL_IN_PROFILE] 	= url_in_profile(data)
 	features[FOLLOWERS_TO_FRIENDS_RATIO_OVER_2] = followers_to_friends_ration_over_2(data)
 
 	# class B
