@@ -1,4 +1,5 @@
-
+import pandas as pd
+import sys
 ###########
 # Class A #
 ###########
@@ -49,7 +50,7 @@ USES_IPHONE = 'uses_iphone'
 USES_ANDROID = 'uses_android'
 USES_FOURSQUARE = 'uses_foursquare'
 USES_INSTAGRAM = 'uses_instagram'
-USES_TWITTERDOTCOM 'uses_twitterdotcom'
+USES_TWITTERDOTCOM = 'uses_twitterdotcom'
 USERID_IN_TWEET = 'userid_in_tweet'
 TWEETS_WITH_URL = 'tweets_with_url'
 RETWEET_OVER_1 = 'retweet_over_1'
@@ -85,6 +86,15 @@ AVERAGE_NEIGHBORS_FOLLOWERS = 'average_neighbors_followers'
 AVERAGE_NEIGHBORS_TWEETS 	= 'average_neighbors_tweets'
 FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS = 'followings_to_median_neighbors_followers'
 
+#*********************************
+#      Features set names        *
+#*********************************
+CAMISANI 		= 'Camisani-Calzolari'
+STATEOFSEARCH	= 'State of search'
+SOCIALBAKERS 	= 'SocialBakers'
+STRINGHINI 		= 'Stringhini et al'
+YANG 			= 'Yang et al'
+
 def get_camisani_features():
 	features = {}
 
@@ -116,7 +126,7 @@ def get_camisani_features():
 
 	return features
 
-def get_state_of_search_features():
+def get_state_of_search_features(dataframe):
 	features = {}
 
 	# class A
@@ -132,6 +142,9 @@ def get_state_of_search_features():
 	return features
 
 def get_socialbakers_features():
+	pass
+
+def get_single_user_socialbakers_features(userRow, tweetsDF):
 	'''
 	Class A : followers ≥ 50, default image after 2
 		months, no bio, no location, friends ≥100, 0 tweets 
@@ -143,23 +156,24 @@ def get_socialbakers_features():
 	features = {}
 
 	#Class A
-	features[HAS_50_FOLLOWERS] 	= has_50_followers()
-	features[HAS_DEFAULT_IMAGE] = has_default_image(60)
-	features[HAS_NO_BIO] 		= has_no_bio()
-	features[HAS_NO_LOCATION] 	= has_no_location()
-	features[HAS_100_FRIENDS] 	= has_100_friends()
-	features[HAS_NO_TWEETS] 	= has_no_tweets()
+	features[HAS_50_FOLLOWERS] 	= has_50_followers(userRow)
+	features[HAS_DEFAULT_IMAGE] = has_default_image(userRow)
+	features[HAS_NO_BIO] 		= has_no_bio(userRow)
+	features[HAS_NO_LOCATION] 	= has_no_location(userRow)
+	features[HAS_100_FRIENDS] 	= has_100_friends(userRow)
+	features[HAS_NO_TWEETS] 	= has_no_tweets(userRow)
 
 	#Class B
-	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(3)
-	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(0.9)
-	features[BIG_TWEET_LINK_RATIO] 	= has_tweet_links_ratio(0.9)
-
-	
+	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userRow,tweetsDF,3)
+	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(userRow,tweetsDF,0.9)
+	features[BIG_TWEET_LINK_RATIO] 	= has_tweet_links_ratio(userRow, tweetsDF,0.9)
 
 	return features
 
 def get_stringhini_features():
+	pass
+
+def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
 	'''
 	Class A : number of friends, number of friends tweets, friends/(followersˆ2)
 
@@ -168,17 +182,20 @@ def get_stringhini_features():
 	features = {}
 
 	# Class A
-	features[NUMBER_OF_FRIENDS] 			= get_friends_count(data)
-	features[NUMBER_OF_FRIENDS_TWEETS] 		= get_friends_tweet_count(data)
-	features[FRIENDS_TO_FOLLOWERS_RATIO] 	= get_friends_to_followers_ratio(data)
+	features[NUMBER_OF_FRIENDS] 			= get_friends_count(userRow)
+	features[NUMBER_OF_FRIENDS_TWEETS] 		= get_friends_tweet_count(userRow,friendsDF,usersDF)
+	features[FRIENDS_TO_FOLLOWERS_RATIO] 	= get_friends_to_followers_ratio(userRow)
 
 	# Class B
-	features[TWEET_SIMILARITY] 	= get_tweet_similarity(data)
-	features[URL_RATIO] 		= get_url_ratio(data)
+	features[TWEET_SIMILARITY] 	= get_tweet_similarity(userRow,tweetsDF)
+	features[URL_RATIO] 		= get_url_ratio(userRow, tweetsDF)
 
 	return features
 
-def get_yang_features():
+def get_yang_features(baseFilesDirectory):
+	dfList = get_dataframes(baseFilesDirectory,"yang")
+
+def get_single_user_yang_features():
 	'''
 	class A : age, following rate
 
@@ -207,6 +224,46 @@ def get_yang_features():
 	features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(data)
 
 	return features
+
+def get_dataframes(datasetDirectory, featureSetName):
+	'''
+	- BaseFilesDirectory is the base directory of the dataset we are using :
+		E13,FAK,FSF,HUM,INT,TFP,TWT.
+	- featureSetName is the name of the feature set for which we want to load the dataframes.
+
+	The function returns the proper required dataframes for the featureSetName specified.
+	'''
+	fileNames = {}
+	dataframes = {}
+
+	if(featureSetName == CAMISANI):
+		pass
+
+	elif(featureSetName == STATEOFSEARCH):
+		pass
+
+	elif(featureSetName == SOCIALBAKERS):
+		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv'}
+
+	elif(featureSetName == STRINGHINI):
+		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv','friends' : 'friends.csv'}
+
+	elif(featureSetName == YANG):
+		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv'}
+
+	# We load the dataframes from the files specified above, in a dataframe dictionary
+	for key, filename in fileNames.items():
+		totalPath = datasetDirectory + '/'+ filename
+
+		print("Loading "+ totalPath)
+		try:
+			dataframes[key] = pd.read_csv(totalPath, encoding='latin-1')
+
+		except Exception as e:
+			print("Error while reading file "+totalPath)
+			print(e)
+
+	return dataframes 
 
 '''
 TODO: create functions that retrieve each individual feature, below
@@ -367,3 +424,9 @@ def get_average_neighbors_tweets(data):
 
 def get_followings_to_median(data):
 	pass
+
+
+if(__name__ == "__main__"):
+	directory = sys.argv[1]
+
+	get_dataframes(directory,'Yang et al')
