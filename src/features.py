@@ -89,13 +89,35 @@ FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS = 'followings_to_median_neighbors_follo
 #*********************************
 #      Features set names        *
 #*********************************
-CAMISANI 		= 'Camisani-Calzolari'
-STATEOFSEARCH	= 'State of search'
-SOCIALBAKERS 	= 'SocialBakers'
-STRINGHINI 		= 'Stringhini et al'
-YANG 			= 'Yang et al'
+CAMISANI 		= 'camisani'	#'Camisani-Calzolari'
+STATEOFSEARCH	= 'state'		#'State of search'
+SOCIALBAKERS 	= 'social'		#'SocialBakers'
+STRINGHINI 		= 'stringhini'	#'Stringhini et al'
+YANG 			= 'yang' 		#'Yang et al'
 
-def get_camisani_features():
+def get_features(featureSetName, dataframes):
+	features = {}
+
+	if(featureSetName == CAMISANI):
+		features = get_camisani_features(dataframes)
+
+	elif(featureSetName == STATEOFSEARCH):
+		features = get_state_of_search_features(dataframes)
+
+	elif(featureSetName == SOCIALBAKERS):
+		features = get_socialbakers_features(dataframes)
+
+	elif(featureSetName == STRINGHINI):
+		features = get_stringhini_features(dataframes)
+
+	elif(featureSetName == YANG):
+		features = get_yang_features(dataframes)
+	else:
+		print("Error Unknown feature set specified : "+featureSetName)
+
+	return features
+
+def get_camisani_features(dataframes):
 	features = {}
 
 	# class A
@@ -141,7 +163,7 @@ def get_state_of_search_features(dataframe):
 
 	return features
 
-def get_socialbakers_features():
+def get_socialbakers_features(dataframes):
 	pass
 
 def get_single_user_socialbakers_features(userRow, tweetsDF):
@@ -170,7 +192,7 @@ def get_single_user_socialbakers_features(userRow, tweetsDF):
 
 	return features
 
-def get_stringhini_features():
+def get_stringhini_features(dataframes):
 	pass
 
 def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
@@ -192,8 +214,8 @@ def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
 
 	return features
 
-def get_yang_features(baseFilesDirectory):
-	dfList = get_dataframes(baseFilesDirectory,"yang")
+def get_yang_features(dataframes):
+	pass
 
 def get_single_user_yang_features():
 	'''
@@ -256,12 +278,15 @@ def get_dataframes(datasetDirectory, featureSetName):
 		totalPath = datasetDirectory + '/'+ filename
 
 		print("Loading "+ totalPath)
+
 		try:
 			dataframes[key] = pd.read_csv(totalPath, encoding='latin-1')
 
 		except Exception as e:
 			print("Error while reading file "+totalPath)
 			print(e)
+
+		print(dataframes[key].head(5))
 
 	return dataframes 
 
@@ -425,8 +450,17 @@ def get_average_neighbors_tweets(data):
 def get_followings_to_median(data):
 	pass
 
+'''
+To use (prototype) go to root directory:
+	Ex: python3 src/features.py "data/E13"
 
+Pour l'instant, le prog trouve automatiquement les fichier à lire, selon
+le feature set spécifié (ici yang, hardcodé ci-dessous)
+'''
 if(__name__ == "__main__"):
 	directory = sys.argv[1]
 
-	get_dataframes(directory,'Yang et al')
+	dataframes = get_dataframes(directory,'yang')
+
+	print("OK, ca passe")
+	features 	= get_features('yang', dataframes)
