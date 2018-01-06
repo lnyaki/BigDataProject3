@@ -238,7 +238,7 @@ def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
 def get_yang_features(dataframes):
 	pass
 
-def get_single_user_yang_features():
+def get_single_user_yang_features(userRow):
 	'''
 	class A : age, following rate
 
@@ -252,8 +252,8 @@ def get_single_user_yang_features():
 	features = {}
 
 	# Class A features
-	features[AGE] 				= get_age(data)
-	features[FOLLOWING_RATE] 	= get_following_rate(data)
+	features[AGE] 				= get_age(userRow) # No age data!
+	features[FOLLOWING_RATE] 	= get_following_rate(userRow)
 
 	# Class B features
 	features[API_RATIO] 			= get_api_ratio(data)
@@ -335,6 +335,9 @@ def has_30_followers(userRow):
 def belongs_to_a_list(data):
 	pass
 
+def get_tweets_count(userRow):
+	return int(userRow[''])
+
 def has_50_tweets(userRow):
 	pass
 
@@ -347,14 +350,16 @@ def followers_to_friends_ration_over_2(data):
 def bot_in_bio(data):
 	pass
 
-def friends_to_followers_ratio_is_100(data):
-	pass
+def friends_to_followers_ratio_is_100(userRow):
+	threshold = 100
+
+	return get_friends_to_followers_ratio(userRow) >= threshold
 
 def duplicate_profile_picture(data):
 	pass
 
 def get_age(data):
-	pass
+	return 0
 
 def get_following_rate(data):
 	pass
@@ -390,57 +395,58 @@ def has_no_tweets(data):
 # Class B features
 
 def geolocalized(data):
-	pass
+	return False
+
 def is_favorite(data):
-	pass
+	return False
 
 def uses_punctuation(data):
-	pass
+	return False
 
 def uses_hashtag(data):
-	pass
+	return False
 
 def uses_iphone(data):
-	pass
+	return False
 
 def uses_android(data):
-	pass
+	return False
 
 def uses_foursquare(data):
-	pass
+	return False
 
 def uses_instagram(data):
-	pass
+	return False
 
 def uses_twitterdotcom(data):
-	pass
+	return False
 
 def userid_in_tweet(data):
-	pass
+	return False
 
 def tweets_with_url(data):
-	pass
+	return 0
 
 def retweet_over_1(data):
-	pass
+	return False
 
 def uses_different_clients(data):
-	pass
+	return False
 
 def duplicate_sentences_across_accounts(data):
-	pass
+	return False
 
 def api_tweets(data):
-	pass
+	return 0
 
 def get_api_ratio(data):
-	pass
+	return 0
 
 def get_api_url_ratio(data):
-	pass
+	return 0
 
 def get_api_tweet_similarity(data):
-	pass
+	return 0
 
 def get_tweet_similarity(userRow,tweetsDF):
 	return 0
@@ -449,27 +455,27 @@ def get_url_ratio(userRow, tweetsDF):
 	return 0
 
 def has_duplicate_tweets(data,duplicate_count):
-	pass
+	return False
 
 def has_retweet_ratio(data, ratio):
-	pass
+	return False
 
 def has_tweet_links_ratio(data, ratio):
-	pass
+	return False
 
 
 # Class C featrues
 def get_bilink_ratio(data):
-	pass
+	return 0
 
 def get_average_neighbors_followers(data):
-	pass
+	return 0
 
 def get_average_neighbors_tweets(data):
-	pass
+	return 0
 
 def get_followings_to_median(data):
-	pass
+	return 0
 
 '''
 To use (prototype) go to root directory:
