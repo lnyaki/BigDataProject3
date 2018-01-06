@@ -1,5 +1,6 @@
 import pandas as pd
 import sys
+import url_finder
 ###########
 # Class A #
 ###########
@@ -65,6 +66,7 @@ HAS_DUPLICATE_TWEETS 	= 'has_duplicate_tweets'
 HIGH_RETWEET_RATIO 		= 'high_retweet_ratio'
 HIGH_TWEET_LINK_RATIO	= 'high_tweet_link_ratio'
 
+
 # Strinhini et al.
 TWEET_SIMILARITY 	= 'tweet_similarity'
 URL_RATIO 			= 'url_ratio'
@@ -89,11 +91,11 @@ FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS 	= 'followings_to_median_neighbors_foll
 #*********************************
 #      Features set names        *
 #*********************************
-CAMISANI 		= 'camisani'	#'Camisani-Calzolari'
-STATEOFSEARCH	= 'state'		#'State of search'
-SOCIALBAKERS 	= 'social'		#'SocialBakers'
-STRINGHINI 		= 'stringhini'	#'Stringhini et al'
-YANG 			= 'yang' 		#'Yang et al'
+CAMISANI 		= 'camisani'		#'Camisani-Calzolari'
+STATEOFSEARCH	= 'stateofsearch'	#'State of search'
+SOCIALBAKERS 	= 'socialbakers'	#'SocialBakers'
+STRINGHINI 		= 'stringhini'		#'Stringhini et al'
+YANG 			= 'yang' 			#'Yang et al'
 
 def get_features(featureSetName, dataframes):
 	features = {}
@@ -165,7 +167,24 @@ def get_state_of_search_features(dataframe):
 	return features
 
 def get_socialbakers_features(dataframes):
-	pass
+	socialbakersFeatures = []
+
+	usersDF 	= dataframes['users']
+	tweetsDF 	= dataframes['tweets']
+
+	LIMIT = 10
+	limit = 1
+
+	for index, row in usersDF.iterrows():
+		socialbakersFeatures.append(get_single_user_socialbakers_features(row,tweetsDF))
+
+		#Temporary code, for test purpose
+		if(limit > LIMIT):
+			break
+		else:
+			limit = limit +1
+
+	return socialbakersFeatures
 
 def get_single_user_socialbakers_features(userRow, tweetsDF):
 	'''
@@ -189,7 +208,7 @@ def get_single_user_socialbakers_features(userRow, tweetsDF):
 	#Class B
 	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userRow,tweetsDF,3)
 	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(userRow,tweetsDF,0.9)
-	features[BIG_TWEET_LINK_RATIO] 	= has_tweet_links_ratio(userRow, tweetsDF,0.9)
+	features[HIGH_TWEET_LINK_RATIO] = has_tweet_links_ratio(userRow, tweetsDF,0.9)
 
 	return features
 
@@ -203,16 +222,17 @@ def get_stringhini_features(dataframes):
 	friendsDF 	= dataframes['friends']
 	tweetsDF 	= dataframes['tweets']
 
-	tmpCount = 1
+	LIMIT = 10
+	limit = 1
 
 	for index, row in usersDF.iterrows():
 		stringhiniFeatures.append(get_single_user_stringhini_features(row,usersDF, friendsDF,tweetsDF))
 
-		if(tmpCount > 10):
+		#Temporary code, for test purpose
+		if(limit > LIMIT):
 			break
-
 		else:
-			tmpCount = tmpCount +1
+			limit = limit +1
 
 	return stringhiniFeatures
 
@@ -236,9 +256,27 @@ def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
 	return features
 
 def get_yang_features(dataframes):
-	pass
+	yangFeatures = []
 
-def get_single_user_yang_features(userRow):
+	usersDF 	= dataframes['users']
+	tweetsDF 	= dataframes['tweets']
+
+	LIMIT = 10
+	limit = 1
+
+	for index, row in usersDF.iterrows():
+		yangFeatures.append(get_single_user_yang_features(row, tweetsDF))
+
+		#Temporary code, for test purpose
+		if(limit > LIMIT):
+			break
+		else:
+			limit = limit +1
+
+	return yangFeatures
+
+
+def get_single_user_yang_features(userRow, tweetsDF):
 	'''
 	class A : age, following rate
 
@@ -256,15 +294,15 @@ def get_single_user_yang_features(userRow):
 	features[FOLLOWING_RATE] 	= get_following_rate(userRow)
 
 	# Class B features
-	features[API_RATIO] 			= get_api_ratio(data)
-	features[API_URL_RATIO] 		= get_api_url_ratio(data)
-	features[API_TWEET_SIMILARITY] 	= get_api_tweet_similarity(data)
+	features[API_RATIO] 			= get_api_ratio(userRow)
+	features[API_URL_RATIO] 		= get_api_url_ratio(userRow)
+	features[API_TWEET_SIMILARITY] 	= get_api_tweet_similarity(userRow)
 
 	# Class C features
-	features[BILINK_RATIO] 					= get_bilink_ratio(data)
-	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(data)
-	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(data)
-	features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(data)
+	features[BILINK_RATIO] 					= get_bilink_ratio(userRow)
+	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userRow)
+	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userRow)
+	features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
 
 	return features
 
@@ -318,37 +356,37 @@ TODO: create functions that retrieve each individual feature, below
 # Class A features
 
 def has_name(data):
-	pass
+	return False
 
 def has_image(data):
-	pass
+	return False
 
 def has_address(data):
-	pass
+	return False
 
 def has_bio(data):
-	pass
+	return False
 
 def has_30_followers(userRow):
 	return  int(userRow['followers_count']) >= 30
 
 def belongs_to_a_list(data):
-	pass
+	return False
 
 def get_tweets_count(userRow):
 	return int(userRow[''])
 
 def has_50_tweets(userRow):
-	pass
+	return False
 
-def url_in_profile(data):
-	pass
+def url_in_profile(userRow):
+	return False
 
 def followers_to_friends_ration_over_2(data):
-	pass
+	return False
 
 def bot_in_bio(data):
-	pass
+	return False
 
 def friends_to_followers_ratio_is_100(userRow):
 	threshold = 100
@@ -356,13 +394,13 @@ def friends_to_followers_ratio_is_100(userRow):
 	return get_friends_to_followers_ratio(userRow) >= threshold
 
 def duplicate_profile_picture(data):
-	pass
+	return False
 
 def get_age(data):
 	return 0
 
 def get_following_rate(data):
-	pass
+	return 0
 
 def get_friends_count(userRow):
 	return int(userRow['friends_count'])
@@ -374,22 +412,22 @@ def get_friends_to_followers_ratio(userRow):
 	return int(userRow['friends_count'])/int(userRow['followers_count'])
 
 def has_50_followers(data):
-	pass
+	return False
 
 def has_default_image(data):
-	pass
+	return False
 
 def has_no_bio(data):
-	pass
+	return False
 
 def has_no_location(data):
-	pass
+	return False
 
 def has_100_friends(data):
-	pass
+	return False
 
 def has_no_tweets(data):
-	pass
+	return False
 
 
 # Class B features
@@ -424,7 +462,7 @@ def uses_twitterdotcom(data):
 def userid_in_tweet(data):
 	return False
 
-def tweets_with_url(data):
+def tweets_with_url(tweetsDF):
 	return 0
 
 def retweet_over_1(data):
@@ -454,13 +492,21 @@ def get_tweet_similarity(userRow,tweetsDF):
 def get_url_ratio(userRow, tweetsDF):
 	return 0
 
-def has_duplicate_tweets(data,duplicate_count):
+def has_duplicate_tweets(userRow, tweetsDF,duplicate_threshold):
 	return False
 
-def has_retweet_ratio(data, ratio):
+def has_retweet_ratio(userRow,tweetsDF, ratio_threshold):
+	'''
+	Returns true if the ratio calculated is superior or equal to the ratio_threshold.
+	Returns false otherwise.
+	'''
 	return False
 
-def has_tweet_links_ratio(data, ratio):
+def has_tweet_links_ratio(userRow, tweetsDF, ratio_threshold):
+	'''
+	Returns true if the ratio calculated is superior or equal to the ratio_threshold.
+	Returns false otherwise.
+	'''
 	return False
 
 
@@ -487,7 +533,7 @@ le feature set spécifié (ici yang, hardcodé ci-dessous)
 if(__name__ == "__main__"):
 	directory = sys.argv[1]
 
-	featureSetName = STRINGHINI
+	featureSetName = sys.argv[2]
 	dataframes = get_dataframes(directory,featureSetName)
 
 	print("OK, ca passe")
