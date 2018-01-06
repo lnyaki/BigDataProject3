@@ -119,49 +119,103 @@ def get_features(featureSetName, dataframes):
 
 	return features
 
+
 def get_camisani_features(dataframes):
+	camisaniFeatures = []
+
+	usersDF 	= dataframes['users']
+	tweetsDF 	= dataframes['tweets']
+
+	LIMIT = 10
+	limit = 1
+
+	for index, row in usersDF.iterrows():
+		camisaniFeatures.append(get_single_user_state_of_search_features(row,usersDF,tweetsDF))
+
+		#Temporary code, for test purpose
+		if(limit > LIMIT):
+			break
+		else:
+			limit = limit +1
+
+	return camisaniFeatures
+
+def get_single_user_camisani_features(userRow, userDF, tweetsDF):
+	'''
+	Class A : has name, has image, has address, has bio, followers >= 30, belongs to a list, 
+	tweets >= 50, URL in profile, 2xfollowers >= friends
+
+	Class B : geo, is favorite, uses punctuation, uses #, uses iphone, uses android, uses foursquare,
+	uses twitter.com, userId in tweet, retweet >= 1, uses different clients
+	'''
 	features = {}
 
 	# class A
-	features[HAS_NAME] 			= has_name(data)
-	features[HAS_IMAGE] 		= has_image(data)
-	features[HAS_ADDRESS] 		= has_address(data)
-	features[HAS_BIO] 			= has_bio(data)
-	features[HAS_30_FOLLOWERS] 	= has_30_followers(data)
-	features[BELONGS_TO_A_LIST] = belongs_to_a_list(data)
-	features[HAS_50_TWEETS] 	= has_50_tweets(data)
-	features[URL_IN_PROFILE] 	= url_in_profile(data)
-	features[FOLLOWERS_TO_FRIENDS_RATIO_OVER_2] = followers_to_friends_ration_over_2(data)
+	features[HAS_NAME] 			= has_name(userRow)
+	features[HAS_IMAGE] 		= has_image(userRow)
+	features[HAS_ADDRESS] 		= has_address(userRow)
+	features[HAS_BIO] 			= has_bio(userRow)
+	features[HAS_30_FOLLOWERS] 	= has_30_followers(userRow)
+	features[BELONGS_TO_A_LIST] = belongs_to_a_list(userRow)
+	features[HAS_50_TWEETS] 	= has_50_tweets(userRow)
+	features[URL_IN_PROFILE] 	= url_in_profile(userRow)
+	features[FOLLOWERS_TO_FRIENDS_RATIO_OVER_2] = followers_to_friends_ration_over_2(userRow)
 
 	# class B
-	features[GEOLOCALIZED] 				= geolocalized(data)
-	features[IS_FAVORITE] 				= is_favorite(data)
-	features[USES_PUNCTUATION] 			= uses_punctuation(data)
-	features[USES_HASHTAG] 				= uses_hashtag(data)
-	features[USES_IPHONE] 				= uses_iphone(data)
-	features[USES_ANDROID] 				= uses_android(data)
-	features[USES_FOURSQUARE] 			= uses_foursquare(data)
-	features[USES_INSTAGRAM] 			= uses_instagram(data)
-	features[USES_TWITTERDOTCOM] 		= uses_twitterdotcom(data)
-	features[USERID_IN_TWEET] 			= userid_in_tweet(data)
-	features[TWEETS_WITH_URL] 			= tweets_with_url(data)
-	features[RETWEET_OVER_1] 			= retweet_over_1(data)
-	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients(data)
+	features[GEOLOCALIZED] 				= geolocalized(userRow)
+	features[IS_FAVORITE] 				= is_favorite(userRow)
+	features[USES_PUNCTUATION] 			= uses_punctuation(userRow)
+	features[USES_HASHTAG] 				= uses_hashtag(userRow)
+	features[USES_IPHONE] 				= uses_iphone(userRow)
+	features[USES_ANDROID] 				= uses_android(userRow)
+	features[USES_FOURSQUARE] 			= uses_foursquare(userRow)
+	features[USES_INSTAGRAM] 			= uses_instagram(userRow)
+	features[USES_TWITTERDOTCOM] 		= uses_twitterdotcom(userRow)
+	features[USERID_IN_TWEET] 			= userid_in_tweet(userRow)
+	features[TWEETS_WITH_URL] 			= tweets_with_url(userRow)
+	features[RETWEET_OVER_1] 			= retweet_over_1(userRow)
+	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients(userRow)
 
 	return features
 
+def get_state_of_search_features(dataframes):
+	stateofsearchFeatures = []
 
-def get_state_of_search_features(dataframe):
+	usersDF 	= dataframes['users']
+	tweetsDF 	= dataframes['tweets']
+
+	LIMIT = 10
+	limit = 1
+
+	for index, row in usersDF.iterrows():
+		stateofsearchFeatures.appen(get_single_user_state_of_search_features(row,usersDF,tweetsDF))
+
+		#Temporary code, for test purpose
+		if(limit > LIMIT):
+			break
+		else:
+			limit = limit +1
+
+	return stateofsearchFeatures
+
+
+def get_single_user_state_of_search_features(userRow, userDF, tweetsDF):
+	'''
+	Class A : bot in biography, friends/followers > 100, duplicate profile pictures
+
+	Class B : same sentence to many accounts, tweet from API
+	'''
+
 	features = {}
 
 	# class A
-	features[BOT_IN_BIO] 						= bot_in_bio(data)
-	features[FRIENDS_TO_FOLLOWERS_RATIO_IS_100] = friends_to_followers_ratio_is_100(data)
-	features[DUPLICATE_PROFILE_PICTURE] 		= duplicate_profile_picture(data)
+	features[BOT_IN_BIO] 						= bot_in_bio(userRow)
+	features[FRIENDS_TO_FOLLOWERS_RATIO_IS_100] = friends_to_followers_ratio_is_100(userRow)
+	features[DUPLICATE_PROFILE_PICTURE] 		= duplicate_profile_picture(userRow)
 	
 	# class B
-	features[DUPLICATE_SENTENCES_ACROSS_ACCOUNTS] 	= duplicate_sentences_across_accounts(data)
-	features[API_TWEETS] 							= api_tweets(data)
+	features[DUPLICATE_SENTENCES_ACROSS_ACCOUNTS] 	= duplicate_sentences_across_accounts(userRow)
+	features[API_TWEETS] 							= api_tweets(userRow)
 
 
 	return features
@@ -318,10 +372,10 @@ def get_dataframes(datasetDirectory, featureSetName):
 	dataframes = {}
 
 	if(featureSetName == CAMISANI):
-		pass
+		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv'}
 
 	elif(featureSetName == STATEOFSEARCH):
-		pass
+		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv'}
 
 	elif(featureSetName == SOCIALBAKERS):
 		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv'}
@@ -355,22 +409,22 @@ TODO: create functions that retrieve each individual feature, below
 
 # Class A features
 
-def has_name(data):
+def has_name(userRow):
 	return False
 
-def has_image(data):
+def has_image(userRow):
 	return False
 
-def has_address(data):
+def has_address(userRow):
 	return False
 
-def has_bio(data):
+def has_bio(userRow):
 	return False
 
 def has_30_followers(userRow):
 	return  int(userRow['followers_count']) >= 30
 
-def belongs_to_a_list(data):
+def belongs_to_a_list(userRow):
 	return False
 
 def get_tweets_count(userRow):
@@ -382,10 +436,10 @@ def has_50_tweets(userRow):
 def url_in_profile(userRow):
 	return False
 
-def followers_to_friends_ration_over_2(data):
+def followers_to_friends_ration_over_2(userRow):
 	return False
 
-def bot_in_bio(data):
+def bot_in_bio(userRow):
 	return False
 
 def friends_to_followers_ratio_is_100(userRow):
@@ -393,13 +447,13 @@ def friends_to_followers_ratio_is_100(userRow):
 
 	return get_friends_to_followers_ratio(userRow) >= threshold
 
-def duplicate_profile_picture(data):
+def duplicate_profile_picture(userRow):
 	return False
 
-def get_age(data):
+def get_age(userRow):
 	return 0
 
-def get_following_rate(data):
+def get_following_rate(userRow):
 	return 0
 
 def get_friends_count(userRow):
@@ -411,79 +465,79 @@ def get_friends_tweet_count(userRow,friendsDF,usersDF):
 def get_friends_to_followers_ratio(userRow):
 	return int(userRow['friends_count'])/int(userRow['followers_count'])
 
-def has_50_followers(data):
+def has_50_followers(userRow):
 	return False
 
-def has_default_image(data):
+def has_default_image(userRow):
 	return False
 
-def has_no_bio(data):
+def has_no_bio(userRow):
 	return False
 
-def has_no_location(data):
+def has_no_location(userRow):
 	return False
 
-def has_100_friends(data):
+def has_100_friends(userRow):
 	return False
 
-def has_no_tweets(data):
+def has_no_tweets(userRow):
 	return False
 
 
 # Class B features
 
-def geolocalized(data):
+def geolocalized(userRow):
 	return False
 
-def is_favorite(data):
+def is_favorite(userRow):
 	return False
 
-def uses_punctuation(data):
+def uses_punctuation(userRow):
 	return False
 
-def uses_hashtag(data):
+def uses_hashtag(userRow):
 	return False
 
-def uses_iphone(data):
+def uses_iphone(userRow):
 	return False
 
-def uses_android(data):
+def uses_android(userRow):
 	return False
 
-def uses_foursquare(data):
+def uses_foursquare(userRow):
 	return False
 
-def uses_instagram(data):
+def uses_instagram(userRow):
 	return False
 
-def uses_twitterdotcom(data):
+def uses_twitterdotcom(userRow):
 	return False
 
-def userid_in_tweet(data):
+def userid_in_tweet(userRow):
 	return False
 
 def tweets_with_url(tweetsDF):
 	return 0
 
-def retweet_over_1(data):
+def retweet_over_1(userRow):
 	return False
 
-def uses_different_clients(data):
+def uses_different_clients(userRow):
 	return False
 
-def duplicate_sentences_across_accounts(data):
+def duplicate_sentences_across_accounts(userRow):
 	return False
 
-def api_tweets(data):
+def api_tweets(userRow):
 	return 0
 
-def get_api_ratio(data):
+def get_api_ratio(userRow):
 	return 0
 
-def get_api_url_ratio(data):
+def get_api_url_ratio(userRow):
 	return 0
 
-def get_api_tweet_similarity(data):
+def get_api_tweet_similarity(userRow):
 	return 0
 
 def get_tweet_similarity(userRow,tweetsDF):
@@ -511,16 +565,16 @@ def has_tweet_links_ratio(userRow, tweetsDF, ratio_threshold):
 
 
 # Class C featrues
-def get_bilink_ratio(data):
+def get_bilink_ratio(userRow):
 	return 0
 
-def get_average_neighbors_followers(data):
+def get_average_neighbors_followers(userRow):
 	return 0
 
-def get_average_neighbors_tweets(data):
+def get_average_neighbors_tweets(userRow):
 	return 0
 
-def get_followings_to_median(data):
+def get_followings_to_median(userRow):
 	return 0
 
 '''
