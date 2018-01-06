@@ -42,7 +42,6 @@ FOLLOWING_RATE 	= 'following_rate'
 ###########
 
 # Camisani-Calzolari
-<<<<<<< HEAD
 GEOLOCALIZED 			= 'geolocalized'
 IS_FAVORITE 			= 'is_favorite'
 USES_PUNCTUATION 		= 'uses_punctuation'
@@ -195,7 +194,27 @@ def get_single_user_socialbakers_features(userRow, tweetsDF):
 	return features
 
 def get_stringhini_features(dataframes):
-	pass
+	'''
+
+	'''
+	stringhiniFeatures = []
+
+	usersDF 	= dataframes['users']
+	friendsDF 	= dataframes['friends']
+	tweetsDF 	= dataframes['tweets']
+
+	tmpCount = 1
+
+	for index, row in usersDF.iterrows():
+		stringhiniFeatures.append(get_single_user_stringhini_features(row,usersDF, friendsDF,tweetsDF))
+
+		if(tmpCount > 10):
+			break
+
+		else:
+			tmpCount = tmpCount +1
+
+	return stringhiniFeatures
 
 def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
 	'''
@@ -310,13 +329,13 @@ def has_address(data):
 def has_bio(data):
 	pass
 
-def has_30_followers(data):
-	pass
+def has_30_followers(userRow):
+	return  int(userRow['followers_count']) >= 30
 
 def belongs_to_a_list(data):
 	pass
 
-def has_50_tweets(data):
+def has_50_tweets(userRow):
 	pass
 
 def url_in_profile(data):
@@ -340,14 +359,14 @@ def get_age(data):
 def get_following_rate(data):
 	pass
 
-def get_friends_count(data):
-	pass
+def get_friends_count(userRow):
+	return int(userRow['friends_count'])
 
-def get_friends_tweet_count(data):
-	pass
+def get_friends_tweet_count(userRow,friendsDF,usersDF):
+	return 0
 
-def get_friends_to_followers_ratio(data):
-	pass
+def get_friends_to_followers_ratio(userRow):
+	return int(userRow['friends_count'])/int(userRow['followers_count'])
 
 def has_50_followers(data):
 	pass
@@ -423,11 +442,11 @@ def get_api_url_ratio(data):
 def get_api_tweet_similarity(data):
 	pass
 
-def get_tweet_similarity(data):
-	pass
+def get_tweet_similarity(userRow,tweetsDF):
+	return 0
 
-def get_url_ratio(data):
-	pass
+def get_url_ratio(userRow, tweetsDF):
+	return 0
 
 def has_duplicate_tweets(data,duplicate_count):
 	pass
@@ -454,7 +473,7 @@ def get_followings_to_median(data):
 
 '''
 To use (prototype) go to root directory:
-	Ex: python3 src/features.py "data/E13"
+	command example : python3 src/features.py "data/E13"
 
 Pour l'instant, le prog trouve automatiquement les fichier à lire, selon
 le feature set spécifié (ici yang, hardcodé ci-dessous)
@@ -462,7 +481,11 @@ le feature set spécifié (ici yang, hardcodé ci-dessous)
 if(__name__ == "__main__"):
 	directory = sys.argv[1]
 
-	dataframes = get_dataframes(directory,'yang')
+	featureSetName = STRINGHINI
+	dataframes = get_dataframes(directory,featureSetName)
 
 	print("OK, ca passe")
-	features 	= get_features('yang', dataframes)
+	features 	= pd.DataFrame(get_features(featureSetName, dataframes))
+
+	print("Features : ")
+	print(features)
