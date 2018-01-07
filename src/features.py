@@ -1,6 +1,8 @@
 import pandas as pd
 import sys
 import url_finder
+from datetime import datetime
+from dateutil.parser import parse
 ###########
 # Class A #
 ###########
@@ -35,7 +37,7 @@ NUMBER_OF_FRIENDS_TWEETS 	= 'number_of_friends_tweets'
 FRIENDS_TO_FOLLOWERS_RATIO 	= 'friends_to_followers_ratio'
 
 # Yang et al.
-AGE 			= 'age'
+ACCOUNT_AGE		= 'account_age'
 FOLLOWING_RATE 	= 'following_rate'
 
 ###########
@@ -252,6 +254,8 @@ def get_single_user_socialbakers_features(userRow, tweetsDF):
 	features = {}
 
 	#Class A
+
+	#TODO : ce n'est pas 50 followers, c'est un ratio de 50:1 entre friends et followers
 	features[HAS_50_FOLLOWERS] 	= has_50_followers(userRow)
 	features[HAS_DEFAULT_IMAGE] = has_default_image(userRow)
 	features[HAS_NO_BIO] 		= has_no_bio(userRow)
@@ -301,7 +305,7 @@ def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
 	# Class A
 	features[NUMBER_OF_FRIENDS] 			= get_friends_count(userRow)
 	features[NUMBER_OF_FRIENDS_TWEETS] 		= get_friends_tweet_count(userRow,friendsDF,usersDF)
-	features[FRIENDS_TO_FOLLOWERS_RATIO] 	= get_friends_to_followers_ratio(userRow)
+	features[FRIENDS_TO_FOLLOWERS_RATIO] 	= get_stringhini_friends_to_followers_ratio(userRow)
 
 	# Class B
 	features[TWEET_SIMILARITY] 	= get_tweet_similarity(userRow,tweetsDF)
@@ -344,7 +348,7 @@ def get_single_user_yang_features(userRow, tweetsDF):
 	features = {}
 
 	# Class A features
-	features[AGE] 				= get_age(userRow) # No age data!
+	features[ACCOUNT_AGE] 		= get_account_age(userRow)
 	features[FOLLOWING_RATE] 	= get_following_rate(userRow)
 
 	# Class B features
@@ -450,8 +454,15 @@ def friends_to_followers_ratio_is_100(userRow):
 def duplicate_profile_picture(userRow):
 	return False
 
-def get_age(userRow):
-	return 0
+def get_account_age(userRow):
+	# Date format : Thu Apr 06 15:24:15 +0000 2017
+	account_creation = datetime.strptime(userRow['created_at'],'%a %b %d %H:%M:%S %z %Y')
+	#Two lines below, to prevent error : can't subtract offset-naive and offset-aware datetimes
+	# Solution from https://stackoverflow.com/questions/796008/cant-subtract-offset-naive-and-offset-aware-datetimes
+	timezone = account_creation.tzinfo
+	today = datetime.now(timezone)
+
+	return (today - account_creation).days
 
 def get_following_rate(userRow):
 	return 0
@@ -464,6 +475,11 @@ def get_friends_tweet_count(userRow,friendsDF,usersDF):
 
 def get_friends_to_followers_ratio(userRow):
 	return int(userRow['friends_count'])/int(userRow['followers_count'])
+
+def get_stringhini_friends_to_followers_ratio(userRow):
+	followers = int(userRow['followers_count'])
+
+	return int(userRow['friends_count'])/(followers*followers)
 
 def has_50_followers(userRow):
 	return False
@@ -532,6 +548,7 @@ def api_tweets(userRow):
 	return 0
 
 def get_api_ratio(userRow):
+	# tweets sent from api over total number of tweets
 	return 0
 
 def get_api_url_ratio(userRow):
@@ -544,6 +561,7 @@ def get_tweet_similarity(userRow,tweetsDF):
 	return 0
 
 def get_url_ratio(userRow, tweetsDF):
+	'''ratio of tweets with a url'''
 	return 0
 
 def has_duplicate_tweets(userRow, tweetsDF,duplicate_threshold):
@@ -566,23 +584,26 @@ def has_tweet_links_ratio(userRow, tweetsDF, ratio_threshold):
 
 # Class C featrues
 def get_bilink_ratio(userRow):
+	#Bi-directional link is when two account follow each other
 	return 0
 
 def get_average_neighbors_followers(userRow):
+	#Average the number of followers of the friends of the user.
 	return 0
 
 def get_average_neighbors_tweets(userRow):
+	#Average the number of tweets of the friends of the user.
 	return 0
 
 def get_followings_to_median(userRow):
+	'''
+	Ratio between number of friends and the median of the followers of its friends.
+	'''
 	return 0
 
 '''
 To use (prototype) go to root directory:
-	command example : python3 src/features.py "data/E13"
-
-Pour l'instant, le prog trouve automatiquement les fichier à lire, selon
-le feature set spécifié (ici yang, hardcodé ci-dessous)
+	command example : python3 src/features.py "data/E13" yang
 '''
 if(__name__ == "__main__"):
 	directory = sys.argv[1]

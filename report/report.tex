@@ -1,16 +1,10 @@
 \documentclass[a4paper,11pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage{textcomp}
-\usepackage{lmodern}
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{listings}
-\usepackage{color}
-\definecolor{lightgray}{rgb}{0.9,0.9,0.9}
-\definecolor{darkgray}{rgb}{0.4,0.4,0.4}
-\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
-\usepackage{url}
-\usepackage[top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry}
+\usepackage{multicol}
+\usepackage{verbatim}
 
 \title{UNamur\\
 	ICYBM201 Big Data and Computer Security : Fame for sale, efficient detection of fake Twitter
@@ -30,9 +24,9 @@ followers}
 \paragraph{}
 The objective of this project is to partially reproduce the results presented in a 2015 paper titled  \textit{Fame for sale: effective detection of fake twitter followers}, by Cresci \textit{et al.}\\
 
-In the paper various classification rules and features proposed by academics, \textit{technology bloggers} and companies specialized in fake twitter users detection are enumerated and assessed. Rule-based classification is shown to be perform more poorly than feature-based classification. Therefore, rule-based classification is dropped, and the 19 features responsible for the most information gain, and the smallest calculation cost are selected as the \textit{feature set}.\\
+In the paper, various classification rules and features proposed by academics, \textit{technology bloggers} and companies specialized in fake twitter users detection are enumerated and assessed. Rule-based classification is shown to perform more poorly than feature-based classification. Therefore the authors decided to abandon rule-based classification and to select the 19 features responsible for the most information gain while having the smallest calculation cost.\\
 
-The resulting classifier shows an accuracy of up to 97.5\% on randomly sampled account, while being solely based on data readily available on the profile of the twitter users.
+The resulting classifier trained on that 19-features set shows an accuracy of up to 97.5\% on randomly sampled account, while being solely based on data readily available on the profile of the twitter users, which ensures that the data processing is fast and lightweight.
 
 \subsection{Objectives}
 In this project, we focus on reproducing the final results of Cresci \textit{et al.}, by implementing various classifiers based on the feature set presented in that paper.\\
@@ -40,11 +34,65 @@ In this project, we focus on reproducing the final results of Cresci \textit{et 
 First we describe the 19 features that will be part of the feature set. Then, we introduce the datasets on which the classifiers will be trained. Later we describe how the features will be extracted from these datasets as well as our planned procedure for training classifier. Each type of classifier is then described along with their parameters, and results are presented for each classifier. Finally, we summarize the results argue on the difference between the results presented in Cresci \textit{et al.}, and the results we managed to obtain.
 
 
-\section{Features set}
-TODO:
-Je choisi de présenter les features avant les données, afin qu'une fois les données brutes présentées, on puisse enchainer avec l'extraction et pre-processing.
+\section{Rule sets and Features set}
+In the paper, five rule sets and features set are analyzed. They come from  academic research, as well as technology bloggers and companies specialized in fake tweeter users detection.\\
 
-Comme on connait déjà les features, ça marche assez bien si on fait les choses dans cet ordre là, je trouve.
+\begin{comment}
+====> Là j'ai défini un truc, mais je me rends compte que l'auteur du paper appelle aussi "features" des trucs que j'appelerais "rules".
+
+We define a rule as a function that takes a non boolean value as an input and returns a boolean output based on an arbitrary criteria. For instance: "the user has at least 30 friends", the number 30 being arbitrary.\\
+
+While a rule is a function, a feature is a value, boolean or otherwise. For example, a feature could be "the number of friends" of the user, without specifying whether it should be bigger or smaller than a certain number, as that will be for the \textit{machine learning} algorithms to decide.
+\end{comment}
+
+\subsection{Camisani-Calzolari rule set}
+The Camisani-Calzolari rule set is described as follows:
+
+\begin{multicols}{2}
+\begin{enumerate}
+\item the profile contains a name;
+\item the profile contains an image;
+\item the profile contains a biography
+\item the account has at least 30 followers;
+\item it has been inserted in a  list by other Twitter users;
+\item it has written at least 50 tweets;
+\item the account has been geo-localized;
+\item the profile contains a URL;
+\item it has been included in another user's favorites;
+\item it writes tweets that have punctuation;
+\item it has used a hashtag in at least one tweet;
+\item it has logged into Twitter using an iPhone;
+\item it has logged into Twitter using an Android device;
+\item it is connected with Foursquare;
+\item it is connected with Instagram;
+\item it has logged into the twitter.com website
+\item it has written the userID of another user in at least one tweet (that is, it posted a @reply or a mention);
+\item (2*number of followers) $\geq$ (number of friends);
+\item it publishes content which does not just contain URLs;
+\item at least one of its tweets has been retwitted by other accounts (worth 2 points)
+\item it has logged into Twitter through different clients (worth 3 points).
+\end{enumerate}
+\end{multicols}
+
+\subsection{State of search}
+
+\subsection{Socialbakers}
+
+\subsection{Stringhini et al.}
+
+Comment : je teste le tabular au lieu de la liste, mais ça marche pas super. J'ai pas le temps de corriger ça pour le moment.\\
+
+\begin{tabular}{cc}
+\hline
+1. spambots do not have thousands of friends; & spambots have a high ratio of tweets containing urls\\
+2. spambots have sent less than 20 tweets; & spambots have a high ratio between the total number of tweets from friends and the square of their total followers (lower ratio means legitimate user)\\
+3. the content of the spambots' tweets exhibits "message similarity"; & \\
+\hline
+\end{tabular}
+
+
+\subsection{Yang et al.}
+
 
 \section{Data extraction}
 
