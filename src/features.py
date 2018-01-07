@@ -3,6 +3,8 @@ import sys
 import url_finder
 from datetime import datetime
 from dateutil.parser import parse
+import itertools
+import string
 ###########
 # Class A #
 ###########
@@ -414,37 +416,40 @@ TODO: create functions that retrieve each individual feature, below
 # Class A features
 
 def has_name(userRow):
-	return False
+	return (not userRow['name'] == "")
 
 def has_image(userRow):
-	return False
+	return (not userRow['profile_image_url'] == "")
 
 def has_address(userRow):
-	return False
+	return (not userRow['location'] == "")
 
 def has_bio(userRow):
-	return False
+	return (not userRow['description'] == "")
 
 def has_30_followers(userRow):
 	return  int(userRow['followers_count']) >= 30
 
 def belongs_to_a_list(userRow):
-	return False
+	return int(userRow['listed_count']) > 0
 
-def get_tweets_count(userRow):
-	return int(userRow[''])
-
-def has_50_tweets(userRow):
-	return False
+def has_50_tweets(userRow,tweetsDF):
+	return get_tweets_count(userRow['id'],tweetsDF) > 50
 
 def url_in_profile(userRow):
-	return False
+	return has_url(userRow['description'])
 
 def followers_to_friends_ration_over_2(userRow):
-	return False
+	return int(userRow['followers_count']/userRow['friends_count']) > 2
 
 def bot_in_bio(userRow):
-	return False
+	# https://stackoverflow.com/questions/11144389/find-all-upper-lower-and-mixed-case-combinations-of-a-string
+	bot_list = map(''.join, itertools.product(*((c.upper(), c.lower()) for c in 'bot')))
+	res = False
+	for bot_combination in bot_list:
+		if bot_combination in userRow['description']:
+			res = True
+	return res
 
 def friends_to_followers_ratio_is_100(userRow):
 	threshold = 100
@@ -452,6 +457,11 @@ def friends_to_followers_ratio_is_100(userRow):
 	return get_friends_to_followers_ratio(userRow) >= threshold
 
 def duplicate_profile_picture(userRow):
+	'''
+	TODO: pas sur de comment résoudre celui-ci...
+	Jme suis dit que je pourrais le faire en prenant la dernière partie 
+	du nom de l'image mais c'est généralement aléatoire pour les bots ... 
+	'''
 	return False
 
 def get_account_age(userRow):
@@ -503,31 +513,38 @@ def has_no_tweets(userRow):
 # Class B features
 
 def geolocalized(userRow):
-	return False
+	return userRow['geo_enabled'] == 1
 
 def is_favorite(userRow):
-	return False
+	return userRow['favorites_count'] > 0
 
-def uses_punctuation(userRow):
-	return False
+def uses_punctuation(userRow,tweetsDF):
+	# https://mail.python.org/pipermail/tutor/2001-October/009454.html
+	bio_and_timeline = userRow['description']
+	bio_and_timeline+= get_tweets_strings(int(userRow['id']),tweetsDF)
+	res = False
+	for letter in bio_and_timeline:
+		if letter in string.punctuation:
+			res = True
+	return res
 
-def uses_hashtag(userRow):
-	return False
+def uses_hashtag(userRow,tweetsDF):
+	return '#' in get_tweets_strings(int(userRow['id']),tweetsDF)
 
-def uses_iphone(userRow):
-	return False
+def uses_iphone(userRow,tweetsDF):
+	return "iphone" in get_tweets_strings(int(userRow['id']),tweetsDF)
 
-def uses_android(userRow):
-	return False
+def uses_android(userRow,tweetsDF):
+	return "android" in get_tweets_strings(int(userRow['id']),tweetsDF)
 
-def uses_foursquare(userRow):
-	return False
+def uses_foursquare(userRow,tweetsDF):
+	return "foursquare" in get_tweets_strings(int(userRow['id']),tweetsDF)
 
-def uses_instagram(userRow):
-	return False
+def uses_instagram(userRow,tweetsDF):
+	return "instagram" in get_tweets_strings(int(userRow['id']),tweetsDF)
 
-def uses_twitterdotcom(userRow):
-	return False
+def uses_twitterdotcom(userRow,tweetsDF):
+	return "twitter.com" in get_tweets_strings(int(userRow['id']),tweetsDF)
 
 def userid_in_tweet(userRow):
 	return False
