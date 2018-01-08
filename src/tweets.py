@@ -1,23 +1,50 @@
+import url_finder
 '''
 In this module, we process tweets, iterate and extract data from them.
 '''
+def has_tweets(userID,tweetsDF):
+	exit = False
+	has_tweets = False
+	l = len(tweetsDF)
+	i = 0
 
+	while not exit:
+		tweet = tweetsDF.loc(i)
+
+		if(tweet['user_id'] == userID):
+			exit = True
+			has_tweets = True
+
+		else:
+			i = i+1
+
+			if(i>=l):
+				exit = True
+
+	return has_tweets
 
 def get_tweets_count(userID,tweetsDF):
 	'''
 	This will count the number of tweets done by a
 	'''
-	return len(get_tweets_user(userID,tweetsDF))
+	#return len(get_tweets_user(userID,tweetsDF))
+	return tweetsDF[tweetsDF['user_id'] == userID].count()
 
 def get_tweets_user(userID,tweetsDF):
 	'''
 	This function returns the tweets belonging to a particular userID
+	'''
 	'''
 	usersTweets = []
 	for index,row in tweetsDF.iterrows():
 		if int(row['user_id']) == userID:
 			usersTweets.append(row)
 	return usersTweets
+	'''
+	return tweetsDF[tweetsDF['user_id']== userID]
+
+def get_avg_friends_tweets(friends,tweetsDF):
+	pass
 
 def get_tweets_strings(userID,tweetsDF):
 	'''
@@ -54,3 +81,18 @@ def get_single_tweet_data(dataIndexList, tweetRow):
 
 	return tweetData
 
+def get_tweets_with_url_ratio(userID, tweetsDF):
+	user_tweets_count = 0
+	tweets_with_url = 0
+
+	for index, row in tweetsDF.iterrows():
+		if(row['user_id'] == userID):
+			user_tweets_count = user_tweets_count+1
+
+			if(tweet_contains_url(row['text'])):
+				tweets_with_url = tweets_with_url+1
+
+	return tweets_with_url/user_tweets_count
+
+def tweet_contains_url(tweet):
+	return url_finder.has_url(tweet)

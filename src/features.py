@@ -6,6 +6,7 @@ import itertools
 import string
 from tweets import *
 from url_finder import *
+from users import *
 import math
 ###########
 # Class A #
@@ -38,6 +39,7 @@ HAS_NO_TWEETS 		= 'has_no_tweets'
 # Stringhini et al.
 NUMBER_OF_FRIENDS 			= 'number_of_friends'
 NUMBER_OF_FRIENDS_TWEETS 	= 'number_of_friends_tweets'
+NUMBER_OF_TWEETS_SENT		= 'number_of_tweets_sent'
 FRIENDS_TO_FOLLOWERS_RATIO 	= 'friends_to_followers_ratio'
 
 # Yang et al.
@@ -248,7 +250,7 @@ def get_socialbakers_features(dataframes):
 
 	return socialbakersFeatures
 
-def get_single_user_socialbakers_features(userRow, tweetsDF):
+def get_single_user_socialbakers_features(userRow, friendsDF,tweetsDF):
 	'''
 	Class A : followers ≥ 50, default image after 2
 		months, no bio, no location, friends ≥100, 0 tweets 
@@ -256,6 +258,7 @@ def get_single_user_socialbakers_features(userRow, tweetsDF):
 	Class B : tweets spam phrases, same tweet ≥ 3, retweets ≥ 90%,
 		tweet-links ≥ 90%
 	'''
+	userID = userRow['id']
 
 	features = {}
 
@@ -266,8 +269,8 @@ def get_single_user_socialbakers_features(userRow, tweetsDF):
 	features[HAS_DEFAULT_IMAGE] = has_default_image(userRow)
 	features[HAS_NO_BIO] 		= has_no_bio(userRow)
 	features[HAS_NO_LOCATION] 	= has_no_location(userRow)
-	features[HAS_100_FRIENDS] 	= has_100_friends(userRow)
-	features[HAS_NO_TWEETS] 	= has_no_tweets(userRow)
+	features[HAS_100_FRIENDS] 	= has_100_friends(userID, friendsDF)
+	features[HAS_NO_TWEETS] 	= has_no_tweets(userID, tweetsDF)
 
 	#Class B
 	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userRow,tweetsDF,3)
@@ -286,7 +289,7 @@ def get_stringhini_features(dataframes):
 	friendsDF 	= dataframes['friends']
 	tweetsDF 	= dataframes['tweets']
 
-	LIMIT = 10
+	LIMIT = 5
 	limit = 1
 
 	for index, row in usersDF.iterrows():
@@ -306,16 +309,25 @@ def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
 
 	Class B : tweet similarity, URL ratio
 	'''
+	'''
+	usersDF.set_index('id', inplace=True)
+	tweetsDF.set_index('user_id',inplace=True)
+	friendsDF.set_index('source_id', inplace=True)
+	'''
+	userID = userRow['id']
+
 	features = {}
 
 	# Class A
-	features[NUMBER_OF_FRIENDS] 			= get_friends_count(userRow)
-	features[NUMBER_OF_FRIENDS_TWEETS] 		= get_friends_tweet_count(userRow,friendsDF,usersDF)
-	features[FRIENDS_TO_FOLLOWERS_RATIO] 	= get_stringhini_friends_to_followers_ratio(userRow)
+	#features[NUMBER_OF_FRIENDS] 			= get_friends_count(userRow)
+	#features[NUMBER_OF_FRIENDS_TWEETS] 		= get_friends_tweet_count(userRow,friendsDF,usersDF)
+	#features[FRIENDS_TO_FOLLOWERS_RATIO] 	= get_stringhini_friends_to_followers_ratio(userRow)
 
 	# Class B
-	features[TWEET_SIMILARITY] 	= get_tweet_similarity(userRow,tweetsDF)
-	features[URL_RATIO] 		= get_url_ratio(userRow, tweetsDF)
+	##features[NUMBER_OF_TWEETS_SENT]	= get_tweets_count(userID,tweetsDF)
+	#features[TWEET_SIMILARITY] 	= get_tweet_similarity(userRow,tweetsDF)	#comment calculer?
+	#features[URL_RATIO] 		= get_url_ratio(userRow, tweetsDF)
+	features[UNIQUE_FRIENDS_NAME_RATIO] = get_unique_friends_name_ratio(userID,usersDF,friendsDF) 
 
 	return features
 
@@ -323,13 +335,15 @@ def get_yang_features(dataframes):
 	yangFeatures = []
 
 	usersDF 	= dataframes['users']
+	friendsDF 	= dataframes['friends']
+	followersDF = dataframes['followers']
 	tweetsDF 	= dataframes['tweets']
 
 	LIMIT = 10
 	limit = 1
 
 	for index, row in usersDF.iterrows():
-		yangFeatures.append(get_single_user_yang_features(row, tweetsDF))
+		yangFeatures.append(get_single_user_yang_features(row, usersDF,friendsDF,followersDF))
 
 		#Temporary code, for test purpose
 		if(limit > LIMIT):
@@ -340,7 +354,7 @@ def get_yang_features(dataframes):
 	return yangFeatures
 
 
-def get_single_user_yang_features(userRow, tweetsDF):
+def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF):
 	'''
 	class A : age, following rate
 
@@ -351,6 +365,8 @@ def get_single_user_yang_features(userRow, tweetsDF):
 		neighbors’ tweets, followings
 		to median neighbor’s followers
 	'''
+	userID = userRow['id']
+
 	features = {}
 
 	# Class A features
@@ -363,9 +379,9 @@ def get_single_user_yang_features(userRow, tweetsDF):
 	features[API_TWEET_SIMILARITY] 	= get_api_tweet_similarity(userRow)
 
 	# Class C features
-	features[BILINK_RATIO] 					= get_bilink_ratio(userRow)
-	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userRow)
-	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userRow)
+	features[BILINK_RATIO] 					= get_bilink_ratio(userID, friendsDF, followersDF)
+	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userID,friendsDF,followersDF)
+	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, userDF, tweetsDF)
 	features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
 
 	return features
@@ -394,7 +410,8 @@ def get_dataframes(datasetDirectory, featureSetName):
 		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv','friends' : 'friends.csv'}
 
 	elif(featureSetName == YANG):
-		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv'}
+		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv','friends': 'friends.csv'
+					,'followers': 'followers.csv'}
 
 	# We load the dataframes from the files specified above, in a dataframe dictionary
 	for key, filename in fileNames.items():
@@ -408,8 +425,8 @@ def get_dataframes(datasetDirectory, featureSetName):
 		except Exception as e:
 			print("Error while reading file "+totalPath)
 			print(e)
-		print(key)
-		print(dataframes[key].head(5))
+		
+		#print(dataframes[key].head(5))
 
 	return dataframes 
 
@@ -498,7 +515,12 @@ def get_friends_count(userRow):
 	return int(userRow['friends_count'])
 
 def get_friends_tweet_count(userRow,friendsDF,usersDF):
+	friends_id_list = get_friends_ids(userRow['id'],friendsDF)
+
+	friends_count = len(friends_id_list)
+
 	return 0
+
 
 def get_friends_to_followers_ratio(userRow):
 	return int(userRow['friends_count'])/int(userRow['followers_count'])
@@ -509,22 +531,28 @@ def get_stringhini_friends_to_followers_ratio(userRow):
 	return int(userRow['friends_count'])/(followers*followers)
 
 def has_50_followers(userRow):
-	return False
+	return int(userRow['followers_count'])>= 50
 
 def has_default_image(userRow):
-	return False
+	return userRow['default_profile_image']
 
 def has_no_bio(userRow):
-	return False
+	if(not userRow['description']):
+		return True
+	else:
+		return False
 
 def has_no_location(userRow):
-	return False
+	if(not userRow['location']):
+		return True
+	else:
+		return False
 
-def has_100_friends(userRow):
-	return False
+def has_100_friends(userID, friendsDF):
+	return get_friends_count(userID,friendsDF) >= 100
 
-def has_no_tweets(userRow):
-	return False
+def has_no_tweets(userID, tweetsDF):
+	return not has_tweets(userID, tweetsDF)
 
 
 # Class B features
@@ -631,6 +659,7 @@ def uses_different_clients(userRow,tweetsDF):
 def duplicate_sentences_across_accounts(userRow,tweetsDF):
 	return False
 
+# I don't know how i can know if connection from API or not
 def api_tweets(userRow):
 	return 0
 
@@ -644,12 +673,18 @@ def get_api_url_ratio(userRow):
 def get_api_tweet_similarity(userRow):
 	return 0
 
-def get_tweet_similarity(userRow,tweetsDF):
+def get_tweet_similarity(userID,tweetsDF):
 	return 0
 
 def get_url_ratio(userRow, tweetsDF):
 	'''ratio of tweets with a url'''
-	return 0
+	return get_tweets_with_url_ratio(userRow['id'],tweetsDF)
+
+def get_unique_friends_name_ratio(userID,usersDF,friendsDF):
+	friends_with_name = len(get_friends_with_name(userID, usersDF,friendsDF))
+	count_unique_names = count_unique_names(friends_with_name)
+
+	return friends_with_name/count_unique_names
 
 def has_duplicate_tweets(userRow, tweetsDF,duplicate_threshold):
 	return False
@@ -670,16 +705,18 @@ def has_tweet_links_ratio(userRow, tweetsDF, ratio_threshold):
 
 
 # Class C featrues
-def get_bilink_ratio(userRow):
+def get_bilink_ratio(userID, friendsDF, followersDF):
 	#Bi-directional link is when two account follow each other
 	return 0
 
-def get_average_neighbors_followers(userRow):
+def get_average_neighbors_followers(userID,friendsDF,followersDF):
 	#Average the number of followers of the friends of the user.
 	return 0
 
-def get_average_neighbors_tweets(userRow):
+def get_average_neighbors_tweets(userID, userDF, tweetsDF):
 	#Average the number of tweets of the friends of the user.
+	friends = get_friends_ids(userID, friendsDF)
+	avg_friends_tweets = get_avg_friends_tweets(friends,tweetsDF)
 	return 0
 
 def get_followings_to_median(userRow):
@@ -697,6 +734,7 @@ if(__name__ == "__main__"):
 
 	featureSetName = sys.argv[2]
 	dataframes = get_dataframes(directory,featureSetName)
+
 
 	print("OK, ca passe")
 	features 	= pd.DataFrame(get_features(featureSetName, dataframes))
