@@ -1,10 +1,12 @@
 import pandas as pd
 import sys
-import url_finder
 from datetime import datetime
 from dateutil.parser import parse
 import itertools
 import string
+from tweets import *
+from url_finder import *
+import math
 ###########
 # Class A #
 ###########
@@ -134,7 +136,7 @@ def get_camisani_features(dataframes):
 	limit = 1
 
 	for index, row in usersDF.iterrows():
-		camisaniFeatures.append(get_single_user_state_of_search_features(row,usersDF,tweetsDF))
+		camisaniFeatures.append(get_single_user_camisani_features(row,tweetsDF))
 
 		#Temporary code, for test purpose
 		if(limit > LIMIT):
@@ -144,7 +146,7 @@ def get_camisani_features(dataframes):
 
 	return camisaniFeatures
 
-def get_single_user_camisani_features(userRow, userDF, tweetsDF):
+def get_single_user_camisani_features(userRow, tweetsDF):
 	'''
 	Class A : has name, has image, has address, has bio, followers >= 30, belongs to a list, 
 	tweets >= 50, URL in profile, 2xfollowers >= friends
@@ -152,6 +154,8 @@ def get_single_user_camisani_features(userRow, userDF, tweetsDF):
 	Class B : geo, is favorite, uses punctuation, uses #, uses iphone, uses android, uses foursquare,
 	uses twitter.com, userId in tweet, retweet >= 1, uses different clients
 	'''
+
+	print(userRow['id'])
 	features = {}
 
 	# class A
@@ -161,24 +165,24 @@ def get_single_user_camisani_features(userRow, userDF, tweetsDF):
 	features[HAS_BIO] 			= has_bio(userRow)
 	features[HAS_30_FOLLOWERS] 	= has_30_followers(userRow)
 	features[BELONGS_TO_A_LIST] = belongs_to_a_list(userRow)
-	features[HAS_50_TWEETS] 	= has_50_tweets(userRow)
+	features[HAS_50_TWEETS] 	= has_50_tweets(userRow,tweetsDF)
 	features[URL_IN_PROFILE] 	= url_in_profile(userRow)
 	features[FOLLOWERS_TO_FRIENDS_RATIO_OVER_2] = followers_to_friends_ration_over_2(userRow)
 
 	# class B
-	features[GEOLOCALIZED] 				= geolocalized(userRow)
-	features[IS_FAVORITE] 				= is_favorite(userRow)
-	features[USES_PUNCTUATION] 			= uses_punctuation(userRow)
-	features[USES_HASHTAG] 				= uses_hashtag(userRow)
-	features[USES_IPHONE] 				= uses_iphone(userRow)
-	features[USES_ANDROID] 				= uses_android(userRow)
-	features[USES_FOURSQUARE] 			= uses_foursquare(userRow)
-	features[USES_INSTAGRAM] 			= uses_instagram(userRow)
-	features[USES_TWITTERDOTCOM] 		= uses_twitterdotcom(userRow)
-	features[USERID_IN_TWEET] 			= userid_in_tweet(userRow)
-	features[TWEETS_WITH_URL] 			= tweets_with_url(userRow)
-	features[RETWEET_OVER_1] 			= retweet_over_1(userRow)
-	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients(userRow)
+	features[GEOLOCALIZED] 				= geolocalized(userRow,tweetsDF)
+	features[IS_FAVORITE] 				= is_favorite(userRow,tweetsDF)
+	features[USES_PUNCTUATION] 			= uses_punctuation(userRow,tweetsDF)
+	features[USES_HASHTAG] 				= uses_hashtag(userRow,tweetsDF)
+	features[USES_IPHONE] 				= uses_iphone(userRow,tweetsDF)
+	features[USES_ANDROID] 				= uses_android(userRow,tweetsDF)
+	features[USES_FOURSQUARE] 			= uses_foursquare(userRow,tweetsDF)
+	features[USES_INSTAGRAM] 			= uses_instagram(userRow,tweetsDF)
+	features[USES_TWITTERDOTCOM] 		= uses_twitterdotcom(userRow,tweetsDF)
+	features[USERID_IN_TWEET] 			= userid_in_tweet(userRow,tweetsDF)
+	features[TWEETS_WITH_URL] 			= tweets_with_url(userRow,tweetsDF)
+	features[RETWEET_OVER_1] 			= retweet_over_1(userRow,tweetsDF)
+	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients(userRow,tweetsDF)
 
 	return features
 
@@ -203,7 +207,7 @@ def get_state_of_search_features(dataframes):
 	return stateofsearchFeatures
 
 
-def get_single_user_state_of_search_features(userRow, userDF, tweetsDF):
+def get_single_user_state_of_search_features(userRow, usersDF, tweetsDF):
 	'''
 	Class A : bot in biography, friends/followers > 100, duplicate profile pictures
 
@@ -215,11 +219,11 @@ def get_single_user_state_of_search_features(userRow, userDF, tweetsDF):
 	# class A
 	features[BOT_IN_BIO] 						= bot_in_bio(userRow)
 	features[FRIENDS_TO_FOLLOWERS_RATIO_IS_100] = friends_to_followers_ratio_is_100(userRow)
-	features[DUPLICATE_PROFILE_PICTURE] 		= duplicate_profile_picture(userRow)
+	features[DUPLICATE_PROFILE_PICTURE] 		= duplicate_profile_picture(userRow,usersDF)
 	
 	# class B
-	features[DUPLICATE_SENTENCES_ACROSS_ACCOUNTS] 	= duplicate_sentences_across_accounts(userRow)
-	features[API_TWEETS] 							= api_tweets(userRow)
+	features[DUPLICATE_SENTENCES_ACROSS_ACCOUNTS] 	= duplicate_sentences_across_accounts(userRow,tweetsDF)
+	features[API_TWEETS] 							= api_tweets(userRow,tweetsDF)
 
 
 	return features
@@ -404,7 +408,7 @@ def get_dataframes(datasetDirectory, featureSetName):
 		except Exception as e:
 			print("Error while reading file "+totalPath)
 			print(e)
-
+		print(key)
 		print(dataframes[key].head(5))
 
 	return dataframes 
@@ -434,21 +438,31 @@ def belongs_to_a_list(userRow):
 	return int(userRow['listed_count']) > 0
 
 def has_50_tweets(userRow,tweetsDF):
-	return get_tweets_count(userRow['id'],tweetsDF) > 50
+	return (get_tweets_count(int(userRow['id']),tweetsDF) > 50)
 
 def url_in_profile(userRow):
-	return has_url(userRow['description'])
+	res = False
+	if userRow['description'] != "" and has_url(userRow['description']):
+		res = True
+	#try:
+	#	if has_url(userRow['description']):
+	#	 	res = True
+	#except TypeError:
+	return res
 
 def followers_to_friends_ration_over_2(userRow):
-	return int(userRow['followers_count']/userRow['friends_count']) > 2
+	return int(userRow['followers_count'])/int(userRow['friends_count']) > 2
 
 def bot_in_bio(userRow):
 	# https://stackoverflow.com/questions/11144389/find-all-upper-lower-and-mixed-case-combinations-of-a-string
 	bot_list = map(''.join, itertools.product(*((c.upper(), c.lower()) for c in 'bot')))
 	res = False
 	for bot_combination in bot_list:
-		if bot_combination in userRow['description']:
-			res = True
+		try:
+			if bot_combination in userRow['description']:
+				res = True
+		except TypeError:
+			print(userRow['description'])
 	return res
 
 def friends_to_followers_ratio_is_100(userRow):
@@ -456,12 +470,15 @@ def friends_to_followers_ratio_is_100(userRow):
 
 	return get_friends_to_followers_ratio(userRow) >= threshold
 
-def duplicate_profile_picture(userRow):
+def duplicate_profile_picture(userRow,usersDF):
 	'''
-	TODO: pas sur de comment résoudre celui-ci...
-	Jme suis dit que je pourrais le faire en prenant la dernière partie 
-	du nom de l'image mais c'est généralement aléatoire pour les bots ... 
+	TODO: more research on possibilities
 	'''
+	res = False
+	for tweet_account in get_tweets_user(int(userRow['id']),tweetsDF):
+		for tweet_users in tweetsDF.iterrows():
+			if tweet_account[''] == tweet_users['']:
+					res = True
 	return False
 
 def get_account_age(userRow):
@@ -511,18 +528,38 @@ def has_no_tweets(userRow):
 
 
 # Class B features
-
-def geolocalized(userRow):
-	return userRow['geo_enabled'] == 1
-
-def is_favorite(userRow):
-	return userRow['favorites_count'] > 0
+'''
+TODO: Decide if the best method is with try:except: or the smart NaN check before ?
+'''
+def geolocalized(userRow,tweetsDF):
+	res = False
+	for tweet in get_tweets_user(int(userRow['id']),tweetsDF):
+		try:
+			if int(tweet['geo']) > 0:
+				res = True
+		except TypeError:
+			print(tweet['geo'])
+		except ValueError:
+			print(tweet['geo'])
+	return res
+	
+def is_favorite(userRow,tweetsDF):
+	res = False
+	for tweet in get_tweets_user(int(userRow['id']),tweetsDF):
+		if not math.isnan(tweet['favorite_count']) and int(tweet['favorite_count']) > 0:
+			res = True
+	return res
 
 def uses_punctuation(userRow,tweetsDF):
 	# https://mail.python.org/pipermail/tutor/2001-October/009454.html
-	bio_and_timeline = userRow['description']
-	bio_and_timeline+= get_tweets_strings(int(userRow['id']),tweetsDF)
+	bio_and_timeline = ""
+	try:
+		bio_and_timeline += userRow['description']
+	except TypeError:
+		print(userRow['description'])
+	bio_and_timeline += get_tweets_strings(int(userRow['id']),tweetsDF)
 	res = False
+
 	for letter in bio_and_timeline:
 		if letter in string.punctuation:
 			res = True
@@ -532,33 +569,66 @@ def uses_hashtag(userRow,tweetsDF):
 	return '#' in get_tweets_strings(int(userRow['id']),tweetsDF)
 
 def uses_iphone(userRow,tweetsDF):
-	return "iphone" in get_tweets_strings(int(userRow['id']),tweetsDF)
+	res = False
+	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
+
+	for tweet in all_tweets:
+		if "Iphone" in tweet['source']:
+			res = True
+	return res
 
 def uses_android(userRow,tweetsDF):
-	return "android" in get_tweets_strings(int(userRow['id']),tweetsDF)
+	res = False
+	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
+
+	for tweet in all_tweets:
+		if "Android" in tweet['source']:
+			res = True
+	return res
 
 def uses_foursquare(userRow,tweetsDF):
-	return "foursquare" in get_tweets_strings(int(userRow['id']),tweetsDF)
+	res = False
+	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
+
+	for tweet in all_tweets:
+		if "foursquare" in tweet['source']:
+			res = True
+	return res
 
 def uses_instagram(userRow,tweetsDF):
-	return "instagram" in get_tweets_strings(int(userRow['id']),tweetsDF)
+	res = False
+	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
+
+	for tweet in all_tweets:
+		if "Instagram" in tweet['source']:
+			res = True
+	return res
 
 def uses_twitterdotcom(userRow,tweetsDF):
-	return "twitter.com" in get_tweets_strings(int(userRow['id']),tweetsDF)
+	res = False
 
-def userid_in_tweet(userRow):
+	for tweet in get_tweets_user(int(userRow['id']),tweetsDF):
+		if "tweetbutton" in tweet['source']:
+			res = True
+	return res
+
+def userid_in_tweet(userRow,tweetsDF):
+	return str(userRow['id']) in get_tweets_strings(userRow['id'],tweetsDF)
+
+def tweets_with_url(userRow,tweetsDF):
+	return has_url(get_tweets_strings(userRow['id'],tweetsDF))
+
+def retweet_over_1(userRow,tweetsDF):
+	res = False
+	for tweet in get_tweets_user(int(userRow['id']),tweetsDF):
+		if int(tweet['retweet_count']) > 1:
+			res = True
 	return False
 
-def tweets_with_url(tweetsDF):
-	return 0
-
-def retweet_over_1(userRow):
+def uses_different_clients(userRow,tweetsDF):
 	return False
 
-def uses_different_clients(userRow):
-	return False
-
-def duplicate_sentences_across_accounts(userRow):
+def duplicate_sentences_across_accounts(userRow,tweetsDF):
 	return False
 
 def api_tweets(userRow):
@@ -620,7 +690,7 @@ def get_followings_to_median(userRow):
 
 '''
 To use (prototype) go to root directory:
-	command example : python3 src/features.py "data/E13" yang
+	command example : python3 src/features.py "data/E13/" yang
 '''
 if(__name__ == "__main__"):
 	directory = sys.argv[1]

@@ -7,7 +7,7 @@ def get_tweets_count(userID,tweetsDF):
 	'''
 	This will count the number of tweets done by a
 	'''
-	return len(get_tweets_user(user_id,tweetsDF))
+	return len(get_tweets_user(userID,tweetsDF))
 
 def get_tweets_user(userID,tweetsDF):
 	'''
