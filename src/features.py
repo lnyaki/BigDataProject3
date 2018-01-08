@@ -155,7 +155,6 @@ def get_single_user_camisani_features(userRow, tweetsDF):
 	uses twitter.com, userId in tweet, retweet >= 1, uses different clients
 	'''
 
-	print(userRow['id'])
 	features = {}
 
 	# class A
@@ -457,12 +456,15 @@ def bot_in_bio(userRow):
 	# https://stackoverflow.com/questions/11144389/find-all-upper-lower-and-mixed-case-combinations-of-a-string
 	bot_list = map(''.join, itertools.product(*((c.upper(), c.lower()) for c in 'bot')))
 	res = False
-	for bot_combination in bot_list:
-		try:
+	if userRow['description'] != "":
+		for bot_combination in bot_list:
 			if bot_combination in userRow['description']:
 				res = True
-		except TypeError:
-			print(userRow['description'])
+		#try:
+		#	if bot_combination in userRow['description']:
+		#		res = True
+		#except TypeError:
+		#	print(userRow['description'])
 	return res
 
 def friends_to_followers_ratio_is_100(userRow):
@@ -534,13 +536,15 @@ TODO: Decide if the best method is with try:except: or the smart NaN check befor
 def geolocalized(userRow,tweetsDF):
 	res = False
 	for tweet in get_tweets_user(int(userRow['id']),tweetsDF):
-		try:
-			if int(tweet['geo']) > 0:
-				res = True
-		except TypeError:
-			print(tweet['geo'])
-		except ValueError:
-			print(tweet['geo'])
+		if not math.isnan(tweet['geo']) and int(tweet['geo']) > 0:
+			res = True
+		#try:
+		#	if int(tweet['geo']) > 0:
+		#		res = True
+		#except TypeError:
+		#	print(tweet['geo'])
+		#except ValueError:
+		#	print(tweet['geo'])
 	return res
 	
 def is_favorite(userRow,tweetsDF):
@@ -553,10 +557,12 @@ def is_favorite(userRow,tweetsDF):
 def uses_punctuation(userRow,tweetsDF):
 	# https://mail.python.org/pipermail/tutor/2001-October/009454.html
 	bio_and_timeline = ""
-	try:
+	if isinstance(userRow['description'], str):
 		bio_and_timeline += userRow['description']
-	except TypeError:
-		print(userRow['description'])
+	#try:
+	#	bio_and_timeline += userRow['description']
+	#except TypeError:
+	#	print(userRow['description'])
 	bio_and_timeline += get_tweets_strings(int(userRow['id']),tweetsDF)
 	res = False
 
