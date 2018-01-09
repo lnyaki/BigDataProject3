@@ -36,6 +36,7 @@ def get_avg_friends_tweets(friendsIDlist,tweetsDF):
 
 	return total_tweet_count/friends_count
 
+
 def get_tweets_strings(userID,tweetsDF):
 	'''
 	Searches for a user's tweets and saves all the text from

@@ -434,19 +434,19 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweet
 	features = {}
 
 	# Class A features
-	features[ACCOUNT_AGE] 		= get_account_age(userRow)
-	features[FOLLOWING_RATE] 	= get_following_rate(userRow)
+	#features[ACCOUNT_AGE] 		= get_account_age(userRow)
+	#features[FOLLOWING_RATE] 	= get_following_rate(userRow)
 
 	# Class B features
-	features[API_RATIO] 			= get_api_ratio(userRow)
-	features[API_URL_RATIO] 		= get_api_url_ratio(userRow)
-	features[API_TWEET_SIMILARITY] 	= get_api_tweet_similarity(userRow)
+	#features[API_RATIO] 			= get_api_ratio(userRow)
+	#features[API_URL_RATIO] 		= get_api_url_ratio(userRow)
+	#features[API_TWEET_SIMILARITY] 	= get_api_tweet_similarity(userRow)
 
 	# Class C features
-	features[BILINK_RATIO] 					= get_bilink_ratio(userID, friendsDF, followersDF)
-	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userID,friendsDF,followersDF)
-	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, usersDF,friendsDF, tweetsDF)
-	features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
+	#features[BILINK_RATIO] 					= get_bilink_ratio(userID, friendsDF, followersDF)
+	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userID,friendsDF,usersDF)
+	#features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, usersDF,friendsDF, tweetsDF)
+	#features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
 
 	return features
 
@@ -781,9 +781,11 @@ def get_bilink_ratio(userID, friendsDF, followersDF):
 	#Bi-directional link is when two account follow each other
 	return 0
 
-def get_average_neighbors_followers(userID,friendsDF,followersDF):
+def get_average_neighbors_followers(userID,friendsDF,usersDF):
 	#Average the number of followers of the friends of the user.
-	return 0
+	friends = get_friends_ids(userID, friendsDF)
+
+	return get_avg_neighbors_followers(friends,usersDF)
 
 def get_average_neighbors_tweets(userID, userDF, friendsDF, tweetsDF):
 	#Average the number of tweets of the friends of the user.

@@ -33,3 +33,29 @@ def count_unique_names(friendsDF):
 			unique_count = unique_count +1
 
 	return unique_count
+
+def get_avg_neighbors_followers(friendsIDlist,usersDF):
+	friends_count 			= len(friendsIDlist)
+	total_followers_count 	= 0
+
+	userOK = 0
+	userKO = 0
+
+	for friendID in friendsIDlist:
+		singleUserDF 	= usersDF[usersDF['id']== friendID]
+		followers_count = 0
+
+		if(singleUserDF.empty):
+			userKO = userKO +1
+
+		else:
+			userOK = userOK +1
+			
+			total_followers_count = total_followers_count+ int(singleUserDF['followers_count'])
+
+	"Total friends : {}, friends found : {}, missing friends :{}".format(friends_count,userOK,userKO)
+
+	if(userOK == 0):
+		return 0
+	else:
+		return total_followers_count/userOK
