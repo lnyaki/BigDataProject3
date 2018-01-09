@@ -78,6 +78,7 @@ HIGH_TWEET_LINK_RATIO	= 'high_tweet_link_ratio'
 # Strinhini et al.
 TWEET_SIMILARITY 	= 'tweet_similarity'
 URL_RATIO 			= 'url_ratio'
+UNIQUE_FRIENDS_NAME_RATIO = 'unique_friends_name'
 
 # Yang et al.
 API_RATIO 				= 'api_ratio'
@@ -292,6 +293,7 @@ def get_stringhini_features(dataframes):
 	limit = 1
 
 	for index, row in usersDF.iterrows():
+		time("User "+str(limit))
 		stringhiniFeatures.append(get_single_user_stringhini_features(row,usersDF, friendsDF,tweetsDF))
 
 		#Temporary code, for test purpose
@@ -318,14 +320,14 @@ def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
 	features = {}
 
 	# Class A
-	#features[NUMBER_OF_FRIENDS] 			= get_friends_count(userRow)
-	#features[NUMBER_OF_FRIENDS_TWEETS] 		= get_friends_tweet_count(userRow,friendsDF,usersDF)
-	#features[FRIENDS_TO_FOLLOWERS_RATIO] 	= get_stringhini_friends_to_followers_ratio(userRow)
+	features[NUMBER_OF_FRIENDS] 			= get_friends_count(userRow)
+	features[FRIENDS_TO_FOLLOWERS_RATIO] 	= get_stringhini_friends_to_followers_ratio(userRow)
 
 	# Class B
-	##features[NUMBER_OF_TWEETS_SENT]	= get_tweets_count(userID,tweetsDF)
+	features[NUMBER_OF_TWEETS_SENT]	= get_tweets_count(userID,tweetsDF)
+	
 	#features[TWEET_SIMILARITY] 	= get_tweet_similarity(userRow,tweetsDF)	#comment calculer?
-	#features[URL_RATIO] 		= get_url_ratio(userRow, tweetsDF)
+	features[URL_RATIO] 		= get_url_ratio(userRow, tweetsDF)
 	features[UNIQUE_FRIENDS_NAME_RATIO] = get_unique_friends_name_ratio(userID,usersDF,friendsDF) 
 
 	return features
@@ -415,11 +417,11 @@ def get_dataframes(datasetDirectory, featureSetName):
 	# We load the dataframes from the files specified above, in a dataframe dictionary
 	for key, filename in fileNames.items():
 		totalPath = datasetDirectory + '/'+ filename
-
+		time("\tLoading datasets")
 		print("Loading "+ totalPath)
 
 		try:
-			dataframes[key] = pd.read_csv(totalPath, encoding='latin-1')
+			dataframes[key] = pd.read_csv(totalPath, encoding='latin-1').fillna('')
 
 		except Exception as e:
 			print("Error while reading file "+totalPath)
@@ -687,10 +689,14 @@ def get_url_ratio(userRow, tweetsDF):
 	return get_tweets_with_url_ratio(userRow['id'],tweetsDF)
 
 def get_unique_friends_name_ratio(userID,usersDF,friendsDF):
-	friends_with_name = len(get_friends_with_name(userID, usersDF,friendsDF))
-	count_unique_names = count_unique_names(friends_with_name)
+	friends_with_name = get_friends_with_initialized_name(userID, usersDF,friendsDF)
+	unique_names_count = count_unique_names(friends_with_name)
 
-	return friends_with_name/count_unique_names
+	#avoid division by zero, so we return a big number
+	if(unique_names_count == 0):
+		return sys.maxsize
+
+	return len(friends_with_name)/unique_names_count
 
 def has_duplicate_tweets(userRow, tweetsDF,duplicate_threshold):
 	return False
@@ -731,6 +737,8 @@ def get_followings_to_median(userRow):
 	'''
 	return 0
 
+def time(message):
+	print(datetime.now().strftime('%H:%M:%S')+' '+message )
 '''
 To use (prototype) go to root directory:
 	command example : python3 src/features.py "data/E13/" yang
@@ -742,8 +750,8 @@ if(__name__ == "__main__"):
 	dataframes = get_dataframes(directory,featureSetName)
 
 
-	print("OK, ca passe")
+	time("OK, ca passe")
 	features 	= pd.DataFrame(get_features(featureSetName, dataframes))
 
-	print("Features : ")
+	time("Features : ")
 	print(features)
