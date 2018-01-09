@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 import url_finder
 import pandas as pd
+=======
+import pandas as pd
+import numpy as np
+from time import *
+
+>>>>>>> 7fb20dc0edd463d6a9b488ab195070fc13d613ba
 '''
 In this module, we process tweets, iterate and extract data from them.
 '''
@@ -26,7 +33,11 @@ def count_user_tweets(userID, tweetsDF):
 
 
 def get_avg_friends_tweets(friends,tweetsDF):
-	pass
+	t0 = time()
+	user_id = tweetsDF['user_id'] == userID
+	res = tweetsDF[user_id]
+	print ("tweet user:", round(time()-t0, 3), "s")
+	return res
 
 
 def get_tweets_strings(userID,tweetsDF):
@@ -34,10 +45,19 @@ def get_tweets_strings(userID,tweetsDF):
 	Searches for a user's tweets and saves all the text from
 	the tweets in 1 string
 	'''
-	tweetsString = ""
-	for tweet in get_tweets_user(userID,tweetsDF):
-		tweetsString+= tweet['text']
-	return tweetsString
+	t0 = time()
+	#tweetsString = ""
+	tweets_user = get_tweets_user(userID,tweetsDF)
+	res = tweets_user['text'].str.cat()
+	#for tweet in tweets_user.iterrows():
+	#	if isinstance(tweet[1]['text'],str):
+	#		tweetsString+= tweet[1]['text']
+	#print ("tweet strings normal:", round(time()-t0, 3), "s")
+	#t1 = time()
+	#print(len(tweets_user['text'].str.cat()))
+	#print(get_tweets_count(userID,tweetsDF))
+	print ("tweet strings optimized:", round(time()-t0, 3), "s")
+	return res
 
 
 def get_tweets_with_url_ratio(userID, tweetsDF):
