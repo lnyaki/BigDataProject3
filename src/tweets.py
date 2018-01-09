@@ -1,12 +1,7 @@
-<<<<<<< HEAD
 import url_finder
-import pandas as pd
-=======
 import pandas as pd
 import numpy as np
 from time import *
-
->>>>>>> 7fb20dc0edd463d6a9b488ab195070fc13d613ba
 '''
 In this module, we process tweets, iterate and extract data from them.
 '''
