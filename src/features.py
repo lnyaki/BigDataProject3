@@ -7,6 +7,7 @@ import string
 from tweets import *
 from url_finder import *
 import math
+from time import time
 ###########
 # Class A #
 ###########
@@ -158,30 +159,78 @@ def get_single_user_camisani_features(userRow, tweetsDF):
 	features = {}
 
 	# class A
+	t0 = time()
+	t2 = time()
 	features[HAS_NAME] 			= has_name(userRow)
+	print ("class A.1 camisani:", round(time()-t2, 3), "s")
+	t3 = time()
 	features[HAS_IMAGE] 		= has_image(userRow)
+	print ("class A.2 camisani:", round(time()-t3, 3), "s")
+	t4 = time()
 	features[HAS_ADDRESS] 		= has_address(userRow)
+	print ("class A.3 camisani:", round(time()-t4, 3), "s")
+	t5 = time()
 	features[HAS_BIO] 			= has_bio(userRow)
+	print ("class A.4 camisani:", round(time()-t5, 3), "s")
+	t6 = time()
 	features[HAS_30_FOLLOWERS] 	= has_30_followers(userRow)
+	print ("class A.5 camisani:", round(time()-t6, 3), "s")
+	t7 = time()
 	features[BELONGS_TO_A_LIST] = belongs_to_a_list(userRow)
-	features[HAS_50_TWEETS] 	= has_50_tweets(userRow,tweetsDF)
+	print ("class A.6 camisani:", round(time()-t7, 3), "s")
+	t8 = time()
+	features[HAS_50_TWEETS] 	= has_50_tweets(userRow)
+	print ("class A.7 camisani:", round(time()-t8, 3), "s")
+	t9 = time()
 	features[URL_IN_PROFILE] 	= url_in_profile(userRow)
+	print ("class A.8 camisani:", round(time()-t9, 3), "s")
+	t10 = time()
 	features[FOLLOWERS_TO_FRIENDS_RATIO_OVER_2] = followers_to_friends_ration_over_2(userRow)
+	print ("class A.9 camisani:", round(time()-t10, 3), "s")
+	print ("class A camisani:", round(time()-t0, 3), "s")
 
 	# class B
+	t1 = time()
+	t10 = time()
 	features[GEOLOCALIZED] 				= geolocalized(userRow,tweetsDF)
+	print ("class B.1 camisani:", round(time()-t10, 3), "s")
+	t11 = time()
 	features[IS_FAVORITE] 				= is_favorite(userRow,tweetsDF)
+	print ("class B.2 camisani:", round(time()-t11, 3), "s")
+	t12 = time()
 	features[USES_PUNCTUATION] 			= uses_punctuation(userRow,tweetsDF)
+	print ("class B.3 camisani:", round(time()-t12, 3), "s")
+	t13 = time()
 	features[USES_HASHTAG] 				= uses_hashtag(userRow,tweetsDF)
+	print ("class B.4 camisani:", round(time()-t13, 3), "s")
+	t14 = time()
 	features[USES_IPHONE] 				= uses_iphone(userRow,tweetsDF)
+	print ("class B.5 camisani:", round(time()-t14, 3), "s")
+	t15 = time()
 	features[USES_ANDROID] 				= uses_android(userRow,tweetsDF)
+	print ("class B.6 camisani:", round(time()-t15, 3), "s")
+	t16 = time()
 	features[USES_FOURSQUARE] 			= uses_foursquare(userRow,tweetsDF)
+	print ("class B.7 camisani:", round(time()-t16, 3), "s")
+	t17 = time()
 	features[USES_INSTAGRAM] 			= uses_instagram(userRow,tweetsDF)
+	print ("class B.8 camisani:", round(time()-t17, 3), "s")
+	t18 = time()
 	features[USES_TWITTERDOTCOM] 		= uses_twitterdotcom(userRow,tweetsDF)
+	print ("class B.9 camisani:", round(time()-t18, 3), "s")
+	t19 = time()
 	features[USERID_IN_TWEET] 			= userid_in_tweet(userRow,tweetsDF)
+	print ("class B.10 camisani:", round(time()-t19, 3), "s")
+	t20 = time()
 	features[TWEETS_WITH_URL] 			= tweets_with_url(userRow,tweetsDF)
+	print ("class B.11 camisani:", round(time()-t20, 3), "s")
+	t21 = time()
 	features[RETWEET_OVER_1] 			= retweet_over_1(userRow,tweetsDF)
+	print ("class B.12 camisani:", round(time()-t21, 3), "s")
+	t22 = time()
 	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients(userRow,tweetsDF)
+	print ("class B.13 camisani:", round(time()-t22, 3), "s")
+	print ("class B camisani:", round(time()-t1, 3), "s")
 
 	return features
 
@@ -216,14 +265,25 @@ def get_single_user_state_of_search_features(userRow, usersDF, tweetsDF):
 	features = {}
 
 	# class A
+	t0 = time()
+	t1 = time()
 	features[BOT_IN_BIO] 						= bot_in_bio(userRow)
+	print ("class A.1 stateofsearch:", round(time()-t1, 3), "s")
+	t2 = time()
 	features[FRIENDS_TO_FOLLOWERS_RATIO_IS_100] = friends_to_followers_ratio_is_100(userRow)
+	print ("class A.2 stateofsearch:", round(time()-t2, 3), "s")
+	t3 = time()
 	features[DUPLICATE_PROFILE_PICTURE] 		= duplicate_profile_picture(userRow,usersDF)
+	print ("class A.3 stateofsearch:", round(time()-t3, 3), "s")
 	
 	# class B
+	t4 = time()
 	features[DUPLICATE_SENTENCES_ACROSS_ACCOUNTS] 	= duplicate_sentences_across_accounts(userRow,tweetsDF)
+	print ("class B.1 stateofsearch:", round(time()-t4, 3), "s")
+	t5 = time()
 	features[API_TWEETS] 							= api_tweets(userRow,tweetsDF)
-
+	print ("class B.2 stateofsearch:", round(time()-t5, 3), "s")
+	print ("class B stateofsearch:", round(time()-t0, 3), "s")
 
 	return features
 
@@ -408,7 +468,11 @@ def get_dataframes(datasetDirectory, featureSetName):
 			print("Error while reading file "+totalPath)
 			print(e)
 		print(key)
-		print(dataframes[key].head(5))
+		try:
+			print(dataframes[key].head(5))
+		except UnicodeEncodeError:
+			pass
+		#print(dataframes[key].head(5))
 
 	return dataframes 
 
@@ -436,17 +500,13 @@ def has_30_followers(userRow):
 def belongs_to_a_list(userRow):
 	return int(userRow['listed_count']) > 0
 
-def has_50_tweets(userRow,tweetsDF):
-	return (get_tweets_count(int(userRow['id']),tweetsDF) > 50)
+def has_50_tweets(userRow):
+	return userRow['statuses_count'] > 50
 
 def url_in_profile(userRow):
 	res = False
-	if userRow['description'] != "" and has_url(userRow['description']):
+	if isinstance(userRow['description'], str) and has_url(userRow['description']):
 		res = True
-	#try:
-	#	if has_url(userRow['description']):
-	#	 	res = True
-	#except TypeError:
 	return res
 
 def followers_to_friends_ration_over_2(userRow):
@@ -456,15 +516,10 @@ def bot_in_bio(userRow):
 	# https://stackoverflow.com/questions/11144389/find-all-upper-lower-and-mixed-case-combinations-of-a-string
 	bot_list = map(''.join, itertools.product(*((c.upper(), c.lower()) for c in 'bot')))
 	res = False
-	if userRow['description'] != "":
+	if isinstance(userRow['description'],str):
 		for bot_combination in bot_list:
 			if bot_combination in userRow['description']:
 				res = True
-		#try:
-		#	if bot_combination in userRow['description']:
-		#		res = True
-		#except TypeError:
-		#	print(userRow['description'])
 	return res
 
 def friends_to_followers_ratio_is_100(userRow):
@@ -530,42 +585,26 @@ def has_no_tweets(userRow):
 
 
 # Class B features
-'''
-TODO: Decide if the best method is with try:except: or the smart NaN check before ?
-'''
 def geolocalized(userRow,tweetsDF):
-	res = False
-	for tweet in get_tweets_user(int(userRow['id']),tweetsDF):
-		if not math.isnan(tweet['geo']) and int(tweet['geo']) > 0:
-			res = True
-		#try:
-		#	if int(tweet['geo']) > 0:
-		#		res = True
-		#except TypeError:
-		#	print(tweet['geo'])
-		#except ValueError:
-		#	print(tweet['geo'])
-	return res
+	#res = False
+	tweets = get_tweets_user(int(userRow['id']),tweetsDF)
+	#print(tweets['geo'])
+	#print(not math.isnan(tweets['geo']))
+	print(type(tweets['geo']))
+	geo = tweets['geo'] > 0
+	print(tweets[geo])
+	return False
 	
 def is_favorite(userRow,tweetsDF):
-	res = False
-	for tweet in get_tweets_user(int(userRow['id']),tweetsDF):
-		if not math.isnan(tweet['favorite_count']) and int(tweet['favorite_count']) > 0:
-			res = True
-	return res
+	tweets = get_tweets_user(int(userRow['id']),tweetsDF)
 
 def uses_punctuation(userRow,tweetsDF):
 	# https://mail.python.org/pipermail/tutor/2001-October/009454.html
 	bio_and_timeline = ""
 	if isinstance(userRow['description'], str):
 		bio_and_timeline += userRow['description']
-	#try:
-	#	bio_and_timeline += userRow['description']
-	#except TypeError:
-	#	print(userRow['description'])
 	bio_and_timeline += get_tweets_strings(int(userRow['id']),tweetsDF)
 	res = False
-
 	for letter in bio_and_timeline:
 		if letter in string.punctuation:
 			res = True
@@ -575,47 +614,62 @@ def uses_hashtag(userRow,tweetsDF):
 	return '#' in get_tweets_strings(int(userRow['id']),tweetsDF)
 
 def uses_iphone(userRow,tweetsDF):
-	res = False
+	#res = False
+	#t0 = time()
 	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
-
-	for tweet in all_tweets:
-		if "Iphone" in tweet['source']:
-			res = True
+	#print(type(all_tweets['source']))
+	#print(all_tweets['source'])
+	#print ("iphone.1:", round(time()-t0, 3), "s")
+	#t1 = time()
+	#for tweet in all_tweets.iterrows():
+	#	if "Iphone" in tweet[1]['source']:
+	#		res = True
+	#print ("iphone.2:", round(time()-t1, 3), "s")
+	t2 = time()
+	#print(type(all_tweets['source'].str.cat()))
+	#print(len(all_tweets['source'].str.cat()))
+	res = "Iphone" in all_tweets['source'].str.cat()
+	print ("optimized iphone:", round(time()-t2, 3), "s")
 	return res
 
 def uses_android(userRow,tweetsDF):
-	res = False
+	#res = False
 	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
 
-	for tweet in all_tweets:
-		if "Android" in tweet['source']:
-			res = True
+	#for tweet in all_tweets.iterrows():
+	#	if "Android" in tweet[1]['source']:
+	#		res = True
+	res = "Android" in all_tweets['source'].str.cat()
 	return res
 
 def uses_foursquare(userRow,tweetsDF):
-	res = False
+	#res = False
 	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
 
-	for tweet in all_tweets:
-		if "foursquare" in tweet['source']:
-			res = True
+	#for tweet in all_tweets.iterrows():
+	#	if "foursquare" in tweet[1]['source']:
+	#		res = True
+	res = "foursquare" in all_tweets['source'].str.cat()
 	return res
 
 def uses_instagram(userRow,tweetsDF):
-	res = False
+	#res = False
 	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
 
-	for tweet in all_tweets:
-		if "Instagram" in tweet['source']:
-			res = True
+	#for tweet in all_tweets.iterrows():
+	#	if "Instagram" in tweet[1]['source']:
+	#		res = True
+	res = "Instagram" in all_tweets['source'].str.cat()
 	return res
 
 def uses_twitterdotcom(userRow,tweetsDF):
-	res = False
+	#res = False
+	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
 
-	for tweet in get_tweets_user(int(userRow['id']),tweetsDF):
-		if "tweetbutton" in tweet['source']:
-			res = True
+	#for tweet in all_tweets.iterrows():
+	#	if "web" in tweet[1]['source']:
+	#		res = True
+	res = "web" in all_tweets['source'].str.cat()
 	return res
 
 def userid_in_tweet(userRow,tweetsDF):
@@ -625,11 +679,12 @@ def tweets_with_url(userRow,tweetsDF):
 	return has_url(get_tweets_strings(userRow['id'],tweetsDF))
 
 def retweet_over_1(userRow,tweetsDF):
-	res = False
-	for tweet in get_tweets_user(int(userRow['id']),tweetsDF):
-		if int(tweet['retweet_count']) > 1:
-			res = True
-	return False
+	#res = False
+	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
+	#for tweet in all_tweets.iterrows():
+	#	if int(tweet[1]['retweet_count']) > 1:
+	#		res = True
+	return (all_tweets['retweet_count'] > 1).any()
 
 def uses_different_clients(userRow,tweetsDF):
 	return False
