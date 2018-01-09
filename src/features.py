@@ -129,6 +129,45 @@ def get_features(featureSetName, dataframes):
 
 	return features
 
+def get_class_A_features():
+	#Class A features = profile-based features
+
+	#Camisani class A
+	features = {}
+	features[HAS_NAME] 			= has_name(userRow)
+	features[HAS_IMAGE] 		= has_image(userRow)
+	features[HAS_ADDRESS] 		= has_address(userRow)
+	features[HAS_BIO] 			= has_bio(userRow)
+	features[HAS_30_FOLLOWERS] 	= has_30_followers(userRow)
+	features[BELONGS_TO_A_LIST] = belongs_to_a_list(userRow)
+	features[HAS_50_TWEETS] 	= has_50_tweets(userRow)
+	features[URL_IN_PROFILE] 	= url_in_profile(userRow)
+	features[FOLLOWERS_TO_FRIENDS_RATIO_OVER_2] = followers_to_friends_ration_over_2(userRow)
+
+	#State of search class A
+	features[BOT_IN_BIO] 						= bot_in_bio(userRow)
+	features[FRIENDS_TO_FOLLOWERS_RATIO_IS_100] = friends_to_followers_ratio_is_100(userRow)
+	features[DUPLICATE_PROFILE_PICTURE] 		= duplicate_profile_picture(userRow,usersDF)
+
+	#Social bakers class A
+	features[HAS_50_FOLLOWERS] 	= has_50_followers(userRow)
+	features[HAS_DEFAULT_IMAGE] = has_default_image(userRow)
+	#features[HAS_NO_BIO] 		= has_no_bio(userRow) #Same as has_bio from camisani
+	features[HAS_NO_LOCATION] 	= has_no_location(userRow)
+	features[HAS_100_FRIENDS] 	= has_100_friends(userID, friendsDF)
+	features[HAS_NO_TWEETS] 	= has_no_tweets(userID, tweetsDF)
+	
+	#Stringhini class A
+	features[NUMBER_OF_FRIENDS] 			= get_friends_count(userRow)
+	features[FRIENDS_TO_FOLLOWERS_RATIO] 	= get_stringhini_friends_to_followers_ratio(userRow)
+
+	#Yang class A
+	features[ACCOUNT_AGE] 		= get_account_age(userRow)
+
+	return features 
+	
+def get_class_C_features():
+	#Class C features = all features
 
 def get_camisani_features(dataframes):
 	camisaniFeatures = []
@@ -435,7 +474,7 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweet
 
 	# Class A features
 	features[ACCOUNT_AGE] 		= get_account_age(userRow)
-	features[FOLLOWING_RATE] 	= get_following_rate(userRow)
+	#features[FOLLOWING_RATE] 	= get_following_rate(userRow) # What is following rate?
 
 	# Class B features
 	#features[API_RATIO] 			= get_api_ratio(userRow)
