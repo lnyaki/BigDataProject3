@@ -434,8 +434,8 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweet
 	features = {}
 
 	# Class A features
-	#features[ACCOUNT_AGE] 		= get_account_age(userRow)
-	#features[FOLLOWING_RATE] 	= get_following_rate(userRow)
+	features[ACCOUNT_AGE] 		= get_account_age(userRow)
+	features[FOLLOWING_RATE] 	= get_following_rate(userRow)
 
 	# Class B features
 	#features[API_RATIO] 			= get_api_ratio(userRow)
@@ -443,9 +443,9 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweet
 	#features[API_TWEET_SIMILARITY] 	= get_api_tweet_similarity(userRow)
 
 	# Class C features
-	#features[BILINK_RATIO] 					= get_bilink_ratio(userID, friendsDF, followersDF)
+	#features[BILINK_RATIO] 					= get_bilink_ratio(userRow, friendsDF, followersDF)
 	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userID,friendsDF,usersDF)
-	#features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, usersDF,friendsDF, tweetsDF)
+	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, usersDF,friendsDF, tweetsDF)
 	#features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
 
 	return features
@@ -564,7 +564,9 @@ def duplicate_profile_picture(userRow,usersDF):
 
 def get_account_age(userRow):
 	# Date format : Thu Apr 06 15:24:15 +0000 2017
-	account_creation = datetime.strptime(userRow['created_at'],'%a %b %d %H:%M:%S %z %Y')
+	creation_date = userRow['created_at']
+	print("Creation Date "+creation_date)
+	account_creation = datetime.strptime(creation_date,'%a %b %d %H:%M:%S %z %Y')
 	#Two lines below, to prevent error : can't subtract offset-naive and offset-aware datetimes
 	# Solution from https://stackoverflow.com/questions/796008/cant-subtract-offset-naive-and-offset-aware-datetimes
 	timezone = account_creation.tzinfo
@@ -573,6 +575,13 @@ def get_account_age(userRow):
 	return (today - account_creation).days
 
 def get_following_rate(userRow):
+	'''
+	following rate: this metric reflects the speed at which an
+	accounts follows other accounts. Spammers usually feature high
+	values of this rate.
+	'''
+
+	#how to calculate that?
 	return 0
 
 def get_friends_count(userRow):
@@ -777,9 +786,20 @@ def has_tweet_links_ratio(userRow, tweetsDF, ratio_threshold):
 
 
 # Class C featrues
-def get_bilink_ratio(userID, friendsDF, followersDF):
+def get_bilink_ratio(userRow, friendsDF, followersDF):
+	userID = userRow['id']
+	friends_count = userRow['friends_count']
 	#Bi-directional link is when two account follow each other
-	return 0
+	friends = get_friends_ids(userID,friendsDF)
+
+	followersSeries = get_follower_ids(userID,followersDF)
+
+	bilinkList = followersSeries.isin(friends).tolist()
+
+	bilink_count = len(bilinkList)
+	print("===== User ID = "+str(userID))
+	print("[Bilink count : {}][Official Friends count : {}][Official Followers count :  {}], [followers actually found : {} ]".format(bilink_count,friends_count,userRow['followers_count'], len(followersSeries)))
+	return bilink_count/friends_count
 
 def get_average_neighbors_followers(userID,friendsDF,usersDF):
 	#Average the number of followers of the friends of the user.

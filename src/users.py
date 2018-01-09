@@ -10,6 +10,11 @@ def get_average_followers_count(userID, usersDF):
 def get_friends_ids(userID, friendsDF):
 	return friendsDF['target_id'][friendsDF['source_id'] == userID].tolist()
 
+def get_follower_ids(userID, followersDF):
+	#source = follower, target = user
+	return followersDF['source_id'][followersDF['target_id'] == userID]
+	#return followersDF['target_id'][followersDF['source_id'] == userID]
+
 def get_friends_count(userID,friendsDF):
 	return friendsDF[friendsDF['source_id'] == userID].count()
 
@@ -53,9 +58,11 @@ def get_avg_neighbors_followers(friendsIDlist,usersDF):
 			
 			total_followers_count = total_followers_count+ int(singleUserDF['followers_count'])
 
-	"Total friends : {}, friends found : {}, missing friends :{}".format(friends_count,userOK,userKO)
+	print("[Total friends : {}], [friends found : {}], [missing friends :{}]".format(friends_count,userOK,userKO))
 
 	if(userOK == 0):
 		return 0
 	else:
 		return total_followers_count/userOK
+
+
