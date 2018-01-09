@@ -354,7 +354,7 @@ def get_stringhini_features(dataframes):
 	limit = 1
 
 	for index, row in usersDF.iterrows():
-		time("User "+str(limit))
+		timelog("User "+str(limit))
 		stringhiniFeatures.append(get_single_user_stringhini_features(row,usersDF, friendsDF,tweetsDF))
 
 		#Temporary code, for test purpose
@@ -405,8 +405,10 @@ def get_yang_features(dataframes):
 	limit = 1
 
 	for index, row in usersDF.iterrows():
-		yangFeatures.append(get_single_user_yang_features(row, usersDF,friendsDF,followersDF))
+		yangFeatures.append(get_single_user_yang_features(row, usersDF,friendsDF,followersDF,tweetsDF))
 
+		timelog("User "+str(limit))
+		
 		#Temporary code, for test purpose
 		if(limit > LIMIT):
 			break
@@ -416,7 +418,7 @@ def get_yang_features(dataframes):
 	return yangFeatures
 
 
-def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF):
+def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweetsDF):
 	'''
 	class A : age, following rate
 
@@ -443,7 +445,7 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF):
 	# Class C features
 	features[BILINK_RATIO] 					= get_bilink_ratio(userID, friendsDF, followersDF)
 	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userID,friendsDF,followersDF)
-	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, userDF, tweetsDF)
+	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, usersDF,friendsDF, tweetsDF)
 	features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
 
 	return features
@@ -478,7 +480,7 @@ def get_dataframes(datasetDirectory, featureSetName):
 	# We load the dataframes from the files specified above, in a dataframe dictionary
 	for key, filename in fileNames.items():
 		totalPath = datasetDirectory + '/'+ filename
-		time("\tLoading datasets")
+		timelog("\tLoading datasets")
 		print("Loading "+ totalPath)
 
 		try:
@@ -783,11 +785,11 @@ def get_average_neighbors_followers(userID,friendsDF,followersDF):
 	#Average the number of followers of the friends of the user.
 	return 0
 
-def get_average_neighbors_tweets(userID, userDF, tweetsDF):
+def get_average_neighbors_tweets(userID, userDF, friendsDF, tweetsDF):
 	#Average the number of tweets of the friends of the user.
 	friends = get_friends_ids(userID, friendsDF)
-	avg_friends_tweets = get_avg_friends_tweets(friends,tweetsDF)
-	return 0
+	return get_avg_friends_tweets(friends,tweetsDF)
+	
 
 def get_followings_to_median(userRow):
 	'''
@@ -795,7 +797,7 @@ def get_followings_to_median(userRow):
 	'''
 	return 0
 
-def time(message):
+def timelog(message):
 	print(datetime.now().strftime('%H:%M:%S')+' '+message )
 '''
 To use (prototype) go to root directory:
@@ -808,8 +810,8 @@ if(__name__ == "__main__"):
 	dataframes = get_dataframes(directory,featureSetName)
 
 
-	time("OK, ca passe")
+	timelog("OK, ca passe")
 	features 	= pd.DataFrame(get_features(featureSetName, dataframes))
 
-	time("Features : ")
+	timelog("Features : ")
 	print(features)
