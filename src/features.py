@@ -129,7 +129,7 @@ def get_features(featureSetName, dataframes):
 
 	return features
 
-def get_class_A_features():
+def get_class_A_features(dataframes):
 	#Class A features = profile-based features
 
 	#Camisani class A
@@ -165,9 +165,53 @@ def get_class_A_features():
 	features[ACCOUNT_AGE] 		= get_account_age(userRow)
 
 	return features 
-	
-def get_class_C_features():
+
+def get_class_C_features(dataframes):
 	#Class C features = all features
+
+	features = get_class_A_features(dataframes)
+
+	#Camisani Class B
+	features[GEOLOCALIZED] 				= geolocalized(userRow,tweetsDF)
+	features[IS_FAVORITE] 				= is_favorite(userRow,tweetsDF)
+	features[USES_PUNCTUATION] 			= uses_punctuation(userRow,tweetsDF)
+	features[USES_HASHTAG] 				= uses_hashtag(userRow,tweetsDF)
+	features[USES_IPHONE] 				= uses_iphone(userRow,tweetsDF)
+	features[USES_ANDROID] 				= uses_android(userRow,tweetsDF)
+	features[USES_FOURSQUARE] 			= uses_foursquare(userRow,tweetsDF)
+	features[USES_INSTAGRAM] 			= uses_instagram(userRow,tweetsDF)
+	features[USES_TWITTERDOTCOM] 		= uses_twitterdotcom(userRow,tweetsDF)
+	features[USERID_IN_TWEET] 			= userid_in_tweet(userRow,tweetsDF)
+	features[TWEETS_WITH_URL] 			= tweets_with_url(userRow,tweetsDF)
+	features[RETWEET_OVER_1] 			= retweet_over_1(userRow,tweetsDF)
+	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients(userRow,tweetsDF)
+
+	#State of search Class B
+	features[DUPLICATE_SENTENCES_ACROSS_ACCOUNTS] 	= duplicate_sentences_across_accounts(userRow,tweetsDF)
+	features[API_TWEETS] 							= api_tweets(userRow,tweetsDF)
+
+	#Social Bakers class B
+	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userRow,tweetsDF,3)
+	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(userRow,tweetsDF,0.9)
+	features[HIGH_TWEET_LINK_RATIO] = has_tweet_links_ratio(userRow, tweetsDF,0.9)
+
+	#Stringhini class B
+	features[NUMBER_OF_TWEETS_SENT]		= get_tweets_count(userID,tweetsDF)
+	#features[TWEET_SIMILARITY] 		= get_tweet_similarity(userRow,tweetsDF)	#comment calculer?
+	features[URL_RATIO] 				= get_url_ratio(userRow, tweetsDF)
+	features[UNIQUE_FRIENDS_NAME_RATIO] = get_unique_friends_name_ratio(userID,usersDF,friendsDF)
+	
+	#Yang class B (Comment calculer API?)
+	#features[API_RATIO] 				= get_api_ratio(userRow)
+	#features[API_URL_RATIO] 			= get_api_url_ratio(userRow)
+	#features[API_TWEET_SIMILARITY] 	= get_api_tweet_similarity(userRow)
+
+	#Yang class C
+	#features[BILINK_RATIO] 				= get_bilink_ratio(userRow, friendsDF, followersDF)
+	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userID,friendsDF,usersDF)
+	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, usersDF,friendsDF, tweetsDF)
+	#features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
+	
 
 def get_camisani_features(dataframes):
 	camisaniFeatures = []
