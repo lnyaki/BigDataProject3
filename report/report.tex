@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{graphicx}
+\usepackage{fontenc}
 \usepackage{listings}
 \usepackage{multicol}
 \usepackage{verbatim}
@@ -92,8 +93,8 @@ Comment : je teste le tabular au lieu de la liste, mais ça marche pas super. J'
 The following features where not implemented,as knowing whether a tweet came from an API was far from obvious : \\
 
 \begin{itemize}
-\item get_api_url_ratio(): returns the ratio between the number of tweets containing a URL and the number of tweets sent from an API.
-\item get_api_tweet_similarity(): supposedly returns a value representing the similarity between tweets sent from an API.
+\item{get\_api\_url\_ratio(): returns the ratio between the number of tweets containing a URL and the number of tweets sent from an API.}
+\item{get\_api\_tweet\_similarity(): supposedly returns a value representing the similarity between tweets sent from an API.}
 \end{itemize} 
 
 We tried using the \textit{grep} command with the keyword "API" on the tweets.csv files but only detected a few results who seemed unrelated.
