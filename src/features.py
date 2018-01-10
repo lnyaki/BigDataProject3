@@ -816,6 +816,7 @@ def has_x50_followers(userRow):
 
 	if(followers ==0):
 		followers == 0.001
+		
 	res = (friends/followers)>= 50
 
 	if(res):
