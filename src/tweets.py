@@ -84,3 +84,11 @@ def get_tweets_with_url_ratio(userID, tweetsDF):
 
 def tweet_contains_url(tweet):
 	return has_url(tweet)
+
+def get_api_tweets_count(userTweetsDF):
+	'''
+	The tweetDF only contains tweets from a single user
+	'''
+	tweets = userTweetsDF[userTweetsDF['text'].apply(lambda tweet : tweet.count("API")>0)]
+
+	return len(tweets.tolist())

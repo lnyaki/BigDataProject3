@@ -31,4 +31,6 @@ if(__name__ == "__main__"):
 
 	featuresData = pd.DataFrame(featuresData)
 
+	print("Features C")
+	print(featuresData)
 	save_features_in_file(datasetDirectory, featuresData,featureSetName)

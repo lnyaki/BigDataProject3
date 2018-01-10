@@ -226,7 +226,7 @@ def get_class_C_features(dataframes):
 def get_single_class_C_features(userRow,usersDF, friendsDF,followersDF,tweetsDF):
 	#Class C features = all features
 	userID = userRow['id']
-	
+
 	features = get_single_class_A_features(userRow, usersDF,tweetsDF)
 
 	#Camisani Class B
@@ -260,7 +260,7 @@ def get_single_class_C_features(userRow,usersDF, friendsDF,followersDF,tweetsDF)
 	features[UNIQUE_FRIENDS_NAME_RATIO] = get_unique_friends_name_ratio(userID,usersDF,friendsDF)
 	
 	#Yang class B (Comment calculer API?)
-	#features[API_RATIO] 				= get_api_ratio(userRow)
+	#features[API_RATIO] 				= get_api_ratio(userID, tweetsDF)
 	#features[API_URL_RATIO] 			= get_api_url_ratio(userRow)
 	#features[API_TWEET_SIMILARITY] 	= get_api_tweet_similarity(userRow)
 
@@ -270,6 +270,7 @@ def get_single_class_C_features(userRow,usersDF, friendsDF,followersDF,tweetsDF)
 	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, usersDF,friendsDF, tweetsDF)
 	#features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
 	
+	return features 
 
 def get_camisani_features(dataframes):
 	camisaniFeatures = []
@@ -883,30 +884,65 @@ def uses_punctuation(userRow,tweetsDF):
 	return res
 
 def uses_hashtag(userRow,tweetsDF):
-	return '#' in get_tweets_strings(int(userRow['id']),tweetsDF)
+	res = '#' in get_tweets_strings(int(userRow['id']),tweetsDF)
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def uses_iphone(userRow,tweetsDF):
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
-	return "Iphone" in all_tweets['source'].str.cat()
+	res =  "Iphone" in all_tweets['source'].str.cat()
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def uses_android(userRow,tweetsDF):
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
-	return "Android" in all_tweets['source'].str.cat()
+	res = "Android" in all_tweets['source'].str.cat()
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def uses_foursquare(userRow,tweetsDF):
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
-	return "foursquare" in all_tweets['source'].str.cat()
+	res = "foursquare" in all_tweets['source'].str.cat()
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def uses_instagram(userRow,tweetsDF):
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
-	return "Instagram" in all_tweets['source'].str.cat()
+	res = "Instagram" in all_tweets['source'].str.cat()
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def uses_twitterdotcom(userRow,tweetsDF):
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
-	return "web" in all_tweets['source'].str.cat()
+	res = "web" in all_tweets['source'].str.cat()
+
+	if(res):
+		return 1
+	else:
+		return 0
 	
 def userid_in_tweet(userRow,tweetsDF):
-	return str(userRow['id']) in get_tweets_strings(userRow['id'],tweetsDF)
+	res = str(userRow['id']) in get_tweets_strings(userRow['id'],tweetsDF)
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def tweets_with_url(userRow,tweetsDF):
 	return has_url(get_tweets_strings(userRow['id'],tweetsDF))
@@ -918,7 +954,12 @@ def retweet_over_1(userRow,tweetsDF):
 
 def uses_different_clients(userRow,tweetsDF):
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
-	return len(all_tweets['source'].unique()) > 1
+	res = len(all_tweets['source'].unique()) > 1
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 # https://stackoverflow.com/questions/17388213/find-the-similarity-percent-between-two-strings
 def similar(a, b):
@@ -947,11 +988,23 @@ def duplicate_sentences_across_tweets(userRow,tweetsDF):
 
 def api_tweets(userRow,tweetsDF):
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
-	return not "twitter.com" in all_tweets['source'].str.cat()
+	res = not "twitter.com" in all_tweets['source'].str.cat()
 
-def get_api_ratio(userRow):
+	if(res):
+		return 1
+	else:
+		return 0
+
+def get_api_ratio(userID, tweetsDF):
 	# tweets sent from api over total number of tweets
-	return 0
+	tweets = get_tweets_dataframe_user(userID, tweetsDF)
+	tweetsCount = len(tweets.tolist())
+	tweets_api = get_api_tweets_count(userID, tweets)
+
+	if(userTweets > 0):
+		return tweets_api/userTweets
+	else:
+		return 0
 
 def get_api_url_ratio(userRow):
 	return 0
