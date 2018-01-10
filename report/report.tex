@@ -139,6 +139,9 @@ pd.read_csv(totalPath, encoding='latin-1').fillna('')
 \end{lstlisting}
 
 \section{Feature set generation}
+Based on \textit{Cresci et al.}, we identified 3 types of features: \textit{A, B} and \textit{C}. \textit{A} features being features whose data can be obtained directly in the user profile, while \textit{B} features require a simple computation, and \textit{C} features require heavier computations.\\
+
+We implemented the functions and used them to extract 2 features set out of the data: a \textit{class A} features set and a class C features set, which encompasses the features of every classes (\textit{A, B} and \textit{C}).
 
 \subsection{Data labeling}
 
