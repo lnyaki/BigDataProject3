@@ -145,7 +145,7 @@ pd.read_csv(totalPath, encoding='latin-1').fillna('')
 \end{lstlisting}
 
 \section{Feature set generation}
-Based on \textit{Cresci et al.}, we identified 3 types of features: \textit{A, B} and \textit{C}. \textit{A} features being features whose data can be obtained directly in the user profile, while \textit{B} features require a simple computation, and \textit{C} features require heavier computations.\\
+Based on \textit{Cresci et al.}, 3 classes of features where identified: classes\textit{A, B} and \textit{C}. Class \textit{A} features being features whose data can be obtained directly in the user profile, while class \textit{B} features require a simple computation, and \textit{C} features require heavier computations.\\
 
 We implemented the functions and used them to extract 2 features set out of the data: a \textit{class A} features set and a class C features set, which encompasses the features of every classes (\textit{A, B} and \textit{C}).
 
@@ -170,6 +170,9 @@ The result was efficient, and the processing time per user came down from 10-20s
 In \textit{Cresci et al.} the following 8 classifiers are proposed: Random Forest, Decorate, Decision Tree, Adaptive Boosting, Bayesian Network, k-Nearest Neighbors, Logistic Regression and Support Vector Machine.\\
 
 For the sake of simplicity, we decided to focus on the following classifiers:Random Forest,  Decision Tree, Adaptive Boosting, k-Nearest Neighbors, Logistic Regression and Support Vector Machine.\\
+
+
+\section{Conclusion}
 
 \bibliography{bibliography}
 \bibliographystyle{plain}
