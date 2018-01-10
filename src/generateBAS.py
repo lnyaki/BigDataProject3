@@ -2,6 +2,7 @@ import pandas as pd
 import features
 import sys
 import os
+from time import time
 
 '''
 The goal of this module is to generate a list of features based on a
@@ -11,7 +12,6 @@ The generated list is the baseline feature set and will be created in the direct
 specified in parameters. Ex: E13/baseline.csv
 '''
 def save_features_in_file(path, featuresDF, featureSetName):
-	print("Current directory :"+os.getcwd())
 
 	filename =  path + "/features_"+featureSetName+".csv"
 	print("Current directory :"+os.getcwd())
@@ -27,10 +27,16 @@ if(__name__ == "__main__"):
 	featureSetName 	= sys.argv[2]
 
 	dataframes  	= features.get_dataframes(featureSetName,datasetDirectory)
+
+	print("=========== Getting features ===========")
+	print(time())
+	t0 = time()
+	
 	featuresData 	= features.get_features(featureSetName, dataframes)
 
 	featuresData = pd.DataFrame(featuresData)
 
-	print("Features C")
-	print(featuresData)
+	tf = time() - t0
+	print("========== Elapsed time ==========")
+	print(tf)
 	save_features_in_file(datasetDirectory, featuresData,featureSetName)

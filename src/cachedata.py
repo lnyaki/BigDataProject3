@@ -1,5 +1,5 @@
-import tweets
-import users
+import tweets as tw
+import users as us
 
 
 _user_tweets = {}
@@ -17,21 +17,21 @@ def get_user_tweets(userID, tweetsDF):
 		tweets = _user_tweets[userID]
 
 	except KeyError:
-		_user_tweets[userID] = tweets.get_tweets_dataframe_user(userID, tweetsDF)
+		_user_tweets[userID] = tw.get_tweets_dataframe_user(userID, tweetsDF)
 
 	finally:
 		tweets = _user_tweets[userID]
 
 	return tweets
 
-def get_tweet_count(userID, tweetsDF):
+def get_tweets_count(userID, tweetsDF):
 	tweetCount = 0
 
 	try:
 		tweetCount = _user_tweets_count[userID]
 
 	except KeyError:
-		_user_tweets_count[userID] = len(get_user_tweets(userID,tweetsDF).tolist())
+		_user_tweets_count[userID] = get_user_tweets(userID,tweetsDF).shape[0]
 
 	finally:
 		tweetCount = _user_tweets_count[userID]
@@ -45,7 +45,7 @@ def get_user_friends(userID, friendsDF):
 		friends = _user_friends[userID]
 
 	except KeyError:
-		_user_friends[userID] = tweets.get_friends_ids(userID, friendsDF)
+		_user_friends[userID] = us.get_friends_ids(userID, friendsDF)
 
 	finally:
 		friends = _user_friends[userID]
@@ -73,7 +73,7 @@ def get_user_followers(userID, followersDF):
 		friends = _user_friends[userID]
 
 	except KeyError:
-		_user_followers[userID] = users.get_followers_ids(userID, followersDF)
+		_user_followers[userID] = us.get_followers_ids(userID, followersDF)
 
 	finally:
 		followers = _user_followers[userID]

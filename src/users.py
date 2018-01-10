@@ -1,4 +1,5 @@
 import pandas as pd
+import cachedata as cache
 '''
 This module handles all processings on the friends of a user.
 '''
@@ -19,7 +20,7 @@ def get_friends_count(userID,friendsDF):
 	return friendsDF[friendsDF['source_id'] == userID].count()
 
 def get_friends_with_initialized_name(userID, usersDF, friendsDF):
-	friendsIDs 	= get_friends_ids(userID,friendsDF)
+	friendsIDs 	= cache.get_user_friends(userID,friendsDF)
 	not_empty 	= usersDF['name'] != ''
 	not_null 	= usersDF['name'].notnull()
 	is_unique 	= usersDF['id'].isin(friendsIDs)
