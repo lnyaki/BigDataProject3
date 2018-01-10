@@ -38,6 +38,20 @@ First we describe the 19 features that will be part of the feature set. Then, we
 \section{Rule sets and Features set}
 In the paper, five rule sets and features set are analyzed. They come from  academic research, as well as technology bloggers and companies specialized in fake tweeter users detection.\\
 
+To avoid simply using all the features mentionned in other papers without any preprocessing, the authors decided to measure each feature individually and asses it's effectiveness thanks to machine learning metrics. After doing, they removed the features they considered not to have a sufficient score and removed the features they considered impossible to obtain. (ie. time related features that would involve monitoring of thousands of accounts.)
+\\\\
+We have decided that we will present the features that they kept and that we will se to train our classifiers.\\
+We have devided the features by paper and in each section we have separated the features related to the profile(class A), the timeline(class B) and relationships (class C).
+
+\subsection{Camisani-Calzolari rule set}
+In this paper the features had as objective to focus on human accounts, but they can still be used to detect bots. \\
+We start with the class A section, for example a couple of straightforward ones: has name, has image, has address, has biography, belongs to a list.
+Pretty simple most human users will fill this type of information.\\
+The next ones assess that the account has been active and tries to find attributes that will correlate with humans: followers ≥ 30, tweets ≥ 50, URL
+in profile, 2 × followers ≥ friends.\\
+For the class B of this paper where we try to find information in the tweets of the user that can be relatable to humans. Some patterns that have been noticed that humans follow: geo-localized, is favorite, uses punctuation, uses hashtag. Another pattern that they noticed is that humans don't use the twitter api that much but rather a lot of different items available to us: uses iPhone, uses Android, uses Foursquare, uses Instagram, uses Twitter.com and using multiple clients. This last ones are some additional ones found to be done by humans: userID in tweet,
+tweets with URLs and retweet ≥ 1. 
+
 The rule set contained the following classes of rules:
 
 \begin{itemize}
@@ -48,47 +62,21 @@ The rule set contained the following classes of rules:
 \item Yang et al.:This paper proposes 9 features. Two of class A, 3 of class B, and 4 of class C.
 \end{itemize}
 
-\begin{comment}
 \subsection{State of search}
-
+This ones are really general ones for bot detection by state of search website.
+For the class A: bot in biography, friends/followers == 100 and duplicate profile pictures.\\
+For class B: same sentence to many accounts, tweet from API.
+This features are actually extracted from spammer bots.
 
 \subsection{Socialbakers}
-
+We start finding a trend with some of the ratios for our class A: friends/followers ≥ 50, friends ≥100. Followed by some features resembling the ones in Camisani: default image after 2 months, no bio, no location, 0 tweets.\\
+For the Class B, we're only looking at ratios and tweets' similarities: tweets spam phrases, same tweet
+≥ 3, retweets ≥ 90\%, tweet-links≥ 90\%.
 \subsection{Stringhini et al.}
-
-\begin{multicols}{2}
-\begin{enumerate}
-\item the profile contains a name;
-\item the profile contains an image;
-\item the profile contains a biography
-\item the account has at least 30 followers;
-\item it has been inserted in a  list by other Twitter users;
-\item it has written at least 50 tweets;
-\item the account has been geo-localized;
-\item the profile contains a URL;
-\item it has been included in another user's favorites;
-\item it writes tweets that have punctuation;
-\item it has used a hashtag in at least one tweet;
-\item it has logged into Twitter using an iPhone;
-\item it has logged into Twitter using an Android device;
-\item it is connected with Foursquare;
-\item it is connected with Instagram;
-\item it has logged into the twitter.com website
-\item it has written the userID of another user in at least one tweet (that is, it posted a @reply or a mention);
-\item (2*number of followers) $\geq$ (number of friends);
-\item it publishes content which does not just contain URLs;
-\item at least one of its tweets has been retwitted by other accounts (worth 2 points)
-\item it has logged into Twitter through different clients (worth 3 points).
-\end{enumerate}
-\end{multicols}
-
-
-\subsection{State of search}
-
-
-\subsection{Socialbakers}
-
-\subsection{Stringhini et al.}
+The last 2 papers already have really strong features that we are going to use and see if we can improve the score they obtained by adding extra features.
+Here you can see some of the best ones: number of friends, number of tweets, $$friends/(followersˆ2)$$.\\
+For class B: we only have a couple of ones: tweet similarity, URL ratio.
+This paper also tracked spam bots.
 
 \begin{tabular}{cc}
 \hline
@@ -100,7 +88,7 @@ The rule set contained the following classes of rules:
 
 
 \subsection{Yang et al.}
-\end{comment}
+This last paper has a focus on the API for class B features: API ratio, API URL ratio, API tweet similarity. And some curious features for the class A: age, following rate. The following rate is obvious, not much people follow bots and the age is smarter, spam bots are susceptible to be banned or simply used once therefore their age will usually be lower then real accounts.
 
 \subsection{Rules that were not implemented}
 The following features where not implemented,as knowing whether a tweet came from an API was far from obvious : \\
@@ -120,7 +108,7 @@ The result was a features dataset that is ready to be used for training classifi
 \subsection{Available data}
 The researchers responsible for the paper Fame forl sale made their 5 basic datasets available for future researchers.\\ 
 
-Since we are trying to replicate the work they have done to practice our skills and understand more deeply the meaning of data and the proper way to analyse data
+Since we are trying to replicate the work they have done to practice our skills and understand more deeply the meaning of data and the proper way to analyse data is by following their BAS dataset creation.
 
 \subsection{Table 1 creation}
 In this section we are going to create the base dataset that we will use throughout the project.
@@ -149,7 +137,7 @@ BAS & 3900 & 2,738,761 & 1,820,842 & 1,782,429 & 3,603,271 \\
 
 \section{Data Pre-Processing}
 \paragraph{}
-The datasets that we received was composed of several directories containing each the following files: \textit{users.csv, friends.csv, followers.csv and tweets.csv}. These are regular files containing text, numerical values and NaN values.\\
+The datasets that we received was composed of several directories containing each the following files: \textit{users.csv, friends.csv, followers.csv and tweets.csv}. These are regular csv files containing text, numerical values and NaN values.\\
 
 NaN values are bothersome as they are there own type and can cause problems when they get mixed with Strings or numerals. Therefore the first thing to do was to replace every NaN instance by something less troublesome. We decided that an empty String would be a good solution. This was done in a single command, when opening the CSV file:
 
@@ -172,12 +160,36 @@ The amount of data that we had to manipulate by no means huge or overwhelming, b
 
 Developing using Python, we used the popular pandas library and its DataFrame object to manipulate our data and perform computations. Soon however, the program was plagued by an abnormally slow execution time.\\
 
-The issue came from manually looping on DataFrame object, either by user a \textit{for} loop, or by using the DataFrame.iterrows() function. This led to processing time that could reach between 10 and 20 seconds per user record. Considering that we had several thousands users, another solution had to be found.
+The issue came from manually looping on DataFrame object, either by user a \textit{for} loop, or by using the DataFrame.iterrows() function. This led to processing time that could reach between 10 and 20 seconds per user record. Considering that we had several thousands users, another solution had to be found.\\\\
+This part of the project was definetly the most time consuming and involved a lot of small tricks to achieve the expected result for certain features.\\
+As explained above, after a first implementation of certain features we realized that the extraction was extremly slow, we then decided to cut down the testing set to 10 users to ensure a functional extractor without waiting for 30 min after each execution. This already improved our testing time.\\
+After that we realized that for the B class features we were getting very long execution times. Because the B class features are realted to tweets, depending on the users this amount can be in the thousands and for some features this involved looping a lot.
 
 \subsection{DataFrame.apply() and lambda functions}
 We found out that there was several efficient ways to loop over a DataFrame. The easiest way being through the use of lambda functions which will automatically be executed on every row of the Dataframe, without requiring a manual management of the iterative process.\\
 
-The result was efficient, and the processing time per user came down from 10-20s to about 0.3s. We decided that this gain in performance was enough, and didn't try to improve further on it, even though we heard of a method called Vectorization which would arguably perform even faster.
+The result was efficient, and the processing time per user came down from 10-20s to about 0.3s. We decided that this gain in performance was good but with 3900 users to process we're still talking of 1300s which is a really long processing time. To improve that we researched optimisation techniques with Pandas.SerieS. And using built in functions and conditions on the Series we kept improving our processing time. For some of our features we obtained huge improvements alowing to reduce most of the B features to 0.05s (except for the HUM dataset because of the high amount of data to check).\\\\
+
+Because the built in functions are limited and Series conditional selection is limited for some of the features we add to be creative. I have some example I want to showcase:
+
+\begin{verbatim}
+def is_favorite(userRow,tweetsDF):
+	tweets = cache.get_user_tweets(int(userRow['id']),tweetsDF)
+	fav = tweets['favorite_count'] != 0
+	return int(not tweets[fav].empty)
+\end{verbatim}
+\\Here we recover a dataframe with only the tweets of the user. We create a conditional variable that selects everthing different then 0. If we apply it to that dataframe we are going to get a Series with True and False values, by checking for tweets[fav].empty we are looking if at least one of the values isn't False.
+\\ A last example: 
+\begin{verbatim}
+def uses_foursquare(userRow,tweetsDF):
+	all_tweets = cache.get_user_tweets(int(userRow['id']),tweetsDF)
+	res = "foursquare" in all_tweets['source'].str.cat()
+\end{verbatim}
+Here instead of looping through the tweet sources and adding them to a string to finally check if the searched string is in it we adopt another approach: isolate the Series of the dataframe and the concatenate the strings using the builtin function. It achieves the same thing but reduces the processing time drasticaly.\\\\
+
+There are many other features that have been approached in unconventional ways to achieve better results. \\
+
+Unfortunately we found out too late of a method called Vectorization which would arguably perform even faster. But this is not a problem since we look forward in the future to try it out and achieve the most optimized result possible.
 
 \section{Classifiers}
 In \textit{Cresci et al.} the following 8 classifiers are proposed: Random Forest, Decorate, Decision Tree, Adaptive Boosting, Bayesian Network, k-Nearest Neighbors, Logistic Regression and Support Vector Machine.\\
