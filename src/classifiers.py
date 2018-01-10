@@ -77,15 +77,16 @@ def decision_tree():
 	# min_impurity_decrease=0.0, min_impurity_split=None, 
 	# class_weight=None, presort=False)
 	# J48
-	clf = train_decision_tree(train_features,train_labels)
+	clf = tree.DecisionTreeClassifier()
+	#clf = train_decision_tree(train_features,train_labels)
 	
-	result = cls.score(test_features, test_labels)
+	#result = cls.score(test_features, test_labels)
 
 	return clf
 
-def train_decision_tree(train_features, train_labels):
-	clf = tree.DecisionTreeClassifier()
-	clf = clf.fit(train_features, train_labels)
+#def train_decision_tree(train_features, train_labels):
+#	clf = tree.DecisionTreeClassifier()
+#	clf = clf.fit(train_features, train_labels)
 
 
 def adaptive_boost():
