@@ -36,43 +36,26 @@ First we describe the 19 features that will be part of the feature set. Then, we
 
 \section{Rule sets and Features set}
 In the paper, five rule sets and features set are analyzed. They come from  academic research, as well as technology bloggers and companies specialized in fake tweeter users detection.\\
-
-
-
+To avoid simply using all the features mentionned in other papers without any preprocessing, the authors decided to measure each feature individually and asses it's effectiveness thanks to machine learning metrics. After doing, they removed the features they considered not to have a sufficient score and removed the features they considered impossible to obtain. (ie. time related features that would involve monitoring of thousands of accounts.)
+\\\\
+We have decided that we will present the features that they kept and that we will se to train our classifiers.\\
+We have devided the features by paper and in each section we have separated the features related to the profile(class A), the timeline(class B) and relationships (class C).
 \subsection{Camisani-Calzolari rule set}
-The Camisani-Calzolari rule set is described as follows:
-
-\begin{multicols}{2}
-\begin{enumerate}
-\item the profile contains a name;
-\item the profile contains an image;
-\item the profile contains a biography
-\item the account has at least 30 followers;
-\item it has been inserted in a  list by other Twitter users;
-\item it has written at least 50 tweets;
-\item the account has been geo-localized;
-\item the profile contains a URL;
-\item it has been included in another user's favorites;
-\item it writes tweets that have punctuation;
-\item it has used a hashtag in at least one tweet;
-\item it has logged into Twitter using an iPhone;
-\item it has logged into Twitter using an Android device;
-\item it is connected with Foursquare;
-\item it is connected with Instagram;
-\item it has logged into the twitter.com website
-\item it has written the userID of another user in at least one tweet (that is, it posted a @reply or a mention);
-\item (2*number of followers) $\geq$ (number of friends);
-\item it publishes content which does not just contain URLs;
-\item at least one of its tweets has been retwitted by other accounts (worth 2 points)
-\item it has logged into Twitter through different clients (worth 3 points).
-\end{enumerate}
-\end{multicols}
+In this paper the features had as objective to focus on human accounts, but they can still be used to detect bots. \\
+We start with the class A section, for example a couple of straightforward ones: has name, has image, has address, has biography, belongs to a list.
+Pretty simple most human users will fill this type of information.\\
+The next ones assess that the account has been active and tries to find attributes that will correlate with humans: followers ≥ 30, tweets ≥ 50, URL
+in profile, 2 × followers ≥ friends.\\
+For the class B of this paper where we try to find information in the tweets of the user that can be relatable to humans. Some patterns that have been noticed that humans follow: geo-localized, is favorite, uses punctuation, uses hashtag. Another pattern that they noticed is that humans don't use the twitter api that much but rather a lot of different items available to us: uses iPhone, uses Android, uses Foursquare, uses Instagram, uses Twitter.com and using multiple clients. This last ones are some additional ones found to be done by humans: userID in tweet,
+tweets with URLs and retweet ≥ 1. 
 
 \subsection{State of search}
-
-
+This ones are really general ones for bot detection by state of search website.
+For the class A: bot in biography, friends/followers == 100 and duplicate profile pictures.\\
+For class B: same sentence to many accounts, tweet from API.
+This features are actually extracted from spammer bots.
 \subsection{Socialbakers}
-
+We start finding a trend with some of the ratios for our class A: friends/followers ≥ 50, friends ≥100. Followed by some features resembling the ones in Camisani: default image after 2 months, no bio, no location, 0 tweets.\\
 \subsection{Stringhini et al.}
 
 Comment : je teste le tabular au lieu de la liste, mais ça marche pas super. J'ai pas le temps de corriger ça pour le moment.\\

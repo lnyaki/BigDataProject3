@@ -803,7 +803,7 @@ def get_friends_tweet_count(userRow,friendsDF,usersDF):
 
 	tweetUsers = usersDF[usersDF['id'].isin(friends_id_list)]
 
-	userTweetCount = lamda user: count_user_tweets(user['id'],friendsDF) 
+	userTweetCount = lambda user: count_user_tweets(user['id'],friendsDF) 
 	res = tweetUsers.apply(userTweetCount).sum()
 
 	return res

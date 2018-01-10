@@ -13,39 +13,39 @@ def metrics(labels,pred_dict):
 	# Ground truth (correct) target values.
 	# pred : array, shape = [n_samples]
 	# Estimated targets as returned by a classifier.
-	
-	for key,pred in pred_dict.items():
+	try:
+		for key,pred in pred_dict.items():
 
-		#tn, fp, fn, tp = confusion_matrix(y_test, pred).ravel()
-		#np.set_printoptions(precision=2)
+			#tn, fp, fn, tp = confusion_matrix(y_test, pred).ravel()
+			#np.set_printoptions(precision=2)
 
-		# Accuracy
-		
-		acc = accuracy_score(labels, pred)
+			# Accuracy
+			
+			acc = accuracy_score(labels, pred)
 
-		# Precision
-		
-		pres = precision_score(labels, pred, average='binary')
+			# Precision
+			
+			pres = precision_score(labels, pred, average='binary')
 
-		# Recall
-		
-		rec = recall_score(labels, pred, average='binary')
+			# Recall
+			
+			rec = recall_score(labels, pred, average='binary')
 
-		# F-measure
-		
-		f1 = f1_score(labels, pred, average='binary')
+			# F-measure
+			
+			f1 = f1_score(labels, pred, average='binary')
 
-		# MCC
-		
-		mcc = matthews_corrcoef(labels, pred) 
+			# MCC
+			
+			mcc = matthews_corrcoef(labels, pred) 
 
-		# AUC
-		auc_score = roc_auc_score(labels, pred)
-		# 
-		# Coud be this one must be rechecked with paper
-		# from sklearn.metrics import roc_auc_score
-		# roc_auc_score(labels, y_scores)
-		results_dict['key'] = [acc,pres,rec,f1,mcc,auc_score]
-		for key,value in results_dict.items():
-			print(str(key)+" : "+str(value))
+			# AUC
+			auc_score = roc_auc_score(labels, pred)
+			# 
+			# Coud be this one must be rechecked with paper
+			# from sklearn.metrics import roc_auc_score
+			# roc_auc_score(labels, y_scores)
+			results_dict[key] = [acc,pres,rec,f1,mcc,auc_score]
+	except ValueError:
+		pass
 	return results_dict

@@ -100,7 +100,8 @@ def adaptive_boost():
 	# clf = AdaBoostClassifier(n_estimators=100)
 	# scores = cross_val_score(clf, iris.data, iris.target)
 	# scores.mean()   
-	clf = AdaBoostClassifier(n_estimators=100, learning_rate=0.1)
+	clf = AdaBoostClassifier()
+	#clf = AdaBoostClassifier(n_estimators=100, learning_rate=0.1)
 	return clf
 
 
@@ -114,7 +115,8 @@ def bayesian_network():
 def k_nearest_neighbors():
 	# http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
 	#
-	clf = KNeighborsClassifier(n_neighbors=3)
+	#clf = KNeighborsClassifier(n_neighbors=3)
+	clf = KNeighborsClassifier()
 	# clf.fit(X, y)
 	# print(clf.predict([[1.1]]))
 	# 
@@ -137,7 +139,7 @@ def logistic_regression():
 	return clf
 
 def support_vector_machine():
-	clf = svm.SVC(kernel='rbf',C=1.0,gamma='auto')
+	clf = svm.SVC(kernel='rbf',C=10.0,gamma='auto')
 	#clf.fit(train_features, train_labels) 
 	# clf.predict([[2., 2.]])
 	# 
@@ -175,8 +177,11 @@ def classify(features, labels):
 	classifiers_dict['kNN'] = k_nearest_neighbors()
 	classifiers_dict['LR'] = logistic_regression()
 	classifiers_dict['SVM'] = support_vector_machine()
+	
 
 	for key, value in classifiers_dict.items():
-		predictions_dict[key] = cross_val_predict(value, features, labels, cv=10)
-
+		try:
+			predictions_dict[key] = cross_val_predict(value, features, labels, cv=10)
+		except ValueError:
+			predictions_dict[key] = None
 	return predictions_dict

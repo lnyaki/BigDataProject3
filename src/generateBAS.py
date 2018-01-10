@@ -26,9 +26,14 @@ def get_BAS_dataset(hum_path,fak_path):
 
 	df_A = pd.concat(frames_A)
 	df_C = pd.concat(frames_C)
-	labels = df_A['label'].tolist()
-	
-	return labels,df_A,df_C
+
+	# randomize features, before cross_validation
+	df_A = df_A.sample(frac=1).reset_index(drop=True)
+	df_C = df_C.sample(frac=1).reset_index(drop=True)
+
+	labels_A = df_A['label'].tolist()
+	labels_C = df_C['label'].tolist()
+	return labels_A,labels_C,df_A,df_C
 
 
 def save_features_in_file(path, featuresDF, featureSetName):
