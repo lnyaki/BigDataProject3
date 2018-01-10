@@ -252,7 +252,7 @@ def get_single_class_C_features(userRow,usersDF, friendsDF,followersDF,tweetsDF)
 	#Social Bakers class B
 	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userRow,tweetsDF,3)
 	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(userID,tweetsDF,0.9)
-	features[HIGH_TWEET_LINK_RATIO] = has_tweet_links_ratio(userRow, tweetsDF,0.9)
+	features[HIGH_TWEET_LINK_RATIO] = has_tweet_links_ratio(userID, tweetsDF,0.9)
 
 	#Stringhini class B
 	features[NUMBER_OF_TWEETS_SENT]		= cache.get_tweets_count(userID,tweetsDF)
@@ -440,7 +440,7 @@ def get_socialbakers_features(dataframes):
 	usersDF 	= dataframes['users']
 	tweetsDF 	= dataframes['tweets']
 
-	LIMIT = 10
+	LIMIT = 100
 	limit = 1
 
 	for index, row in usersDF.iterrows():
@@ -479,7 +479,7 @@ def get_single_user_socialbakers_features(userRow, tweetsDF):
 	#Class B
 	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userRow,tweetsDF,3)
 	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(userID,tweetsDF,0.9)
-	features[HIGH_TWEET_LINK_RATIO] = has_tweet_links_ratio(userRow, tweetsDF,0.9)
+	features[HIGH_TWEET_LINK_RATIO] = has_tweet_links_ratio(userID, tweetsDF,0.9)
 
 	return features
 
