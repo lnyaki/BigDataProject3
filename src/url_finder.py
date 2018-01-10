@@ -9,6 +9,7 @@ URL_REGEX = re.compile('''(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](
 
 #TODO : à corriger car ne marche pas
 def has_url(text):
+	
 	if(re.search(URL_REGEX,text)):
 		return True
 	else:
