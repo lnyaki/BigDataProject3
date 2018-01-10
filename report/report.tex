@@ -37,6 +37,7 @@ First we describe the 19 features that will be part of the feature set. Then, we
 
 \section{Rule sets and Features set}
 In the paper, five rule sets and features set are analyzed. They come from  academic research, as well as technology bloggers and companies specialized in fake tweeter users detection.\\
+
 To avoid simply using all the features mentionned in other papers without any preprocessing, the authors decided to measure each feature individually and asses it's effectiveness thanks to machine learning metrics. After doing, they removed the features they considered not to have a sufficient score and removed the features they considered impossible to obtain. (ie. time related features that would involve monitoring of thousands of accounts.)
 \\\\
 We have decided that we will present the features that they kept and that we will se to train our classifiers.\\
@@ -50,6 +51,16 @@ The next ones assess that the account has been active and tries to find attribut
 in profile, 2 × followers ≥ friends.\\
 For the class B of this paper where we try to find information in the tweets of the user that can be relatable to humans. Some patterns that have been noticed that humans follow: geo-localized, is favorite, uses punctuation, uses hashtag. Another pattern that they noticed is that humans don't use the twitter api that much but rather a lot of different items available to us: uses iPhone, uses Android, uses Foursquare, uses Instagram, uses Twitter.com and using multiple clients. This last ones are some additional ones found to be done by humans: userID in tweet,
 tweets with URLs and retweet ≥ 1. 
+
+The rule set contained the following classes of rules:
+
+\begin{itemize}
+\item Camisani-Calzolari: The Camisani-Calzolari rule set is described as follows: 22 class A rules
+\item State of search:They propose 7 rules, with 5 of class A, and 2 of class B
+\item SocialBakers: The rule set of social baker is composed of 9 rules, with 6 of class A and 3 of class B.
+\item Stringhini et al.: This paper proposes 5 features with 3 class A features, and 2 class B features
+\item Yang et al.:This paper proposes 9 features. Two of class A, 3 of class B, and 4 of class C.
+\end{itemize}
 
 \subsection{State of search}
 This ones are really general ones for bot detection by state of search website.
@@ -66,6 +77,7 @@ The last 2 papers already have really strong features that we are going to use a
 Here you can see some of the best ones: number of friends, number of tweets, $$friends/(followersˆ2)$$.\\
 For class B: we only have a couple of ones: tweet similarity, URL ratio.
 This paper also tracked spam bots.
+
 \begin{tabular}{cc}
 \hline
 1. spambots do not have thousands of friends; & spambots have a high ratio of tweets containing urls\\
@@ -77,6 +89,7 @@ This paper also tracked spam bots.
 
 \subsection{Yang et al.}
 This last paper has a focus on the API for class B features: API ratio, API URL ratio, API tweet similarity. And some curious features for the class A: age, following rate. The following rate is obvious, not much people follow bots and the age is smarter, spam bots are susceptible to be banned or simply used once therefore their age will usually be lower then real accounts.
+
 \subsection{Rules that were not implemented}
 The following features where not implemented,as knowing whether a tweet came from an API was far from obvious : \\
 
@@ -159,8 +172,24 @@ The result was efficient, and the processing time per user came down from 10-20s
 
 Because the built in functions are limited and Series conditional selection is limited for some of the features we add to be creative. I have some example I want to showcase:
 
+\begin{verbatim}
+def is_favorite(userRow,tweetsDF):
+	tweets = cache.get_user_tweets(int(userRow['id']),tweetsDF)
+	fav = tweets['favorite_count'] != 0
+	return int(not tweets[fav].empty)
+\end{verbatim}
+\\Here we recover a dataframe with only the tweets of the user. We create a conditional variable that selects everthing different then 0. If we apply it to that dataframe we are going to get a Series with True and False values, by checking for tweets[fav].empty we are looking if at least one of the values isn't False.
+\\ A last example: 
+\begin{verbatim}
+def uses_foursquare(userRow,tweetsDF):
+	all_tweets = cache.get_user_tweets(int(userRow['id']),tweetsDF)
+	res = "foursquare" in all_tweets['source'].str.cat()
+\end{verbatim}
+Here instead of looping through the tweet sources and adding them to a string to finally check if the searched string is in it we adopt another approach: isolate the Series of the dataframe and the concatenate the strings using the builtin function. It achieves the same thing but reduces the processing time drasticaly.\\\\
 
-Unfortunately we found out too late of a method called Vectorization which would arguably perform even faster.
+There are many other features that have been approached in unconventional ways to achieve better results. \\
+
+Unfortunately we found out too late of a method called Vectorization which would arguably perform even faster. But this is not a problem since we look forward in the future to try it out and achieve the most optimized result possible.
 
 \section{Classifiers}
 In \textit{Cresci et al.} the following 8 classifiers are proposed: Random Forest, Decorate, Decision Tree, Adaptive Boosting, Bayesian Network, k-Nearest Neighbors, Logistic Regression and Support Vector Machine.\\
@@ -174,6 +203,7 @@ After training our classifiers, we obtain the following resutls:
 	\hline
 	\textbf{Algorithm} 	& \textbf{Accuracy} 	& \textbf{Precision} & \textbf{Recall} & F-M 	& \textbf{MCC} & AUC\\
 	\hline
+	\textit{Class A}\\
 	SVM			&	0.682	&	0.999	&	0.364	&0.533 & 0.47 & 0.68\\
 	AB			&	1		&	1		&	1		& 1 	&	1	& 1   \\
 	RF			&	1		&	1		&	1		& 1   	&	1	& 1  \\
@@ -190,6 +220,7 @@ After training our classifiers, we obtain the following resutls:
 	J48			&	1		&	1		&	1		& 1 	&	1	& 1   \\
 	LR			&	0.999		&	0.998		&	0.999		& 0.999 	&	0.998	& 0.999   \\
 	
+	Due to an execution error caused by a bad value, the results for class C couldn't be displayed.
 	
 \end{tabular}
 
