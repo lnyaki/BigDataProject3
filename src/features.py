@@ -790,11 +790,17 @@ def get_friends_count(userRow):
 	return int(userRow['friends_count'])
 
 def get_friends_tweet_count(userRow,friendsDF,usersDF):
-	friends_id_list = get_friends_ids(userRow['id'],friendsDF)
+	userID 	= userRow['id']
 
-	friends_count = len(friends_id_list)
+	friends_id_list = get_friends_ids(userID,friendsDF)
+	friends_count 	= len(friends_id_list)
 
-	return 0
+	tweetUsers = usersDF[usersDF['id'].isin(friends_id_list)]
+
+	userTweetCount = lamda user: count_user_tweets(user['id'],friendsDF) 
+	res = tweetUsers.apply(userTweetCount).sum()
+
+	return res
 
 def get_friends_to_followers_ratio(userRow):
 	res = 0
