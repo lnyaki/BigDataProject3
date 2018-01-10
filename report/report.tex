@@ -175,13 +175,26 @@ For the sake of simplicity, we decided to focus on the following classifiers:Ran
 After training our classifiers, we obtain the following resutls:
 
 \begin{tabular}{lcccccc}
+	\hline
 	\textbf{Algorithm} 	& \textbf{Accuracy} 	& \textbf{Precision} & \textbf{Recall} & F-M 	& \textbf{MCC} & AUC\\
+	\hline
 	SVM			&	0.682	&	0.999	&	0.364	&0.533 & 0.47 & 0.68\\
 	AB			&	1		&	1		&	1		& 1 	&	1	& 1   \\
 	RF			&	1		&	1		&	1		& 1   	&	1	& 1  \\
 	kNN			&	0.947	&	0.94	&	0.956	& 0.948 & 0.895 & 0.947\\
 	J48			&	1		&	1		&	1		& 1 	&	1	& 1   \\
 	LR			&	1		&	1		&	1		& 1 	&	1	& 1   \\
+	\hline
+	\textbf{Algorithm} 	& \textbf{Accuracy} 	& \textbf{Precision} & \textbf{Recall} & F-M 	& \textbf{MCC} & AUC\\
+	\hline
+	SVM			&	0.503	&	1	&	0.006	& 0.012 & 0.056 & 0.503\\
+	AB			&	1		&	1		&	1		& 1 	&	1	& 1   \\
+	RF			&	1		&	1		&	0.999		& 1   	&	0.999	& 1  \\
+	kNN			&	0.892	&	0.853	&	0.949	& 0.898 & 0.79 & 0.892\\
+	J48			&	1		&	1		&	1		& 1 	&	1	& 1   \\
+	LR			&	0.999		&	0.998		&	0.999		& 0.999 	&	0.998	& 0.999   \\
+	
+	
 \end{tabular}
 
 \section{Conclusion}
