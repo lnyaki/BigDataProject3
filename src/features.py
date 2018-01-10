@@ -695,21 +695,15 @@ def followers_to_friends_ration_over_2(userRow):
 def bot_in_bio(userRow):
 	# https://stackoverflow.com/questions/11144389/find-all-upper-lower-and-mixed-case-combinations-of-a-string
 	bot_list = map(''.join, itertools.product(*((c.upper(), c.lower()) for c in 'bot')))
-<<<<<<< HEAD
+
 	res = 0
-	if isinstance(userRow['description'],str):
-		for bot_combination in bot_list:
-			if bot_combination in userRow['description']:
-				res = 1
-=======
-	res = False
 	time("start")
 	if isinstance(userRow['description'],str):
 		for bot_combination in bot_list:
 			if bot_combination in userRow['description']:
-				res = True
+				res = 1
 	time("end")
->>>>>>> e5c24eab0dc442560161bb13c3c1cfab8dd1c193
+
 	return res
 
 def friends_to_followers_ratio_is_100(userRow):
@@ -827,20 +821,14 @@ def has_no_tweets(userID, tweetsDF):
 
 # Class B features
 def geolocalized(userRow,tweetsDF):
-<<<<<<< HEAD
-	#res = False
-	tweets = get_tweets_user(int(userRow['id']),tweetsDF)
-	#print(tweets['geo'])
-	#print(not math.isnan(tweets['geo']))
-	print(type(tweets['geo']))
-	geo = tweets['geo'] > 0
-	print(tweets[geo])
-	return 0
-=======
 	tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
 	geo = tweets['geo'] != ""
-	return not tweets[geo].empty
->>>>>>> e5c24eab0dc442560161bb13c3c1cfab8dd1c193
+	res =  not tweets[geo].empty
+
+	if(res):
+		return 1
+	else:
+		return 0
 	
 def is_favorite(userRow,tweetsDF):
 	tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
@@ -896,19 +884,15 @@ def retweet_over_1(userRow,tweetsDF):
 	return (all_tweets['retweet_count'] > 1).any()
 
 def uses_different_clients(userRow,tweetsDF):
-<<<<<<< HEAD
-	return 0
-
-def duplicate_sentences_across_accounts(userRow,tweetsDF):
-	return 0
-=======
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
 	return len(all_tweets['source'].unique()) > 1
 
 # https://stackoverflow.com/questions/17388213/find-the-similarity-percent-between-two-strings
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
->>>>>>> e5c24eab0dc442560161bb13c3c1cfab8dd1c193
+
+def duplicate_sentences_across_accounts(userRow,tweetsDF):
+	return 0
 
 def duplicate_sentences_across_tweets(userRow,tweetsDF):
 	res = False
