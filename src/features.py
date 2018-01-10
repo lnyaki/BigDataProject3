@@ -8,7 +8,8 @@ from tweets import *
 from url_finder import *
 from users import *
 import math
-from time import time
+from time import *
+from difflib import SequenceMatcher
 ###########
 # Class A #
 ###########
@@ -67,7 +68,7 @@ RETWEET_OVER_1 			= 'retweet_over_1'
 USES_DIFFERENT_CLIENTS 	= 'uses_different_clients'
 
 #State of Search
-DUPLICATE_SENTENCES_ACROSS_ACCOUNTS = 'duplicate_sentences_across_accounts'
+DUPLICATE_SENTENCES_ACROSS_TWEETS = 'duplicate_sentences_across_tweets'
 API_TWEETS 							= 'api_tweets'
 
 # Socialbakers
@@ -162,7 +163,7 @@ def get_single_user_camisani_features(userRow, tweetsDF):
 	features = {}
 
 	# class A
-	t0 = time()
+	time("start")
 	#t2 = time()
 	features[HAS_NAME] 			= has_name(userRow)
 	#print ("class A.1 camisani:", round(time()-t2, 3), "s")
@@ -234,8 +235,8 @@ def get_single_user_camisani_features(userRow, tweetsDF):
 	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients(userRow,tweetsDF)
 	#print ("class B.13 camisani:", round(time()-t22, 3), "s")
 	#print ("class B camisani:", round(time()-t1, 3), "s")
-	print ("camisani:", round(time()-t0, 3), "s")
-
+	#print ("camisani:", round(time()-t0, 3), "s")
+	time("end")
 	return features
 
 def get_state_of_search_features(dataframes):
@@ -248,7 +249,7 @@ def get_state_of_search_features(dataframes):
 	limit = 1
 
 	for index, row in usersDF.iterrows():
-		stateofsearchFeatures.appen(get_single_user_state_of_search_features(row,usersDF,tweetsDF))
+		stateofsearchFeatures.append(get_single_user_state_of_search_features(row,usersDF,tweetsDF))
 
 		#Temporary code, for test purpose
 		if(limit > LIMIT):
@@ -269,25 +270,25 @@ def get_single_user_state_of_search_features(userRow, usersDF, tweetsDF):
 	features = {}
 
 	# class A
-	t0 = time()
-	t1 = time()
+	#0 = time()
+	#t1 = time()
 	features[BOT_IN_BIO] 						= bot_in_bio(userRow)
-	print ("class A.1 stateofsearch:", round(time()-t1, 3), "s")
-	t2 = time()
+	#print ("class A.1 stateofsearch:", round(time()-t1, 3), "s")
+	#t2 = time()
 	features[FRIENDS_TO_FOLLOWERS_RATIO_IS_100] = friends_to_followers_ratio_is_100(userRow)
-	print ("class A.2 stateofsearch:", round(time()-t2, 3), "s")
-	t3 = time()
+	#print ("class A.2 stateofsearch:", round(time()-t2, 3), "s")
+	#t3 = time()
 	features[DUPLICATE_PROFILE_PICTURE] 		= duplicate_profile_picture(userRow,usersDF)
-	print ("class A.3 stateofsearch:", round(time()-t3, 3), "s")
+	#print ("class A.3 stateofsearch:", round(time()-t3, 3), "s")
 	
 	# class B
-	t4 = time()
-	features[DUPLICATE_SENTENCES_ACROSS_ACCOUNTS] 	= duplicate_sentences_across_accounts(userRow,tweetsDF)
-	print ("class B.1 stateofsearch:", round(time()-t4, 3), "s")
-	t5 = time()
+	#t4 = time()
+	features[DUPLICATE_SENTENCES_ACROSS_TWEETS] 	= duplicate_sentences_across_tweets(userRow,tweetsDF)
+	#print ("class B.1 stateofsearch:", round(time()-t4, 3), "s")
+	#t5 = time()
 	features[API_TWEETS] 							= api_tweets(userRow,tweetsDF)
-	print ("class B.2 stateofsearch:", round(time()-t5, 3), "s")
-	print ("stateofsearch:", round(time()-t0, 3), "s")
+	#print ("class B.2 stateofsearch:", round(time()-t5, 3), "s")
+	#print ("stateofsearch:", round(time()-t0, 3), "s")
 
 	return features
 
@@ -483,7 +484,7 @@ def get_dataframes(datasetDirectory, featureSetName):
 
 		try:
 			dataframes[key] = pd.read_csv(totalPath, encoding='latin-1').fillna('')
-
+			#dataframes[key] = pd.read_csv(totalPath).fillna('')
 		except Exception as e:
 			print("Error while reading file "+totalPath)
 			print(e)
@@ -538,10 +539,12 @@ def bot_in_bio(userRow):
 	# https://stackoverflow.com/questions/11144389/find-all-upper-lower-and-mixed-case-combinations-of-a-string
 	bot_list = map(''.join, itertools.product(*((c.upper(), c.lower()) for c in 'bot')))
 	res = False
+	time("start")
 	if isinstance(userRow['description'],str):
 		for bot_combination in bot_list:
 			if bot_combination in userRow['description']:
 				res = True
+	time("end")
 	return res
 
 def friends_to_followers_ratio_is_100(userRow):
@@ -551,14 +554,13 @@ def friends_to_followers_ratio_is_100(userRow):
 
 def duplicate_profile_picture(userRow,usersDF):
 	'''
-	TODO: more research on possibilities
+	This functions checks if the name of the profile picture link is duplicated.
 	'''
-	res = False
-	for tweet_account in get_tweets_user(int(userRow['id']),tweetsDF):
-		for tweet_users in tweetsDF.iterrows():
-			if tweet_account[''] == tweet_users['']:
-					res = True
-	return False
+	clean = lambda x: x.split('/')[-1]
+	image = userRow['profile_image_url'].split('/')[-1]
+	img_column = usersDF['profile_image_url'].apply(clean)
+
+	return not image in img_column.unique()
 
 def get_account_age(userRow):
 	# Date format : Thu Apr 06 15:24:15 +0000 2017
@@ -583,9 +585,11 @@ def get_friends_tweet_count(userRow,friendsDF,usersDF):
 
 	return 0
 
-
 def get_friends_to_followers_ratio(userRow):
-	return int(userRow['friends_count'])/int(userRow['followers_count'])
+	res = 0
+	if int(userRow['followers_count']) != 0:
+		int(userRow['friends_count'])/int(userRow['followers_count'])
+	return res
 
 def get_stringhini_friends_to_followers_ratio(userRow):
 	followers = int(userRow['followers_count'])
@@ -619,17 +623,14 @@ def has_no_tweets(userID, tweetsDF):
 
 # Class B features
 def geolocalized(userRow,tweetsDF):
-	#res = False
-	tweets = get_tweets_user(int(userRow['id']),tweetsDF)
-	#print(tweets['geo'])
-	#print(not math.isnan(tweets['geo']))
-	print(type(tweets['geo']))
-	geo = tweets['geo'] > 0
-	print(tweets[geo])
-	return False
+	tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	geo = tweets['geo'] != ""
+	return not tweets[geo].empty
 	
 def is_favorite(userRow,tweetsDF):
-	tweets = get_tweets_user(int(userRow['id']),tweetsDF)
+	tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	fav = tweets['favorite_count'] != 0
+	return not tweets[fav].empty
 
 def uses_punctuation(userRow,tweetsDF):
 	# https://mail.python.org/pipermail/tutor/2001-October/009454.html
@@ -647,64 +648,25 @@ def uses_hashtag(userRow,tweetsDF):
 	return '#' in get_tweets_strings(int(userRow['id']),tweetsDF)
 
 def uses_iphone(userRow,tweetsDF):
-	#res = False
-	#t0 = time()
-	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
-	#print(type(all_tweets['source']))
-	#print(all_tweets['source'])
-	#print ("iphone.1:", round(time()-t0, 3), "s")
-	#t1 = time()
-	#for tweet in all_tweets.iterrows():
-	#	if "Iphone" in tweet[1]['source']:
-	#		res = True
-	#print ("iphone.2:", round(time()-t1, 3), "s")
-	t2 = time()
-	#print(type(all_tweets['source'].str.cat()))
-	#print(len(all_tweets['source'].str.cat()))
-	res = "Iphone" in all_tweets['source'].str.cat()
-	print ("optimized iphone:", round(time()-t2, 3), "s")
-	return res
+	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	return "Iphone" in all_tweets['source'].str.cat()
 
 def uses_android(userRow,tweetsDF):
-	#res = False
-	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
-
-	#for tweet in all_tweets.iterrows():
-	#	if "Android" in tweet[1]['source']:
-	#		res = True
-	res = "Android" in all_tweets['source'].str.cat()
-	return res
+	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	return "Android" in all_tweets['source'].str.cat()
 
 def uses_foursquare(userRow,tweetsDF):
-	#res = False
-	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
-
-	#for tweet in all_tweets.iterrows():
-	#	if "foursquare" in tweet[1]['source']:
-	#		res = True
-	res = "foursquare" in all_tweets['source'].str.cat()
-	return res
+	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	return "foursquare" in all_tweets['source'].str.cat()
 
 def uses_instagram(userRow,tweetsDF):
-	#res = False
-	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
-
-	#for tweet in all_tweets.iterrows():
-	#	if "Instagram" in tweet[1]['source']:
-	#		res = True
-	res = "Instagram" in all_tweets['source'].str.cat()
-	return res
+	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	return "Instagram" in all_tweets['source'].str.cat()
 
 def uses_twitterdotcom(userRow,tweetsDF):
-	#res = False
-	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
-
-	#for tweet in all_tweets.iterrows():
-	#	if "web" in tweet[1]['source']:
-	#		res = True
-	res = "web" in all_tweets['source'].str.cat()
-	return res
-
+	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	return "web" in all_tweets['source'].str.cat()
+	
 def userid_in_tweet(userRow,tweetsDF):
 	return str(userRow['id']) in get_tweets_strings(userRow['id'],tweetsDF)
 
@@ -712,22 +674,39 @@ def tweets_with_url(userRow,tweetsDF):
 	return has_url(get_tweets_strings(userRow['id'],tweetsDF))
 
 def retweet_over_1(userRow,tweetsDF):
-	#res = False
-	all_tweets = get_tweets_user(int(userRow['id']),tweetsDF)
-	#for tweet in all_tweets.iterrows():
-	#	if int(tweet[1]['retweet_count']) > 1:
-	#		res = True
+	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	# Any checks if the conditions happens once in the Series.
 	return (all_tweets['retweet_count'] > 1).any()
 
 def uses_different_clients(userRow,tweetsDF):
-	return False
+	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	return len(all_tweets['source'].unique()) > 1
 
-def duplicate_sentences_across_accounts(userRow,tweetsDF):
-	return False
+# https://stackoverflow.com/questions/17388213/find-the-similarity-percent-between-two-strings
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
 
-# I don't know how i can know if connection from API or not
-def api_tweets(userRow):
-	return 0
+def duplicate_sentences_across_tweets(userRow,tweetsDF):
+	res = False
+	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	counter = 0
+	for index, tweet in all_tweets.iterrows():
+		other_counter = 0
+		for other_index, other_tweet in all_tweets.iterrows():
+			if similar(tweet['text'],other_tweet['text']) > 0.7 and index != other_index :
+				res = True
+				break
+			if other_counter == 20:
+				break
+			other_counter+=1
+		if counter == 20:
+			break
+		counter+=1		
+	return res
+
+def api_tweets(userRow,tweetsDF):
+	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	return not "twitter.com" in all_tweets['source'].str.cat()
 
 def get_api_ratio(userRow):
 	# tweets sent from api over total number of tweets

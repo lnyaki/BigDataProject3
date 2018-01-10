@@ -1,4 +1,4 @@
-import url_finder
+from url_finder import *
 import pandas as pd
 import numpy as np
 from time import *
@@ -22,16 +22,25 @@ def get_tweets_user(userID,tweetsDF):
 	'''
 	return tweetsDF['text'][tweetsDF['user_id']== userID].tolist()
 
+def get_tweets_dataframe_user(userID,tweetsDF):
+	'''
+	This function returns the tweets belonging to a particular userID
+	'''
+	#t0 = time()
+	user_id = tweetsDF['user_id'] == userID
+	res = tweetsDF[user_id]
+	#print ("tweet user:", round(time()-t0, 3), "s")
+	return res
 
 def count_user_tweets(userID, tweetsDF):
 	return len(get_tweets_user(userID,tweetsDF))
 
 
 def get_avg_friends_tweets(friends,tweetsDF):
-	t0 = time()
+	#t0 = time()
 	user_id = tweetsDF['user_id'] == userID
 	res = tweetsDF[user_id]
-	print ("tweet user:", round(time()-t0, 3), "s")
+	#print ("tweet user:", round(time()-t0, 3), "s")
 	return res
 
 
@@ -40,9 +49,9 @@ def get_tweets_strings(userID,tweetsDF):
 	Searches for a user's tweets and saves all the text from
 	the tweets in 1 string
 	'''
-	t0 = time()
+	#t0 = time()
 	#tweetsString = ""
-	tweets_user = get_tweets_user(userID,tweetsDF)
+	tweets_user = get_tweets_dataframe_user(userID,tweetsDF)
 	res = tweets_user['text'].str.cat()
 	#for tweet in tweets_user.iterrows():
 	#	if isinstance(tweet[1]['text'],str):
@@ -51,7 +60,7 @@ def get_tweets_strings(userID,tweetsDF):
 	#t1 = time()
 	#print(len(tweets_user['text'].str.cat()))
 	#print(get_tweets_count(userID,tweetsDF))
-	print ("tweet strings optimized:", round(time()-t0, 3), "s")
+	#print ("tweet strings optimized:", round(time()-t0, 3), "s")
 	return res
 
 
