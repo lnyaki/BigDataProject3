@@ -45,7 +45,7 @@ def get_avg_neighbors_followers(friendsIDlist,usersDF):
 	total_result = followers.sum()
 
 
-	print("[Total friends : {}], [Followers : {}], [Total neigbors followers :{}]".format(friends_count,total_followers_count,total_result))
+	#print("[Total friends : {}], [Followers : {}], [Total neigbors followers :{}]".format(friends_count,total_followers_count,total_result))
 
 	if(total_followers_count == 0):
 		return 0

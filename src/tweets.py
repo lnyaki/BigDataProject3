@@ -96,10 +96,10 @@ def retweet_ratio(userID, tweetsDF):
 	retweets = tweets[tweets['retweet_count']>0].shape[0]
 
 	if(tweetsCount == 0):
-		print("-----------------Retweet 0")
+		#print("-----------------Retweet 0")
 		return 0
 
 	else:
 		res = retweets/tweetsCount
-		print("-----------------Retweet : "+str(res))
+		#print("-----------------Retweet : "+str(res))
 		return res

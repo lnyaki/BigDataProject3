@@ -11,6 +11,12 @@ base directory (ex: E13, FAK, etc) and the name of the feature set (class A, cla
 The generated list is the baseline feature set and will be created in the directory
 specified in parameters. Ex: E13/baseline.csv
 '''
+
+def get_BAS_dataset(hum_path,fak_path):
+	hum_df = (hum_path, encoding='latin-1')
+	fak_df = (fak_path, encoding='latin-1')
+	frames = [hum_df,fak_df]
+
 def save_features_in_file(path, featuresDF, featureSetName):
 
 	filename =  path + "/features_"+featureSetName+".csv"

@@ -151,7 +151,7 @@ def get_class_A_features(dataframes):
 	limit = 1
 
 	for index, row in usersDF.iterrows():
-		timelog("[{}] User {}".format(index,row['id']))
+		#timelog("[{}] User {}".format(index,row['id']))
 		features.append(get_single_class_A_features(row,usersDF, tweetsDF))
 
 		#Temporary code, for test purpose
@@ -214,13 +214,14 @@ def get_class_C_features(dataframes):
 	LIMIT = 5
 	t0 = time()
 	for index, row in usersDF.iterrows():
-		timelog("[{}] User {}".format(index,row['id']))
+		#timelog("[{}] User {}".format(index,row['id']))
 		features.append(get_single_class_C_features(row,usersDF, friendsDF,followersDF,tweetsDF))
 
 		#Temporary code, for test purpose
+		'''
 		if(index > LIMIT):
 			break
-		
+		'''
 
 	
 	return features
@@ -499,14 +500,16 @@ def get_stringhini_features(dataframes):
 	limit = 1
 
 	for index, row in usersDF.iterrows():
-		timelog("User "+str(limit))
+		#timelog("User "+str(limit))
 		stringhiniFeatures.append(get_single_user_stringhini_features(row,usersDF, friendsDF,tweetsDF))
 
 		#Temporary code, for test purpose
+		'''
 		if(limit > LIMIT):
 			break
 		else:
 			limit = limit +1
+		'''
 
 	return stringhiniFeatures
 
@@ -555,13 +558,15 @@ def get_yang_features(dataframes):
 	for index, row in usersDF.iterrows():
 		yangFeatures.append(get_single_user_yang_features(row, usersDF,friendsDF,followersDF,tweetsDF))
 
-		timelog("User "+str(limit))
+		#timelog("User "+str(limit))
 		
 		#Temporary code, for test purpose
+		'''
 		if(limit > LIMIT):
 			break
 		else:
 			limit = limit +1
+		'''
 
 	return yangFeatures
 
@@ -580,11 +585,11 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweet
 	userID = userRow['id']
 
 	features = {}
-	timelog("Start processing")
+	#timelog("Start processing")
 	# Class A features
 	features[ACCOUNT_AGE] 		= get_account_age(userRow)
 	#features[FOLLOWING_RATE] 	= get_following_rate(userRow) # What is following rate?
-	timelog("\tClass A finished")
+	#timelog("\tClass A finished")
 	# Class B features
 	#features[API_RATIO] 			= get_api_ratio(userRow)
 	#features[API_URL_RATIO] 		= get_api_url_ratio(userRow)
@@ -595,7 +600,7 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweet
 	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userID,friendsDF,usersDF)
 	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, usersDF,friendsDF, tweetsDF)
 	#features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
-	timelog("\tClass C finished")
+	#timelog("\tClass C finished")
 	return features
 
 def get_dataframes(featureSetName, datasetDirectory):
@@ -635,7 +640,7 @@ def get_dataframes(featureSetName, datasetDirectory):
 	for key, filename in fileNames.items():
 
 		totalPath = datasetDirectory + '/'+ filename
-		print(totalPath)
+		#print(totalPath)
 		timelog("Loading "+ totalPath)
 
 		try:
@@ -1092,8 +1097,8 @@ def get_bilink_ratio(userRow, friendsDF, followersDF):
 	bilinkList = followersSeries.isin(friends)
 
 	bilink_count = bilink.shap[0]
-	print("===== User ID = "+str(userID))
-	print("[Bilink count : {}][Official Friends count : {}][Official Followers count :  {}], [followers actually found : {} ]".format(bilink_count,friends_count,userRow['followers_count'], len(followersSeries)))
+	#print("===== User ID = "+str(userID))
+	#print("[Bilink count : {}][Official Friends count : {}][Official Followers count :  {}], [followers actually found : {} ]".format(bilink_count,friends_count,userRow['followers_count'], len(followersSeries)))
 	return bilink_count/friends_count
 
 def get_average_neighbors_followers(userID,friendsDF,usersDF):
@@ -1127,12 +1132,12 @@ if(__name__ == "__main__"):
 	dataframes = get_dataframes(featureSetName, directory)
 
 	timelog("OK, ca passe")
-	print("=========== Getting features ===========")
-	print(time())
+	#print("=========== Getting features ===========")
+	#print(time())
 	t0 = time()
 	features 	= pd.DataFrame(get_features(featureSetName, dataframes))
 	tf = time() - t0
-	print("========== Elapsed time ==========")
-	print(tf)
-	timelog("Features : ")
+	#print("========== Elapsed time ==========")
+	#print(tf)
+	#timelog("Features : ")
 	print(features)
