@@ -16,10 +16,10 @@ def get_BAS_dataset(hum_path,fak_path):
 	filename_A = "features_A.csv"
 	filename_C = "features_C.csv"
 
-	hum_df_A = pd.read_csv(hum_path+filename_A, encoding='latin-1')
-	fak_df_A = pd.read_csv(fak_path+filename_A, encoding='latin-1')
-	hum_df_C = pd.read_csv(hum_path+filename_C, encoding='latin-1')
-	fak_df_C = pd.read_csv(fak_path+filename_C, encoding='latin-1')
+	hum_df_A = pd.read_csv(hum_path+filename_A, encoding='latin-1',sep='\t')
+	fak_df_A = pd.read_csv(fak_path+filename_A, encoding='latin-1',sep='\t')
+	hum_df_C = pd.read_csv(hum_path+filename_C, encoding='latin-1',sep='\t')
+	fak_df_C = pd.read_csv(fak_path+filename_C, encoding='latin-1',sep='\t')
 	
 	frames_A = [hum_df_A,fak_df_A]
 	frames_C = [hum_df_C,fak_df_C]
@@ -46,7 +46,7 @@ def labelize_features(featuresDF, label):
 	elif(label == 'bot'):
 		labelVal = 1
 		
-	featuresDF['label'] = label
+	featuresDF['label'] = labelVal
 
 
 if(__name__ == "__main__"):

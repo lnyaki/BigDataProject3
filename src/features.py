@@ -794,6 +794,7 @@ def get_following_rate(userRow):
 def get_friends_count(userRow):
 	return int(userRow['friends_count'])
 
+
 def get_friends_tweet_count(userRow,friendsDF,usersDF):
 	userID 	= userRow['id']
 
@@ -807,10 +808,11 @@ def get_friends_tweet_count(userRow,friendsDF,usersDF):
 
 	return res
 
+
 def get_friends_to_followers_ratio(userRow):
 	res = 0
 	if int(userRow['followers_count']) != 0:
-		int(userRow['friends_count'])/int(userRow['followers_count'])
+		res = int(userRow['friends_count'])/int(userRow['followers_count'])
 	return res
 
 def get_stringhini_friends_to_followers_ratio(userRow):
@@ -887,7 +889,7 @@ def is_favorite(userRow,tweetsDF):
 	#tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
 	tweets = cache.get_user_tweets(int(userRow['id']),tweetsDF)
 	fav = tweets['favorite_count'] != 0
-	return not tweets[fav].empty
+	return int(not tweets[fav].empty)
 
 def uses_punctuation(userRow,tweetsDF):
 	# https://mail.python.org/pipermail/tutor/2001-October/009454.html
@@ -975,7 +977,7 @@ def tweets_with_url(userRow,tweetsDF):
 def retweet_over_1(userRow,tweetsDF):
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
 	# Any checks if the conditions happens once in the Series.
-	return (all_tweets['retweet_count'] > 1).any()
+	return int((all_tweets['retweet_count'] > 1).any())
 
 def uses_different_clients(userRow,tweetsDF):
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
