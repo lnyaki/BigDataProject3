@@ -153,14 +153,12 @@ def support_vector_machine():
     # tol=0.001, verbose=False)
     return clf
 
-def classify(features_dataframe):
+def classify(features, labels):
 
 	# CROSS VALIDATION: cross_val_score(clf, test_features, test_labels, cv=10)
 	# or 
 	# from sklearn.model_selection import cross_val_predict
 	# pred = cross_val_predict(clf, test_features, test_labels)
-
-	features, labels = preprocess()
 
 	# dico with the classifiers 
 	classifiers_dict = {}
@@ -180,9 +178,3 @@ def classify(features_dataframe):
 		predictions_dict[key] = cross_val_predict(value, features, labels, cv=10)
 
 	return predictions_dict
-
-
-def preprocess():
-	# 1. charger les 2 datasets(labelisés)
-	# 2. concatener les 2
-	pass
