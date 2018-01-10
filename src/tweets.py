@@ -36,12 +36,15 @@ def count_user_tweets(userID, tweetsDF):
 	return len(get_tweets_user(userID,tweetsDF))
 
 
-def get_avg_friends_tweets(friends,tweetsDF):
-	#t0 = time()
-	user_id = tweetsDF['user_id'] == userID
-	res = tweetsDF[user_id]
-	#print ("tweet user:", round(time()-t0, 3), "s")
-	return res
+def get_avg_friends_tweets(friendsIDlist,tweetsDF):
+	friends_count 		= len(friendsIDlist)
+	total_tweet_count 	= 0
+
+	for friendID in friendsIDlist:
+		total_tweet_count = total_tweet_count + count_user_tweets(friendID, tweetsDF)
+
+	return total_tweet_count/friends_count
+
 
 
 def get_tweets_strings(userID,tweetsDF):

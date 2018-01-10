@@ -31,25 +31,25 @@
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
 
-def random_forest():
+def random_forest(features):
 	pass
 
-def decorate():
+def decorate(features):
 	pass
 
-def decision_tree():
+def decision_tree(features):
 	# J48
 	pass
 
-def adaptive_boost():
+def adaptive_boost(features):
 	pass
 
-def bayesian_network():
+def bayesian_network(features):
 	# http://pomegranate.readthedocs.io/en/latest/BayesianNetwork.html
 	# Careful with dependencies
 	pass
 
-def knn():
+def knn(features):
 	# http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
 	#
 	# neigh = KNeighborsClassifier(n_neighbors=3)
@@ -60,7 +60,7 @@ def knn():
 	#  p=2, metric=’minkowski’, metric_params=None, n_jobs=1, **kwargs)
 	pass
 
-def logistic_regression():
+def logistic_regression(features):
 	# http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
 	# http://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
 	# 
@@ -70,7 +70,7 @@ def logistic_regression():
 	# multi_class=’ovr’, verbose=0, warm_start=False, n_jobs=1)
 	pass
 
-def svm():
+def svm(features):
 	# clf = svm.SVC()
 	# clf.fit(X, y) 
 	# clf.predict([[2., 2.]])
@@ -79,4 +79,4 @@ def svm():
     # decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
     # max_iter=-1, probability=False, random_state=None, shrinking=True,
     # tol=0.001, verbose=False)
-
+    pass
