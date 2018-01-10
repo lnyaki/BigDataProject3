@@ -815,8 +815,8 @@ def has_x50_followers(userRow):
 	friends = int(userRow['friends_count'])
 
 	if(followers ==0):
-		followers == 0.001
-		
+		followers = 0.001
+
 	res = (friends/followers)>= 50
 
 	if(res):
