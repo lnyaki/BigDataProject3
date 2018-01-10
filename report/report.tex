@@ -159,12 +159,12 @@ The amount of data that we had to manipulate by no means huge or overwhelming, b
 
 Developing using Python, we used the popular pandas library and its DataFrame object to manipulate our data and perform computations. Soon however, the program was plagued by an abnormally slow execution time.\\
 
-The issue came from manually looping on DataFrame object, either by user a \textit{for} loop, or by using the DataFrame.iterrows() function. This led to processing time that could reach between 10 and 20 seconds per user. Considering that we had several thousands users, another solution had to be found.
+The issue came from manually looping on DataFrame object, either by user a \textit{for} loop, or by using the DataFrame.iterrows() function. This led to processing time that could reach between 10 and 20 seconds per user record. Considering that we had several thousands users, another solution had to be found.
 
-\subsection{DataFrame.apply() method and lambda functions}
-We found out that there was several efficient ways to loop over a DataFrame. The easiest way being through the use of lambda functions, which is a much better solution than looping manually.\\
+\subsection{DataFrame.apply() and lambda functions}
+We found out that there was several efficient ways to loop over a DataFrame. The easiest way being through the use of lambda functions which will automatically be executed on every row of the Dataframe, without requiring a manual management of the iterative process.\\
 
-
+The result was efficient, and the processing time per user came down from 10-20s to about 0.3s. We decided that this gain in performance was enough, and didn't try to improve further on it, even though we heard of a method called Vectorization which would arguably perform even faster.
 
 \section{Classifiers}
 In \textit{Cresci et al.} the following 8 classifiers are proposed: Random Forest, Decorate, Decision Tree, Adaptive Boosting, Bayesian Network, k-Nearest Neighbors, Logistic Regression and Support Vector Machine.\\
