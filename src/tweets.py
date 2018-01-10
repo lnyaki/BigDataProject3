@@ -76,9 +76,11 @@ def get_tweets_with_url_ratio(userID, tweetsDF):
 	tweets_with_url 	= len(urlTweets)
 	user_tweets_count 	= count_user_tweets(userID,tweetsDF)
 
-
+	if(user_tweets_count == 0):
+		user_tweets_count = 0.001
+		
 	return tweets_with_url/user_tweets_count
 
 
 def tweet_contains_url(tweet):
-	return url_finder.has_url(tweet)
+	return has_url(tweet)

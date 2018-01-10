@@ -68,7 +68,8 @@ RETWEET_OVER_1 			= 'retweet_over_1'
 USES_DIFFERENT_CLIENTS 	= 'uses_different_clients'
 
 #State of Search
-DUPLICATE_SENTENCES_ACROSS_TWEETS = 'duplicate_sentences_across_tweets'
+DUPLICATE_SENTENCES_ACROSS_TWEETS 	= 'duplicate_sentences_across_tweets'
+DUPLICATE_SENTENCES_ACROSS_ACCOUNTS = 'duplicate_sentences_accross_accounts'
 API_TWEETS 							= 'api_tweets'
 
 # Socialbakers
@@ -202,9 +203,31 @@ def get_single_class_A_features(userRow, usersDF,tweetsDF):
 	return features 
 
 def get_class_C_features(dataframes):
-	#Class C features = all features
+	usersDF 	= dataframes['users']
+	tweetsDF 	= dataframes['tweets']
+	friendsDF 	= dataframes['friends']
+	followersDF = dataframes['followers']
 
-	features = get_class_A_features(dataframes)
+	features 	= []
+
+	LIMIT = 5
+
+	for index, row in usersDF.iterrows():
+		timelog("[{}] User {}".format(index,row['id']))
+		features.append(get_single_class_C_features(row,usersDF, friendsDF,followersDF,tweetsDF))
+
+		#Temporary code, for test purpose
+		if(index > LIMIT):
+			break
+		
+
+	return features
+
+def get_single_class_C_features(userRow,usersDF, friendsDF,followersDF,tweetsDF):
+	#Class C features = all features
+	userID = userRow['id']
+	
+	features = get_single_class_A_features(userRow, usersDF,tweetsDF)
 
 	#Camisani Class B
 	features[GEOLOCALIZED] 				= geolocalized(userRow,tweetsDF)
