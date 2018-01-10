@@ -24,14 +24,14 @@ followers}
 \paragraph{}
 The objective of this project is to partially reproduce the results presented in a 2015 paper titled  \textit{Fame for sale: effective detection of fake twitter followers}, by Cresci \textit{et al.}\\
 
-In the paper, various classification rules and features proposed by academics, \textit{technology bloggers} and companies specialized in fake twitter users detection are enumerated and assessed. Rule-based classification is shown to perform more poorly than feature-based classification. Therefore the authors decided to abandon rule-based classification and to select the 19 features responsible for the most information gain while having the smallest calculation cost.\\
+In the paper, various classification rules and features proposed by academics, \textit{technology bloggers} and companies specialized in fake twitter users detection are enumerated and assessed. Rule-based classification is shown to perform more poorly than feature-based classification. Therefore the authors decided to abandon rule-based classification in favor of the 19 features responsible for the most information gain while having the smallest calculation cost.\\
 
 The resulting classifier trained on that 19-features set shows an accuracy of up to 97.5\% on randomly sampled account, while being solely based on data readily available on the profile of the twitter users, which ensures that the data processing is fast and lightweight.
 
 \subsection{Objectives}
 In this project, we focus on reproducing the final results of Cresci \textit{et al.}, by implementing various classifiers based on the feature set presented in that paper.\\
 
-First we describe the 19 features that will be part of the feature set. Then, we introduce the datasets on which the classifiers will be trained. Later we describe how the features will be extracted from these datasets as well as our planned procedure for training classifier. Each type of classifier is then described along with their parameters, and results are presented for each classifier. Finally, we summarize the results argue on the difference between the results presented in Cresci \textit{et al.}, and the results we managed to obtain.
+First we describe the 19 features that will be part of the feature set. Then, we introduce the datasets that have been provided, and which contain \textit{human} or \textit{bot} data. Later we describe how the features will be extracted from these datasets as well as our planned procedure for training classifier. Each type of classifier is then described along with their parameters, and results are presented for each classifier. Finally, we summarize the results argue on the difference between the results presented in Cresci \textit{et al.}, and the results we managed to obtain.
 
 
 \section{Rule sets and Features set}
@@ -160,9 +160,10 @@ We found out that there was several efficient ways to loop over a DataFrame. The
 
 
 
-
-
 \section{Classifiers}
+In \textit{Cresci et al.} the following 8 classifiers are proposed: Random Forest, Decorate, Decision Tree, Adaptive Boosting, Bayesian Network, k-Nearest Neighbors, Logistic Regression and Support Vector Machine.\\
+
+For the sake of simplicity, we decided to focus on the following classifiers:Random Forest,  Decision Tree, Adaptive Boosting, k-Nearest Neighbors, Logistic Regression and Support Vector Machine.\\
 
 \bibliography{bibliography}
 \bibliographystyle{plain}
