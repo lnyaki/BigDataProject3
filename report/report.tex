@@ -38,10 +38,23 @@ First we describe the 19 features that will be part of the feature set. Then, we
 \section{Rule sets and Features set}
 In the paper, five rule sets and features set are analyzed. They come from  academic research, as well as technology bloggers and companies specialized in fake tweeter users detection.\\
 
+The rule set contained the following classes of rules:
+
+\begin{itemize}
+\item Camisani-Calzolari: The Camisani-Calzolari rule set is described as follows: 22 class A rules
+\item State of search:They propose 7 rules, with 5 of class A, and 2 of class B
+\item SocialBakers: The rule set of social baker is composed of 9 rules, with 6 of class A and 3 of class B.
+\item Stringhini et al.: This paper proposes 5 features with 3 class A features, and 2 class B features
+\item Yang et al.:This paper proposes 9 features. Two of class A, 3 of class B, and 4 of class C.
+\end{itemize}
+
+\begin{comment}
+\subsection{State of search}
 
 
-\subsection{Camisani-Calzolari rule set}
-The Camisani-Calzolari rule set is described as follows:
+\subsection{Socialbakers}
+
+\subsection{Stringhini et al.}
 
 \begin{multicols}{2}
 \begin{enumerate}
@@ -69,14 +82,13 @@ The Camisani-Calzolari rule set is described as follows:
 \end{enumerate}
 \end{multicols}
 
+
 \subsection{State of search}
 
 
 \subsection{Socialbakers}
 
 \subsection{Stringhini et al.}
-
-Comment : je teste le tabular au lieu de la liste, mais ça marche pas super. J'ai pas le temps de corriger ça pour le moment.\\
 
 \begin{tabular}{cc}
 \hline
@@ -88,6 +100,7 @@ Comment : je teste le tabular au lieu de la liste, mais ça marche pas super. J'
 
 
 \subsection{Yang et al.}
+\end{comment}
 
 \subsection{Rules that were not implemented}
 The following features where not implemented,as knowing whether a tweet came from an API was far from obvious : \\
@@ -195,6 +208,7 @@ After training our classifiers, we obtain the following resutls:
 	J48			&	1		&	1		&	1		& 1 	&	1	& 1   \\
 	LR			&	0.999		&	0.998		&	0.999		& 0.999 	&	0.998	& 0.999   \\
 	
+	Due to an execution error caused by a bad value, the results for class C couldn't be displayed.
 	
 \end{tabular}
 
