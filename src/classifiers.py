@@ -77,15 +77,16 @@ def decision_tree():
 	# min_impurity_decrease=0.0, min_impurity_split=None, 
 	# class_weight=None, presort=False)
 	# J48
-	clf = train_decision_tree(train_features,train_labels)
+	clf = tree.DecisionTreeClassifier()
+	#clf = train_decision_tree(train_features,train_labels)
 	
-	result = cls.score(test_features, test_labels)
+	#result = cls.score(test_features, test_labels)
 
 	return clf
 
-def train_decision_tree(train_features, train_labels):
-	clf = tree.DecisionTreeClassifier()
-	clf = clf.fit(train_features, train_labels)
+#def train_decision_tree(train_features, train_labels):
+#	clf = tree.DecisionTreeClassifier()
+#	clf = clf.fit(train_features, train_labels)
 
 
 def adaptive_boost():
@@ -167,10 +168,10 @@ def classify(features_dataframe):
 	predictions_dict = {}
 
 	classifiers_dict['RF'] = random_forest()
-	classifiers_dict['D'] = decorate()
+	#classifiers_dict['D'] = decorate()
 	classifiers_dict['J48'] = decision_tree()
 	classifiers_dict['AB'] = adaptive_boost()
-	classifiers_dict['BN'] = bayesian_network()
+	#classifiers_dict['BN'] = bayesian_network()
 	classifiers_dict['kNN'] = k_nearest_neighbors()
 	classifiers_dict['LR'] = logistic_regression()
 	classifiers_dict['SVM'] = support_vector_machine()

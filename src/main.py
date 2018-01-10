@@ -11,14 +11,16 @@ def main(datasetDirectory):
 	df_features_class_A = get_class_A_features(df)
 	df_features_class_C = get_class_C_features(df)
 
+	
+
 	# classifiers (training + prediction)
 	class_A_classifiers_predictions = classify(df_features_class_A)
 	class_C_classifiers_predictions = classify(df_features_class_C)
 
 	# Metrics on the result predictions from the classifiers
-	results_class_A_classifiers = metrics(class_A_classifiers)
-	results_class_C_classifiers = metrics(class_C_classifiers)
-
+	results_class_A_classifiers = metrics(labels,class_A_classifiers_predictions)
+	results_class_C_classifiers = metrics(labels, class_C_classifiers_predictions)
+ 
 	# publish and save results
 	publish(results_class_A_classifiers)
 	publish(results_class_C_classifiers)
@@ -32,7 +34,7 @@ if(__name__ == "__main__"):
 	baseDataset 	= sys.argv[1]
 	featureSetName 	= sys.argv[2]
 
-	dataframes  = features.get_dataframes(baseDataset, featureSetName)
+	dataframes  = features.get_dataframes(baseDataset_A, featureSetName)
 
 	main(baseDataset)
 
