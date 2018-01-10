@@ -41,6 +41,7 @@ To avoid simply using all the features mentionned in other papers without any pr
 \\\\
 We have decided that we will present the features that they kept and that we will se to train our classifiers.\\
 We have devided the features by paper and in each section we have separated the features related to the profile(class A), the timeline(class B) and relationships (class C).
+
 \subsection{Camisani-Calzolari rule set}
 In this paper the features had as objective to focus on human accounts, but they can still be used to detect bots. \\
 We start with the class A section, for example a couple of straightforward ones: has name, has image, has address, has biography, belongs to a list.
@@ -55,12 +56,16 @@ This ones are really general ones for bot detection by state of search website.
 For the class A: bot in biography, friends/followers == 100 and duplicate profile pictures.\\
 For class B: same sentence to many accounts, tweet from API.
 This features are actually extracted from spammer bots.
+
 \subsection{Socialbakers}
 We start finding a trend with some of the ratios for our class A: friends/followers ≥ 50, friends ≥100. Followed by some features resembling the ones in Camisani: default image after 2 months, no bio, no location, 0 tweets.\\
+For the Class B, we're only looking at ratios and tweets' similarities: tweets spam phrases, same tweet
+≥ 3, retweets ≥ 90\%, tweet-links≥ 90\%.
 \subsection{Stringhini et al.}
-
-Comment : je teste le tabular au lieu de la liste, mais ça marche pas super. J'ai pas le temps de corriger ça pour le moment.\\
-
+The last 2 papers already have really strong features that we are going to use and see if we can improve the score they obtained by adding extra features.
+Here you can see some of the best ones: number of friends, number of tweets, $$friends/(followersˆ2)$$.\\
+For class B: we only have a couple of ones: tweet similarity, URL ratio.
+This paper also tracked spam bots.
 \begin{tabular}{cc}
 \hline
 1. spambots do not have thousands of friends; & spambots have a high ratio of tweets containing urls\\
@@ -71,7 +76,7 @@ Comment : je teste le tabular au lieu de la liste, mais ça marche pas super. J'
 
 
 \subsection{Yang et al.}
-
+This last paper has a focus on the API for class B features: API ratio, API URL ratio, API tweet similarity. And some curious features for the class A: age, following rate. The following rate is obvious, not much people follow bots and the age is smarter, spam bots are susceptible to be banned or simply used once therefore their age will usually be lower then real accounts.
 \subsection{Rules that were not implemented}
 The following features where not implemented,as knowing whether a tweet came from an API was far from obvious : \\
 
@@ -90,7 +95,7 @@ The result was a features dataset that is ready to be used for training classifi
 \subsection{Available data}
 The researchers responsible for the paper Fame forl sale made their 5 basic datasets available for future researchers.\\ 
 
-Since we are trying to replicate the work they have done to practice our skills and understand more deeply the meaning of data and the proper way to analyse data
+Since we are trying to replicate the work they have done to practice our skills and understand more deeply the meaning of data and the proper way to analyse data is by following their BAS dataset creation.
 
 \subsection{Table 1 creation}
 In this section we are going to create the base dataset that we will use throughout the project.
@@ -119,7 +124,7 @@ BAS & 3900 & 2,738,761 & 1,820,842 & 1,782,429 & 3,603,271 \\
 
 \section{Data Pre-Processing}
 \paragraph{}
-The datasets that we received was composed of several directories containing each the following files: \textit{users.csv, friends.csv, followers.csv and tweets.csv}. These are regular files containing text, numerical values and NaN values.\\
+The datasets that we received was composed of several directories containing each the following files: \textit{users.csv, friends.csv, followers.csv and tweets.csv}. These are regular csv files containing text, numerical values and NaN values.\\
 
 NaN values are bothersome as they are there own type and can cause problems when they get mixed with Strings or numerals. Therefore the first thing to do was to replace every NaN instance by something less troublesome. We decided that an empty String would be a good solution. This was done in a single command, when opening the CSV file:
 
@@ -142,12 +147,20 @@ The amount of data that we had to manipulate by no means huge or overwhelming, b
 
 Developing using Python, we used the popular pandas library and its DataFrame object to manipulate our data and perform computations. Soon however, the program was plagued by an abnormally slow execution time.\\
 
-The issue came from manually looping on DataFrame object, either by user a \textit{for} loop, or by using the DataFrame.iterrows() function. This led to processing time that could reach between 10 and 20 seconds per user record. Considering that we had several thousands users, another solution had to be found.
+The issue came from manually looping on DataFrame object, either by user a \textit{for} loop, or by using the DataFrame.iterrows() function. This led to processing time that could reach between 10 and 20 seconds per user record. Considering that we had several thousands users, another solution had to be found.\\\\
+This part of the project was definetly the most time consuming and involved a lot of small tricks to achieve the expected result for certain features.\\
+As explained above, after a first implementation of certain features we realized that the extraction was extremly slow, we then decided to cut down the testing set to 10 users to ensure a functional extractor without waiting for 30 min after each execution. This already improved our testing time.\\
+After that we realized that for the B class features we were getting very long execution times. Because the B class features are realted to tweets, depending on the users this amount can be in the thousands and for some features this involved looping a lot.
 
 \subsection{DataFrame.apply() and lambda functions}
 We found out that there was several efficient ways to loop over a DataFrame. The easiest way being through the use of lambda functions which will automatically be executed on every row of the Dataframe, without requiring a manual management of the iterative process.\\
 
-The result was efficient, and the processing time per user came down from 10-20s to about 0.3s. We decided that this gain in performance was enough, and didn't try to improve further on it, even though we heard of a method called Vectorization which would arguably perform even faster.
+The result was efficient, and the processing time per user came down from 10-20s to about 0.3s. We decided that this gain in performance was good but with 3900 users to process we're still talking of 1300s which is a really long processing time. To improve that we researched optimisation techniques with Pandas.SerieS. And using built in functions and conditions on the Series we kept improving our processing time. For some of our features we obtained huge improvements alowing to reduce most of the B features to 0.05s (except for the HUM dataset because of the high amount of data to check).\\\\
+
+Because the built in functions are limited and Series conditional selection is limited for some of the features we add to be creative. I have some example I want to showcase:
+
+
+Unfortunately we found out too late of a method called Vectorization which would arguably perform even faster.
 
 \section{Classifiers}
 In \textit{Cresci et al.} the following 8 classifiers are proposed: Random Forest, Decorate, Decision Tree, Adaptive Boosting, Bayesian Network, k-Nearest Neighbors, Logistic Regression and Support Vector Machine.\\
