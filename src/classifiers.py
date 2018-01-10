@@ -28,9 +28,11 @@
 # k parameter of the kNN classifier and the ridge penalizing parameter
 # of the LR model have been optimized via a cross validation parameter 
 # selection algorithm.
+from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
+from pomegranate import *
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
 
@@ -55,10 +57,18 @@ def decorate(train_features,train_labels,test_features,test_labels):
 	# Install https://github.com/fracpete/python-weka-wrapper3
 	# 
 	# examples: https://github.com/fracpete/python-weka-wrapper3-examples/blob/master/src/wekaexamples/classifiers/classifiers.py
-	# pass
+	pass
 
 def decision_tree(train_features,train_labels,test_features,test_labels):
-	# J48
+	# http://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier
+	# clf = DecisionTreeClassifier(random_state=0)
+	#
+	# DecisionTreeClassifier(criterion=’gini’, splitter=’best’, 
+	# max_depth=None, min_samples_split=2, min_samples_leaf=1, 
+	# min_weight_fraction_leaf=0.0, max_features=None, 
+	# random_state=None, max_leaf_nodes=None, 
+	# min_impurity_decrease=0.0, min_impurity_split=None, 
+	# class_weight=None, presort=False)
 	pass
 
 def adaptive_boost(train_features,train_labels,test_features,test_labels):
@@ -76,6 +86,7 @@ def adaptive_boost(train_features,train_labels,test_features,test_labels):
 def bayesian_network(train_features,train_labels,test_features,test_labels):
 	# http://pomegranate.readthedocs.io/en/latest/BayesianNetwork.html
 	# Careful with dependencies
+	# 
 	pass
 
 def k_nearest_neighbors(train_features,train_labels,test_features,test_labels):
@@ -123,6 +134,13 @@ def support_vector_machine(train_features,train_labels,test_features,test_labels
     pass
 
 def classify(features_dataframe):
+
+	# CROSS VALIDATION: cross_val_score(clf, test_features, test_labels, cv=10)
+	# or 
+	# from sklearn.model_selection import cross_val_predict
+	# pred = cross_val_predict(clf, test_features, test_labels)
+
+
 	pred_RF = random_forest(train_features,train_labels,test_features,test_labels)
 	pred_D = decorate(train_features,train_labels,test_features,test_labels)
 	pred_J48 = decision_tree(train_features,train_labels,test_features,test_labels)
