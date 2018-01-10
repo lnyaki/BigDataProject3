@@ -129,11 +129,32 @@ BAS & 3900 & 2,738,761 & 1,820,842 & 1,782,429 & 3,603,271 \\
 
 
 \section{Data Pre-Processing}
+\paragraph{}
+The datasets that we received was composed of several directories containing each the following files: \textit{users.csv, friends.csv, followers.csv and tweets.csv}. These are regular files containing text, numerical values and NaN values.\\
+
+NaN values are bothersome as they are there own type and can cause problems when they get mixed with Strings or numerals. Therefore the first thing to do was to replace every NaN instance by something less troublesome. We decided that an empty String would be a good solution. This was done in a single command, when opening the CSV file:
+
+\begin{lstlisting}
+pd.read_csv(totalPath, encoding='latin-1').fillna('')
+\end{lstlisting}
 
 \section{Feature set generation}
+
 \subsection{Data labeling}
 
 \section{Process Optimization}
+The amount of data that we had to manipulate by no means huge or overwhelming, but it was still big enough so that, if not careful, some optimization issues could arise.\\
+
+Developing using Python, we used the popular pandas library and its DataFrame object to manipulate our data and perform computations. Soon however, the program was plagued by an abnormally slow execution time.\\
+
+The issue came from manually looping on DataFrame object, either by user a \textit{for} loop, or by using the DataFrame.iterrows() function. This led to processing time that could reach between 10 and 20 seconds per user. Considering that we had several thousands users, another solution had to be found.
+
+\subsection{DataFrame.apply() method and lambda functions}
+We found out that there was several efficient ways to loop over a DataFrame. The easiest way being through the use of lambda functions, which is a much better solution than looping manually.\\
+
+
+
+
 
 \section{Classifiers}
 
