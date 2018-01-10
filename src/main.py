@@ -1,6 +1,6 @@
-import classifiers
-import features
-import metrics
+from classifiers import *
+from features import *
+from metrics import *
 import sys
 from generateBAS import *
 
@@ -9,17 +9,16 @@ def main():
 
 	# data frame with our dataset
 	labels, df_features_class_A, df_features_class_C = get_BAS_dataset("data/HUM/","data/FAK/")
-	print(labels)
 	# preprocessing of the data to capture the features we want
 	#df_features_class_A = get_class_A_features(df)
 	#df_features_class_C = get_class_C_features(df)
 
 	# classifiers (training + prediction)
-	#class_A_classifiers_predictions = classify(df_features_class_A,labels)
+	class_A_classifiers_predictions = classify(df_features_class_A,labels)
 	#class_C_classifiers_predictions = classify(df_features_class_C,labels)
 
 	# Metrics on the result predictions from the classifiers
-	#results_class_A_classifiers = metrics(labels,class_A_classifiers_predictions)
+	results_class_A_classifiers = metrics(labels,class_A_classifiers_predictions)
 	#results_class_C_classifiers = metrics(labels, class_C_classifiers_predictions)
  
 	# publish and save results

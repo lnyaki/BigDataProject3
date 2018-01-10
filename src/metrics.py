@@ -4,7 +4,7 @@ from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import f1_score
 from sklearn.metrics import matthews_corrcoef
-from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_auc_score
 def metrics(labels,pred_dict):
 
 	results_dict = {}
@@ -40,11 +40,12 @@ def metrics(labels,pred_dict):
 		mcc = matthews_corrcoef(labels, pred) 
 
 		# AUC
-		fpr, tpr, thresholds = roc_curve(y, pred, pos_label=2)
-		auc_score = metrics.auc(fpr, tpr)
+		auc_score = roc_auc_score(labels, pred)
 		# 
 		# Coud be this one must be rechecked with paper
 		# from sklearn.metrics import roc_auc_score
 		# roc_auc_score(labels, y_scores)
 		results_dict['key'] = [acc,pres,rec,f1,mcc,auc_score]
+		for key,value in results_dict.items():
+			print(str(key)+" : "+str(value))
 	return results_dict

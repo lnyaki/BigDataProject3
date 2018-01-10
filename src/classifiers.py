@@ -33,6 +33,7 @@ from sklearn.model_selection import cross_val_predict
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.linear_model import LogisticRegression
 #from pomegranate import *
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
@@ -49,10 +50,10 @@ def random_forest():
 	# n_jobs=1, random_state=None, verbose=0, warm_start=False, 
 	# class_weight=None)
 	# 
-	# clf = RandomForestClassifier(max_depth=2, random_state=0)
+	clf = RandomForestClassifier()
 	# clf.fit(X, y)
 	# clf.predict([[0, 0, 0, 0]]))
-	pass
+	return clf
 
 def decorate():
 	# Install https://github.com/fracpete/python-weka-wrapper3
@@ -77,7 +78,7 @@ def decision_tree():
 	# min_impurity_decrease=0.0, min_impurity_split=None, 
 	# class_weight=None, presort=False)
 	# J48
-	clf = tree.DecisionTreeClassifier()
+	clf = DecisionTreeClassifier()
 	#clf = train_decision_tree(train_features,train_labels)
 	
 	#result = cls.score(test_features, test_labels)
@@ -100,6 +101,7 @@ def adaptive_boost():
 	# scores = cross_val_score(clf, iris.data, iris.target)
 	# scores.mean()   
 	clf = AdaBoostClassifier(n_estimators=100, learning_rate=0.1)
+	return clf
 
 
 def bayesian_network():
@@ -135,7 +137,7 @@ def logistic_regression():
 	return clf
 
 def support_vector_machine():
-	clf = svm.SVC(kernel='rbf',C=1.0,gamma=auto)
+	clf = svm.SVC(kernel='rbf',C=1.0,gamma='auto')
 	#clf.fit(train_features, train_labels) 
 	# clf.predict([[2., 2.]])
 	# 
