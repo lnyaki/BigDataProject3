@@ -250,7 +250,7 @@ def get_single_class_C_features(userRow,usersDF, friendsDF,followersDF,tweetsDF)
 	features[API_TWEETS] 							= api_tweets(userRow,tweetsDF)
 
 	#Social Bakers class B
-	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userRow,tweetsDF,3)
+	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userID,tweetsDF,3)
 	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(userID,tweetsDF,0.9)
 	features[HIGH_TWEET_LINK_RATIO] = has_tweet_links_ratio(userID, tweetsDF,0.9)
 
@@ -447,10 +447,12 @@ def get_socialbakers_features(dataframes):
 		socialbakersFeatures.append(get_single_user_socialbakers_features(row,tweetsDF))
 
 		#Temporary code, for test purpose
+		'''
 		if(limit > LIMIT):
 			break
 		else:
 			limit = limit +1
+		'''
 
 	return socialbakersFeatures
 
@@ -477,7 +479,7 @@ def get_single_user_socialbakers_features(userRow, tweetsDF):
 	features[HAS_NO_TWEETS] 	= has_no_tweets(userID, tweetsDF)
 
 	#Class B
-	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userRow,tweetsDF,3)
+	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userID,tweetsDF,3)
 	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(userID,tweetsDF,0.9)
 	features[HIGH_TWEET_LINK_RATIO] = has_tweet_links_ratio(userID, tweetsDF,0.9)
 
@@ -811,6 +813,9 @@ def get_stringhini_friends_to_followers_ratio(userRow):
 def has_x50_followers(userRow):
 	followers = int(userRow['followers_count'])
 	friends = int(userRow['friends_count'])
+
+	if(followers ==0):
+		followers == 0.001
 	res = (friends/followers)>= 50
 
 	if(res):
@@ -1038,8 +1043,18 @@ def get_unique_friends_name_ratio(userID,usersDF,friendsDF):
 
 	return len(friends_with_name)/unique_names_count
 
-def has_duplicate_tweets(userRow, tweetsDF,duplicate_threshold):
-	return 0
+def has_duplicate_tweets(userID, tweetsDF,duplicate_threshold):
+	tweetsUser = get_tweets_dataframe_user(userID,tweetsDF)
+
+	uniqueTweets = tweetsUser['text'].unique()
+
+	userTweets = tweetsUser.shape[0]
+	uniqueCount = len(uniqueTweets.tolist())
+
+	if(uniqueCount < userTweets):
+		return 1
+	else:
+		return 0
 
 def has_retweet_ratio(userID,tweetsDF, ratio_threshold):
 	'''

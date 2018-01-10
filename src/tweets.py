@@ -60,8 +60,8 @@ def get_tweets_strings(userID,tweetsDF):
 
 def get_tweets_with_url_ratio(userID, tweetsDF):
 	t0 = time()
-	print("ID ----"+str(userID))
-	print(tweetsDF.head())
+	#print("ID ----"+str(userID))
+	#print(tweetsDF.head())
 	user_tweets = tweetsDF['user_id'] == userID
 	#urlTweets 	= tweetsDF[user_tweets &(tweetsDF['text'].apply(lambda tweet: tweet_contains_url(tweet)))]
 	urlTweets 	= tweetsDF[user_tweets & tweetsDF['text']]
