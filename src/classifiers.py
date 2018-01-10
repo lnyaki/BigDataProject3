@@ -97,7 +97,8 @@ def bayesian_network(train_features,train_labels,test_features,test_labels):
 	# http://pomegranate.readthedocs.io/en/latest/BayesianNetwork.html
 	# Careful with dependencies
 	# 
-	pass
+	model = BayesianNetwork.from_samples(train_features, algorithm='exact')
+	model.predict(test_features)
 
 def k_nearest_neighbors(train_features,train_labels,test_features,test_labels):
 	# http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html

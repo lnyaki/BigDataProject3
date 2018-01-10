@@ -246,7 +246,7 @@ def get_single_class_C_features(userRow,usersDF, friendsDF,followersDF,tweetsDF)
 	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients(userRow,tweetsDF)
 
 	#State of search Class B
-	features[DUPLICATE_SENTENCES_ACROSS_ACCOUNTS] 	= duplicate_sentences_across_accounts(userRow,tweetsDF)
+	features[DUPLICATE_SENTENCES_ACROSS_TWEETS] 	= duplicate_sentences_across_tweets(userRow,tweetsDF)
 	features[API_TWEETS] 							= api_tweets(userRow,tweetsDF)
 
 	#Social Bakers class B
