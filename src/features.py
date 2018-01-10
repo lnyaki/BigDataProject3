@@ -126,13 +126,43 @@ def get_features(featureSetName, dataframes):
 
 	elif(featureSetName == YANG):
 		features = get_yang_features(dataframes)
+
+	elif(featureSetName == CLASS_A):
+		features = get_class_A_features(dataframes)
+
+	elif(featureSetName == CLASS_C):
+		features = get_class_C_features(dataframes)
+
 	else:
 		print("Error Unknown feature set specified : "+featureSetName)
 
 	return features
 
 def get_class_A_features(dataframes):
+	usersDF 	= dataframes['users']
+	tweetsDF 	= dataframes['tweets']
+
+	features 	= []
+
+	LIMIT = 10
+	limit = 1
+
+	for index, row in usersDF.iterrows():
+
+		features.append(get_single_class_A_features(row,usersDF, tweetsDF))
+
+		#Temporary code, for test purpose
+		if(limit > LIMIT):
+			break
+		else:
+			limit = limit +1
+
+	return features
+
+
+def get_single_class_A_features(userRow, usersDF,tweetsDF):
 	#Class A features = profile-based features
+	userID = userRow['id']
 
 	#Camisani class A
 	features = {}
@@ -156,7 +186,7 @@ def get_class_A_features(dataframes):
 	features[HAS_DEFAULT_IMAGE] = has_default_image(userRow)
 	#features[HAS_NO_BIO] 		= has_no_bio(userRow) #Same as has_bio from camisani
 	features[HAS_NO_LOCATION] 	= has_no_location(userRow)
-	features[HAS_100_FRIENDS] 	= has_100_friends(userID, friendsDF)
+	features[HAS_100_FRIENDS] 	= has_100_friends(userRow)
 	features[HAS_NO_TWEETS] 	= has_no_tweets(userID, tweetsDF)
 	
 	#Stringhini class A
@@ -415,7 +445,7 @@ def get_single_user_socialbakers_features(userRow, friendsDF,tweetsDF):
 	features[HAS_DEFAULT_IMAGE] = has_default_image(userRow)
 	features[HAS_NO_BIO] 		= has_no_bio(userRow)
 	features[HAS_NO_LOCATION] 	= has_no_location(userRow)
-	features[HAS_100_FRIENDS] 	= has_100_friends(userID, friendsDF)
+	features[HAS_100_FRIENDS] 	= has_100_friends(userRow)
 	features[HAS_NO_TWEETS] 	= has_no_tweets(userID, tweetsDF)
 
 	#Class B
@@ -535,7 +565,7 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweet
 
 	return features
 
-def get_dataframes(datasetDirectory, featureSetName):
+def get_dataframes(featureSetName, datasetDirectory):
 	'''
 	- BaseFilesDirectory is the base directory of the dataset we are using :
 		E13,FAK,FSF,HUM,INT,TFP,TWT.
@@ -563,7 +593,7 @@ def get_dataframes(datasetDirectory, featureSetName):
 					,'followers': 'followers.csv'}
 
 	elif(featureSetName == CLASS_A):
-		fileNames = {'users' : 'users.csv'}
+		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv'}
 
 	elif(featureSetName == CLASS_C):
 		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv','friends': 'friends.csv'
@@ -592,65 +622,127 @@ TODO: create functions that retrieve each individual feature, below
 # Class A features
 
 def has_name(userRow):
-	return (not userRow['name'] == "")
+	res = (not userRow['name'] == "")
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def has_image(userRow):
-	return (not userRow['profile_image_url'] == "")
+	res = (not userRow['profile_image_url'] == "")
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def has_address(userRow):
-	return (not userRow['location'] == "")
+	res = (not userRow['location'] == "")
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def has_bio(userRow):
-	return (not userRow['description'] == "")
+	res =  (not userRow['description'] == "")
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def has_30_followers(userRow):
-	return  int(userRow['followers_count']) >= 30
+	res = int(userRow['followers_count']) >= 30
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def belongs_to_a_list(userRow):
-	return int(userRow['listed_count']) > 0
+	res = int(userRow['listed_count']) > 0
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def has_50_tweets(userRow):
-	return userRow['statuses_count'] > 50
+	res = userRow['statuses_count'] > 50
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def url_in_profile(userRow):
-	res = False
+	res = 0
 	if isinstance(userRow['description'], str) and has_url(userRow['description']):
-		res = True
+		res = 1
 	return res
 
 def followers_to_friends_ration_over_2(userRow):
-	return int(userRow['followers_count'])/int(userRow['friends_count']) > 2
+	res =  int(userRow['followers_count'])/int(userRow['friends_count']) > 2
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def bot_in_bio(userRow):
 	# https://stackoverflow.com/questions/11144389/find-all-upper-lower-and-mixed-case-combinations-of-a-string
 	bot_list = map(''.join, itertools.product(*((c.upper(), c.lower()) for c in 'bot')))
-	res = False
+	res = 0
 	if isinstance(userRow['description'],str):
 		for bot_combination in bot_list:
 			if bot_combination in userRow['description']:
-				res = True
+				res = 1
 	return res
 
 def friends_to_followers_ratio_is_100(userRow):
 	threshold = 100
 
-	return get_friends_to_followers_ratio(userRow) >= threshold
+	res = get_friends_to_followers_ratio(userRow) >= threshold
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def duplicate_profile_picture(userRow,usersDF):
 	'''
 	TODO: more research on possibilities
+	====> Sans doutes faut-il comparer l'url
+	'''
 	'''
 	res = False
 	for tweet_account in get_tweets_user(int(userRow['id']),tweetsDF):
 		for tweet_users in tweetsDF.iterrows():
 			if tweet_account[''] == tweet_users['']:
 					res = True
-	return False
+	'''
+	http_image 	= userRow["profile_image_url"]
+	https_image  = userRow["profile_image_url_https"]
+
+	http_image_duplicate 	= usersDF['profile_image_url']== http_image
+	https_image_duplicate 	= usersDF['profile_image_url_https']== https_image
+
+	not_current_user = usersDF['id'] != userRow['id']
+
+
+	response =  usersDF[(http_image_duplicate | https_image_duplicate) & not_current_user].any()
+
+	#print("REponse dataframe =============")
+	#print(response)
+
+	return 0
 
 def get_account_age(userRow):
 	# Date format : Thu Apr 06 15:24:15 +0000 2017
 	creation_date = userRow['created_at']
-	print("Creation Date "+creation_date)
+	
 	account_creation = datetime.strptime(creation_date,'%a %b %d %H:%M:%S %z %Y')
 	#Two lines below, to prevent error : can't subtract offset-naive and offset-aware datetimes
 	# Solution from https://stackoverflow.com/questions/796008/cant-subtract-offset-naive-and-offset-aware-datetimes
@@ -689,28 +781,48 @@ def get_stringhini_friends_to_followers_ratio(userRow):
 	return int(userRow['friends_count'])/(followers*followers)
 
 def has_50_followers(userRow):
-	return int(userRow['followers_count'])>= 50
+	res = int(userRow['followers_count'])>= 50
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def has_default_image(userRow):
-	return userRow['default_profile_image']
+	res =  userRow['default_profile_image']
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def has_no_bio(userRow):
 	if(not userRow['description']):
-		return True
+		return 1
 	else:
-		return False
+		return 0
 
 def has_no_location(userRow):
 	if(not userRow['location']):
-		return True
+		return 1
 	else:
-		return False
+		return 0
 
-def has_100_friends(userID, friendsDF):
-	return get_friends_count(userID,friendsDF) >= 100
+def has_100_friends(userRow):
+	res =  get_friends_count(userRow) >= 100
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 def has_no_tweets(userID, tweetsDF):
-	return not has_tweets(userID, tweetsDF)
+	res = not has_tweets(userID, tweetsDF)
+
+	if(res):
+		return 1
+	else:
+		return 0
 
 
 # Class B features
@@ -722,7 +834,7 @@ def geolocalized(userRow,tweetsDF):
 	print(type(tweets['geo']))
 	geo = tweets['geo'] > 0
 	print(tweets[geo])
-	return False
+	return 0
 	
 def is_favorite(userRow,tweetsDF):
 	tweets = get_tweets_user(int(userRow['id']),tweetsDF)
@@ -733,10 +845,12 @@ def uses_punctuation(userRow,tweetsDF):
 	if isinstance(userRow['description'], str):
 		bio_and_timeline += userRow['description']
 	bio_and_timeline += get_tweets_strings(int(userRow['id']),tweetsDF)
-	res = False
+
+	res = 0
+
 	for letter in bio_and_timeline:
 		if letter in string.punctuation:
-			res = True
+			res = 1
 	return res
 
 def uses_hashtag(userRow,tweetsDF):
@@ -816,10 +930,10 @@ def retweet_over_1(userRow,tweetsDF):
 	return (all_tweets['retweet_count'] > 1).any()
 
 def uses_different_clients(userRow,tweetsDF):
-	return False
+	return 0
 
 def duplicate_sentences_across_accounts(userRow,tweetsDF):
-	return False
+	return 0
 
 # I don't know how i can know if connection from API or not
 def api_tweets(userRow):
@@ -853,21 +967,21 @@ def get_unique_friends_name_ratio(userID,usersDF,friendsDF):
 	return len(friends_with_name)/unique_names_count
 
 def has_duplicate_tweets(userRow, tweetsDF,duplicate_threshold):
-	return False
+	return 0
 
 def has_retweet_ratio(userRow,tweetsDF, ratio_threshold):
 	'''
 	Returns true if the ratio calculated is superior or equal to the ratio_threshold.
 	Returns false otherwise.
 	'''
-	return False
+	return 0
 
 def has_tweet_links_ratio(userRow, tweetsDF, ratio_threshold):
 	'''
 	Returns true if the ratio calculated is superior or equal to the ratio_threshold.
 	Returns false otherwise.
 	'''
-	return False
+	return 0
 
 
 # Class C featrues

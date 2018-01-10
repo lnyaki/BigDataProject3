@@ -27,11 +27,12 @@ def main(datasetDirectory):
 if(__name__ == "__main__"):
 	# Command example. Load class A : python3 src/main.py data/E13 A
 	# Command example. Load class C : python3 src/main.py data/E13 C
+
 	#Get the dataset name (E13, FAK, FSF,HUM,etc)
 	baseDataset 	= sys.argv[1]
 	featureSetName 	= sys.argv[2]
 
 	dataframes  = features.get_dataframes(baseDataset, featureSetName)
 
-	#main(baseDataset)
+	main(baseDataset)
 
