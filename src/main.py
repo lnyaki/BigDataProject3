@@ -12,8 +12,8 @@ def main(datasetDirectory):
 	df_features_class_C = get_class_C_features(df)
 
 	# classifiers (training + prediction)
-	class_A_classifiers = classify(df_features_class_A)
-	class_C_classifiers = classify(df_features_class_C)
+	class_A_classifiers_predictions = classify(df_features_class_A)
+	class_C_classifiers_predictions = classify(df_features_class_C)
 
 	# Metrics on the result predictions from the classifiers
 	results_class_A_classifiers = metrics(class_A_classifiers)

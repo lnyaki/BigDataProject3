@@ -111,13 +111,13 @@ def bayesian_network():
 def k_nearest_neighbors():
 	# http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
 	#
-	# neigh = KNeighborsClassifier(n_neighbors=3)
-	# neigh.fit(X, y)
-	# print(neigh.predict([[1.1]]))
+	clf = KNeighborsClassifier(n_neighbors=3)
+	# clf.fit(X, y)
+	# print(clf.predict([[1.1]]))
 	# 
 	# (n_neighbors=5, weights=’uniform’, algorithm=’auto’, leaf_size=30,
 	#  p=2, metric=’minkowski’, metric_params=None, n_jobs=1, **kwargs)
-	pass
+	return clf
 
 def logistic_regression():
 	# http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
@@ -127,11 +127,11 @@ def logistic_regression():
 	# random_state=None, solver=’liblinear’, max_iter=100, 
 	# multi_class=’ovr’, verbose=0, warm_start=False, n_jobs=1)
 	# 
-	# clf = LogisticRegression()
+	clf = LogisticRegression()
 	# clf.fit(X, y)
 	# clf.predict(X)
 	# 
-	pass
+	return clf
 
 def support_vector_machine():
 	clf = svm.SVC(kernel='rbf',C=1.0,gamma=auto)
