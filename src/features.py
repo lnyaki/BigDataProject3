@@ -149,14 +149,16 @@ def get_class_A_features(dataframes):
 	limit = 1
 
 	for index, row in usersDF.iterrows():
-
+		timelog("[{}] User {}".format(index,row['id']))
 		features.append(get_single_class_A_features(row,usersDF, tweetsDF))
 
 		#Temporary code, for test purpose
+		'''
 		if(limit > LIMIT):
 			break
 		else:
 			limit = limit +1
+		'''
 
 	return features
 
@@ -685,9 +687,14 @@ def url_in_profile(userRow):
 	return res
 
 def followers_to_friends_ration_over_2(userRow):
-	res =  int(userRow['followers_count'])/int(userRow['friends_count']) > 2
+	friendsCount = int(userRow['friends_count'])
 
-	if(res):
+	if(friendsCount == 0):
+		friendsCount = 0.001
+	
+	res = int(userRow['followers_count'])/friendsCount > 2
+	
+	if(res):							
 		return 1
 	else:
 		return 0
@@ -697,12 +704,12 @@ def bot_in_bio(userRow):
 	bot_list = map(''.join, itertools.product(*((c.upper(), c.lower()) for c in 'bot')))
 
 	res = 0
-	timelog("start")
+	#timelog("start")
 	if isinstance(userRow['description'],str):
 		for bot_combination in bot_list:
 			if bot_combination in userRow['description']:
 				res = 1
-	timelog("end")
+	#timelog("end")
 
 	return res
 
@@ -772,7 +779,10 @@ def get_friends_to_followers_ratio(userRow):
 def get_stringhini_friends_to_followers_ratio(userRow):
 	followers = int(userRow['followers_count'])
 
-	return int(userRow['friends_count'])/(followers*followers)
+	if(followers > 0):
+		return int(userRow['friends_count'])/(followers*followers)
+	else:
+		return int(userRow['friends_count'])/0.01
 
 def has_50_followers(userRow):
 	res = int(userRow['followers_count'])>= 50
