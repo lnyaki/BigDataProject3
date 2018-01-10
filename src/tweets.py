@@ -42,7 +42,8 @@ def get_avg_friends_tweets(friendsIDlist,tweetsDF):
 	friendsIDlist = pd.Series(friendsIDlist)
 
 	total_tweet_count = tweetsDF[tweetsDF['user_id'].isin(friendsIDlist)].shape[0]
-
+	if friends_count == 0:
+		friends_count = 0.001
 	return total_tweet_count/friends_count
 
 
@@ -96,10 +97,10 @@ def retweet_ratio(userID, tweetsDF):
 	retweets = tweets[tweets['retweet_count']>0].shape[0]
 
 	if(tweetsCount == 0):
-		print("-----------------Retweet 0")
+		#print("-----------------Retweet 0")
 		return 0
 
 	else:
 		res = retweets/tweetsCount
-		print("-----------------Retweet : "+str(res))
+		#print("-----------------Retweet : "+str(res))
 		return res

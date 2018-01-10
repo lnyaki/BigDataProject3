@@ -11,6 +11,26 @@ base directory (ex: E13, FAK, etc) and the name of the feature set (class A, cla
 The generated list is the baseline feature set and will be created in the directory
 specified in parameters. Ex: E13/baseline.csv
 '''
+
+def get_BAS_dataset(hum_path,fak_path):
+	filename_A = "features_A.csv"
+	filename_C = "features_C.csv"
+
+	hum_df_A = pd.read_csv(hum_path+filename_A, encoding='latin-1')
+	fak_df_A = pd.read_csv(fak_path+filename_A, encoding='latin-1')
+	hum_df_C = pd.read_csv(hum_path+filename_C, encoding='latin-1')
+	fak_df_C = pd.read_csv(fak_path+filename_C, encoding='latin-1')
+	
+	frames_A = [hum_df_A,fak_df_A]
+	frames_C = [hum_df_C,fak_df_C]
+
+	df_A = pd.concat(frames_A)
+	df_C = pd.concat(frames_C)
+	labels = df_A['label'].tolist()
+	
+	return labels,df_A,df_C
+
+
 def save_features_in_file(path, featuresDF, featureSetName):
 
 	filename =  path + "/features_"+featureSetName+".csv"
