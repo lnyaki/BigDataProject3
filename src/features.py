@@ -79,7 +79,7 @@ HIGH_RETWEET_RATIO 		= 'high_retweet_ratio'
 HIGH_TWEET_LINK_RATIO	= 'high_tweet_link_ratio'
 
 
-# Strinhini et al.
+# Stringhini et al.
 TWEET_SIMILARITY 	= 'tweet_similarity'
 URL_RATIO 			= 'url_ratio'
 UNIQUE_FRIENDS_NAME_RATIO = 'unique_friends_name'
@@ -975,7 +975,6 @@ def similar(a, b):
 
 
 def duplicate_sentences_across_tweets(userRow,tweetsDF):
-	t0 = time()
 	res = False
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
 	counter = 0
@@ -993,7 +992,6 @@ def duplicate_sentences_across_tweets(userRow,tweetsDF):
 		if counter == 20:
 			break
 		counter+=1
-	print ("duplicate:", round(time()-t0, 3), "s")
 
 	return int(res)
 

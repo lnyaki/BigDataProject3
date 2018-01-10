@@ -126,11 +126,11 @@ def logistic_regression(train_features,train_labels,test_features,test_labels):
 	pass
 
 def support_vector_machine(train_features,train_labels,test_features,test_labels):
-	# clf = svm.SVC()
-	# clf.fit(X, y) 
+	clf = svm.SVC(kernel='rbf',C=1.0,gamma=auto)
+	clf.fit(train_features, train_labels) 
 	# clf.predict([[2., 2.]])
 	# 
-	# Algo: libSVM
+	# Algo: libSVM (SVC)
 	# kernel: rbf
 	# C 	: optimized 
 	# gamma : optimized 

@@ -59,19 +59,20 @@ def get_tweets_strings(userID,tweetsDF):
 
 
 def get_tweets_with_url_ratio(userID, tweetsDF):
-	user_tweets = tweetsDF['user_id']== userID
-
-	urlTweets 	= tweetsDF[user_tweets &(tweetsDF['text'].apply(lambda tweet: tweet_contains_url(tweet)))]
-
-
-	tweets_with_url 	= urlTweets.shape[0]
-
+	t0 = time()
+	user_tweets = tweetsDF['user_id'] == userID
+	#urlTweets 	= tweetsDF[user_tweets &(tweetsDF['text'].apply(lambda tweet: tweet_contains_url(tweet)))]
+	urlTweets 	= tweetsDF[user_tweets & tweetsDF['text']]
+	new_value = urlTweets['text'].apply(lambda tweet: tweet_contains_url(tweet))
+	#print(new_value)
+	#print("TEST:", round(time()-t0, 3), "s")
+	tweets_with_url 	= new_value.mean()
+	#print("tweets_with_url: "+str(tweets_with_url))
 	user_tweets_count 	= count_user_tweets(userID,tweetsDF)
-
 	if(user_tweets_count == 0):
 		user_tweets_count = 0.001
 		
-	return tweets_with_url/user_tweets_count
+	return float(tweets_with_url)/float(user_tweets_count)
 
 
 def tweet_contains_url(tweet):
