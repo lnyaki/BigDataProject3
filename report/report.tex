@@ -144,6 +144,9 @@ Based on \textit{Cresci et al.}, we identified 3 types of features: \textit{A, B
 We implemented the functions and used them to extract 2 features set out of the data: a \textit{class A} features set and a class C features set, which encompasses the features of every classes (\textit{A, B} and \textit{C}).
 
 \subsection{Data labeling}
+For each initial dataset (E13, FAK, FSF, HUM, INT, TFP, TWT) the label of the users is known. The TFP and HUM dataset only contain real users, while the other dataset contain fake users.\\
+
+Therefor, when generating the class A and class C features set, we add the label 'human' for the features set based on TFP and HUM, and the label 'bot' to the other. These labels will actually be numbers in the features set : 1 for bots, and 0 for humans.
 
 \section{Process Optimization}
 The amount of data that we had to manipulate by no means huge or overwhelming, but it was still big enough so that, if not careful, some optimization issues could arise.\\
