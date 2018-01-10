@@ -526,16 +526,19 @@ def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
 	features = {}
 
 	# Class A
+	timelog("Start stringhini class A")
 	features[NUMBER_OF_FRIENDS] 			= get_friends_count(userRow)
 	features[FRIENDS_TO_FOLLOWERS_RATIO] 	= get_stringhini_friends_to_followers_ratio(userRow)
-
+	timelog("Start class B")
 	# Class B
-	features[NUMBER_OF_TWEETS_SENT]	= cache.get_tweets_count(userID,tweetsDF)
-	
+	features[NUMBER_OF_TWEETS_SENT]	= count_user_tweets(userID,tweetsDF)
+	timelog("count user tweets Ok")
 	#features[TWEET_SIMILARITY] 	= get_tweet_similarity(userRow,tweetsDF)	#comment calculer?
-	features[URL_RATIO] 		= get_url_ratio(userRow, tweetsDF)
+	features[URL_RATIO] 				= get_url_ratio(userRow, tweetsDF)
+	timelog("url ratio Ok")
 	features[UNIQUE_FRIENDS_NAME_RATIO] = get_unique_friends_name_ratio(userID,usersDF,friendsDF) 
-
+	timelog("unique friends Ok")
+	timelog("End class B")
 	return features
 
 def get_yang_features(dataframes):
@@ -1065,9 +1068,9 @@ def get_bilink_ratio(userRow, friendsDF, followersDF):
 
 	followersSeries = get_follower_ids(userID,followersDF)
 
-	bilinkList = followersSeries.isin(friends).tolist()
+	bilinkList = followersSeries.isin(friends)
 
-	bilink_count = len(bilinkList)
+	bilink_count = bilink.shap[0]
 	print("===== User ID = "+str(userID))
 	print("[Bilink count : {}][Official Friends count : {}][Official Followers count :  {}], [followers actually found : {} ]".format(bilink_count,friends_count,userRow['followers_count'], len(followersSeries)))
 	return bilink_count/friends_count

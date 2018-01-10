@@ -29,14 +29,8 @@ def get_friends_with_initialized_name(userID, usersDF, friendsDF):
 
 def count_unique_names(friendsDF):
 	#duplicate Dataframe
-	friends2 = friendsDF.copy()
-	unique_count = 0
-	unique_names = friendsDF.name.unique()
-
-	for index, row in friendsDF.iterrows():
-
-		if(row['name'] in unique_names):
-			unique_count = unique_count +1
+	
+	unique_count = len(friendsDF.name.unique().tolist())	
 
 	return unique_count
 
