@@ -29,11 +29,11 @@
 # of the LR model have been optimized via a cross validation parameter 
 # selection algorithm.
 from sklearn.model_selection import cross_val_score
- from sklearn.model_selection import cross_val_predict
+from sklearn.model_selection import cross_val_predict
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
-from pomegranate import *
+#from pomegranate import *
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
 
@@ -151,7 +151,7 @@ def support_vector_machine():
     # decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
     # max_iter=-1, probability=False, random_state=None, shrinking=True,
     # tol=0.001, verbose=False)
-    return clf
+	return clf
 
 def classify(features, labels):
 

@@ -42,7 +42,8 @@ def get_avg_friends_tweets(friendsIDlist,tweetsDF):
 	friendsIDlist = pd.Series(friendsIDlist)
 
 	total_tweet_count = tweetsDF[tweetsDF['user_id'].isin(friendsIDlist)].shape[0]
-
+	if friends_count == 0:
+		friends_count = 0.001
 	return total_tweet_count/friends_count
 
 

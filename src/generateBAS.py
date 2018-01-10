@@ -26,7 +26,7 @@ def get_BAS_dataset(hum_path,fak_path):
 
 	df_A = pd.concat(frames_A)
 	df_C = pd.concat(frames_C)
-	labels = df_A['labels'].tolist()
+	labels = df_A['label'].tolist()
 	
 	return labels,df_A,df_C
 

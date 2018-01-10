@@ -2,14 +2,14 @@ import classifiers
 import features
 import metrics
 import sys
-import generateBAS
+from generateBAS import *
 
 def main():
 	
 
 	# data frame with our dataset
 	labels, df_features_class_A, df_features_class_C = get_BAS_dataset("data/HUM/","data/FAK/")
-
+	print(labels)
 	# preprocessing of the data to capture the features we want
 	#df_features_class_A = get_class_A_features(df)
 	#df_features_class_C = get_class_C_features(df)
