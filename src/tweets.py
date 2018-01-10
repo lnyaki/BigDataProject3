@@ -52,18 +52,9 @@ def get_tweets_strings(userID,tweetsDF):
 	Searches for a user's tweets and saves all the text from
 	the tweets in 1 string
 	'''
-	#t0 = time()
-	#tweetsString = ""
+
 	tweets_user = get_tweets_dataframe_user(userID,tweetsDF)
 	res = tweets_user['text'].str.cat()
-	#for tweet in tweets_user.iterrows():
-	#	if isinstance(tweet[1]['text'],str):
-	#		tweetsString+= tweet[1]['text']
-	#print ("tweet strings normal:", round(time()-t0, 3), "s")
-	#t1 = time()
-	#print(len(tweets_user['text'].str.cat()))
-	#print(get_tweets_count(userID,tweetsDF))
-	#print ("tweet strings optimized:", round(time()-t0, 3), "s")
 	return res
 
 
