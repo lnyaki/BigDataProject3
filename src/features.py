@@ -33,7 +33,7 @@ FRIENDS_TO_FOLLOWERS_RATIO_IS_100 	= 'friends_to_followers_ratio_is_100'
 DUPLICATE_PROFILE_PICTURE 			= 'duplicate_profile_picture'
 
 # Socialbakers 
-HAS_50_FOLLOWERS 	= 'has_50_followers'
+HAS_x50_FOLLOWERS 	= 'has_x50_followers'
 HAS_DEFAULT_IMAGE 	= 'has_default_image'
 HAS_NO_BIO 			= 'has_no_bio'
 HAS_NO_LOCATION 	= 'has_no_location'
@@ -187,7 +187,7 @@ def get_single_class_A_features(userRow, usersDF,tweetsDF):
 	features[DUPLICATE_PROFILE_PICTURE] 		= duplicate_profile_picture(userRow,usersDF)
 
 	#Social bakers class A
-	features[HAS_50_FOLLOWERS] 	= has_50_followers(userRow)
+	features[HAS_x50_FOLLOWERS] = has_x50_followers(userRow)
 	features[HAS_DEFAULT_IMAGE] = has_default_image(userRow)
 	#features[HAS_NO_BIO] 		= has_no_bio(userRow) #Same as has_bio from camisani
 	features[HAS_NO_LOCATION] 	= has_no_location(userRow)
@@ -246,18 +246,18 @@ def get_single_class_C_features(userRow,usersDF, friendsDF,followersDF,tweetsDF)
 	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients(userRow,tweetsDF)
 
 	#State of search Class B
-	features[DUPLICATE_SENTENCES_ACROSS_ACCOUNTS] 	= duplicate_sentences_across_accounts(userRow,tweetsDF)
+	features[DUPLICATE_SENTENCES_ACROSS_TWEETS] 	= duplicate_sentences_across_tweets(userRow,tweetsDF)
 	features[API_TWEETS] 							= api_tweets(userRow,tweetsDF)
 
 	#Social Bakers class B
 	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userRow,tweetsDF,3)
-	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(userRow,tweetsDF,0.9)
+	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(userID,tweetsDF,0.9)
 	features[HIGH_TWEET_LINK_RATIO] = has_tweet_links_ratio(userRow, tweetsDF,0.9)
 
 	#Stringhini class B
 	features[NUMBER_OF_TWEETS_SENT]		= cache.get_tweets_count(userID,tweetsDF)
 	#features[TWEET_SIMILARITY] 		= get_tweet_similarity(userRow,tweetsDF)	#comment calculer?
-	features[URL_RATIO] 				= get_url_ratio(userRow, tweetsDF)
+	features[URL_RATIO] 				= get_url_ratio(userID, tweetsDF)
 	features[UNIQUE_FRIENDS_NAME_RATIO] = get_unique_friends_name_ratio(userID,usersDF,friendsDF)
 	
 	#Yang class B (Comment calculer API?)
@@ -454,7 +454,7 @@ def get_socialbakers_features(dataframes):
 
 	return socialbakersFeatures
 
-def get_single_user_socialbakers_features(userRow, friendsDF,tweetsDF):
+def get_single_user_socialbakers_features(userRow, tweetsDF):
 	'''
 	Class A : followers ≥ 50, default image after 2
 		months, no bio, no location, friends ≥100, 0 tweets 
@@ -469,7 +469,7 @@ def get_single_user_socialbakers_features(userRow, friendsDF,tweetsDF):
 	#Class A
 
 	#TODO : ce n'est pas 50 followers, c'est un ratio de 50:1 entre friends et followers
-	features[HAS_50_FOLLOWERS] 	= has_50_followers(userRow)
+	features[HAS_x50_FOLLOWERS] = has_x50_followers(userRow)
 	features[HAS_DEFAULT_IMAGE] = has_default_image(userRow)
 	features[HAS_NO_BIO] 		= has_no_bio(userRow)
 	features[HAS_NO_LOCATION] 	= has_no_location(userRow)
@@ -478,7 +478,7 @@ def get_single_user_socialbakers_features(userRow, friendsDF,tweetsDF):
 
 	#Class B
 	features[HAS_DUPLICATE_TWEETS] 	= has_duplicate_tweets(userRow,tweetsDF,3)
-	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(userRow,tweetsDF,0.9)
+	features[HIGH_RETWEET_RATIO] 	= has_retweet_ratio(userID,tweetsDF,0.9)
 	features[HIGH_TWEET_LINK_RATIO] = has_tweet_links_ratio(userRow, tweetsDF,0.9)
 
 	return features
@@ -532,7 +532,7 @@ def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
 	features[NUMBER_OF_TWEETS_SENT]	= count_user_tweets(userID,tweetsDF)
 	timelog("count user tweets Ok")
 	#features[TWEET_SIMILARITY] 	= get_tweet_similarity(userRow,tweetsDF)	#comment calculer?
-	features[URL_RATIO] 				= get_url_ratio(userRow, tweetsDF)
+	features[URL_RATIO] 				= get_url_ratio(userID, tweetsDF)
 	timelog("url ratio Ok")
 	features[UNIQUE_FRIENDS_NAME_RATIO] = get_unique_friends_name_ratio(userID,usersDF,friendsDF) 
 	timelog("unique friends Ok")
@@ -782,9 +782,7 @@ def get_following_rate(userRow):
 	accounts follows other accounts. Spammers usually feature high
 	values of this rate.
 	'''
-
-	#how to calculate that?
-	return 0
+	return int(userRow['friends_count'])/int(userRow['followers_count'])
 
 def get_friends_count(userRow):
 	return int(userRow['friends_count'])
@@ -810,8 +808,10 @@ def get_stringhini_friends_to_followers_ratio(userRow):
 	else:
 		return int(userRow['friends_count'])/0.01
 
-def has_50_followers(userRow):
-	res = int(userRow['followers_count'])>= 50
+def has_x50_followers(userRow):
+	followers = int(userRow['followers_count'])
+	friends = int(userRow['friends_count'])
+	res = (friends/followers)>= 50
 
 	if(res):
 		return 1
@@ -1026,9 +1026,9 @@ def get_api_tweet_similarity(userRow):
 def get_tweet_similarity(userID,tweetsDF):
 	return 0
 
-def get_url_ratio(userRow, tweetsDF):
+def get_url_ratio(userID, tweetsDF):
 	'''ratio of tweets with a url'''
-	return get_tweets_with_url_ratio(userRow['id'],tweetsDF)
+	return get_tweets_with_url_ratio(userID,tweetsDF)
 
 def get_unique_friends_name_ratio(userID,usersDF,friendsDF):
 	friends_with_name = get_friends_with_initialized_name(userID, usersDF,friendsDF)
@@ -1043,19 +1043,27 @@ def get_unique_friends_name_ratio(userID,usersDF,friendsDF):
 def has_duplicate_tweets(userRow, tweetsDF,duplicate_threshold):
 	return 0
 
-def has_retweet_ratio(userRow,tweetsDF, ratio_threshold):
+def has_retweet_ratio(userID,tweetsDF, ratio_threshold):
 	'''
 	Returns true if the ratio calculated is superior or equal to the ratio_threshold.
 	Returns false otherwise.
 	'''
-	return 0
+	if(retweet_ratio(userID,tweetsDF)>= ratio_threshold):
+		return 1
+	else:
+		return 0
 
-def has_tweet_links_ratio(userRow, tweetsDF, ratio_threshold):
+def has_tweet_links_ratio(userID, tweetsDF, ratio_threshold):
 	'''
 	Returns true if the ratio calculated is superior or equal to the ratio_threshold.
 	Returns false otherwise.
 	'''
-	return 0
+
+	ratio = get_url_ratio(userID, tweetsDF)
+
+	res = ratio >= ratio_threshold
+	
+	return int(res)
 
 
 # Class C featrues

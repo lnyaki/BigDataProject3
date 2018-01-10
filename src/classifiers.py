@@ -56,6 +56,12 @@ def decorate(train_features,train_labels,test_features,test_labels):
 	# 
 	# examples: https://github.com/fracpete/python-weka-wrapper3-examples/blob/master/src/wekaexamples/classifiers/classifiers.py
 	# pass
+	# load a dataset
+    loader = Loader("weka.core.converters.ArffLoader")
+
+    #evaluation
+    evaluation = Evaluation(train_features)
+
 
 def decision_tree(train_features,train_labels,test_features,test_labels):
 	# J48
@@ -80,12 +86,13 @@ def adaptive_boost(train_features,train_labels,test_features,test_labels):
 	# clf = AdaBoostClassifier(n_estimators=100)
 	# scores = cross_val_score(clf, iris.data, iris.target)
 	# scores.mean()   
-	pass
+	clf = AdaBoostClassifier(n_estimators=100, learning_rate=0.1)
+
 
 def bayesian_network(train_features,train_labels,test_features,test_labels):
 	# http://pomegranate.readthedocs.io/en/latest/BayesianNetwork.html
 	# Careful with dependencies
-	pass
+	
 
 def k_nearest_neighbors(train_features,train_labels,test_features,test_labels):
 	# http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
