@@ -577,11 +577,11 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweet
 	userID = userRow['id']
 
 	features = {}
-
+	timelog("Start processing")
 	# Class A features
 	features[ACCOUNT_AGE] 		= get_account_age(userRow)
 	#features[FOLLOWING_RATE] 	= get_following_rate(userRow) # What is following rate?
-
+	timelog("\tClass A finished")
 	# Class B features
 	#features[API_RATIO] 			= get_api_ratio(userRow)
 	#features[API_URL_RATIO] 		= get_api_url_ratio(userRow)
@@ -592,7 +592,7 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweet
 	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userID,friendsDF,usersDF)
 	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, usersDF,friendsDF, tweetsDF)
 	#features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
-
+	timelog("\tClass C finished")
 	return features
 
 def get_dataframes(featureSetName, datasetDirectory):
@@ -1100,11 +1100,16 @@ if(__name__ == "__main__"):
 	directory = sys.argv[1]
 
 	featureSetName = sys.argv[2]
-	dataframes = get_dataframes(directory,featureSetName)
+	dataframes = get_dataframes(featureSetName, directory)
 
 
 	timelog("OK, ca passe")
+	print("=========== Getting features ===========")
+	print(time())
+	t0 = time()
 	features 	= pd.DataFrame(get_features(featureSetName, dataframes))
-
+	tf = time() - t0
+	print("========== Elapsed time ==========")
+	print(tf)
 	timelog("Features : ")
 	print(features)
