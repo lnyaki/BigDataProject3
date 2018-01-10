@@ -1,4 +1,5 @@
 import pandas as pd
+import cachedata as cache
 '''
 This module handles all processings on the friends of a user.
 '''
@@ -19,7 +20,7 @@ def get_friends_count(userID,friendsDF):
 	return friendsDF[friendsDF['source_id'] == userID].count()
 
 def get_friends_with_initialized_name(userID, usersDF, friendsDF):
-	friendsIDs 	= get_friends_ids(userID,friendsDF)
+	friendsIDs 	= cache.get_user_friends(userID,friendsDF)
 	not_empty 	= usersDF['name'] != ''
 	not_null 	= usersDF['name'].notnull()
 	is_unique 	= usersDF['id'].isin(friendsIDs)
@@ -28,14 +29,8 @@ def get_friends_with_initialized_name(userID, usersDF, friendsDF):
 
 def count_unique_names(friendsDF):
 	#duplicate Dataframe
-	friends2 = friendsDF.copy()
-	unique_count = 0
-	unique_names = friendsDF.name.unique()
-
-	for index, row in friendsDF.iterrows():
-
-		if(row['name'] in unique_names):
-			unique_count = unique_count +1
+	
+	unique_count = len(friendsDF.name.unique().tolist())	
 
 	return unique_count
 
@@ -43,26 +38,18 @@ def get_avg_neighbors_followers(friendsIDlist,usersDF):
 	friends_count 			= len(friendsIDlist)
 	total_followers_count 	= 0
 
-	userOK = 0
-	userKO = 0
+	friendsSeries = pd.Series(friendsIDlist)
 
-	for friendID in friendsIDlist:
-		singleUserDF 	= usersDF[usersDF['id']== friendID]
-		followers_count = 0
+	followers = usersDF['followers_count'][usersDF['id'].isin(friendsSeries)]
+	total_followers_count = followers.shape[0]
+	total_result = followers.sum()
 
-		if(singleUserDF.empty):
-			userKO = userKO +1
 
-		else:
-			userOK = userOK +1
-			
-			total_followers_count = total_followers_count+ int(singleUserDF['followers_count'])
+	print("[Total friends : {}], [Followers : {}], [Total neigbors followers :{}]".format(friends_count,total_followers_count,total_result))
 
-	print("[Total friends : {}], [friends found : {}], [missing friends :{}]".format(friends_count,userOK,userKO))
-
-	if(userOK == 0):
+	if(total_followers_count == 0):
 		return 0
 	else:
-		return total_followers_count/userOK
+		return total_result/total_followers_count
 
 

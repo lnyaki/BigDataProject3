@@ -39,9 +39,9 @@ def count_user_tweets(userID, tweetsDF):
 def get_avg_friends_tweets(friendsIDlist,tweetsDF):
 	friends_count 		= len(friendsIDlist)
 	total_tweet_count 	= 0
+	friendsIDlist = pd.Series(friendsIDlist)
 
-	for friendID in friendsIDlist:
-		total_tweet_count = total_tweet_count + count_user_tweets(friendID, tweetsDF)
+	total_tweet_count = tweetsDF[tweetsDF['user_id'].isin(friendsIDlist)].shape[0]
 
 	return total_tweet_count/friends_count
 
@@ -60,11 +60,12 @@ def get_tweets_strings(userID,tweetsDF):
 
 def get_tweets_with_url_ratio(userID, tweetsDF):
 	user_tweets = tweetsDF['user_id']== userID
-	
-	urlTweets 	= tweetsDF['user_id'][user_tweets &(tweetsDF['text'].apply(lambda tweet: tweet_contains_url(tweet)))]
-	urlTweets = urlTweets.tolist()
 
-	tweets_with_url 	= len(urlTweets)
+	urlTweets 	= tweetsDF[user_tweets &(tweetsDF['text'].apply(lambda tweet: tweet_contains_url(tweet)))]
+
+
+	tweets_with_url 	= urlTweets.shape[0]
+
 	user_tweets_count 	= count_user_tweets(userID,tweetsDF)
 
 	if(user_tweets_count == 0):

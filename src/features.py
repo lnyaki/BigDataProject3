@@ -4,12 +4,14 @@ from datetime import datetime
 from dateutil.parser import parse
 import itertools
 import string
+import cachedata as cache
 from tweets import *
 from url_finder import *
 from users import *
 import math
 from time import *
 from difflib import SequenceMatcher
+
 ###########
 # Class A #
 ###########
@@ -210,7 +212,7 @@ def get_class_C_features(dataframes):
 	features 	= []
 
 	LIMIT = 5
-
+	t0 = time()
 	for index, row in usersDF.iterrows():
 		timelog("[{}] User {}".format(index,row['id']))
 		features.append(get_single_class_C_features(row,usersDF, friendsDF,followersDF,tweetsDF))
@@ -220,12 +222,12 @@ def get_class_C_features(dataframes):
 			break
 		
 
+	
 	return features
 
 def get_single_class_C_features(userRow,usersDF, friendsDF,followersDF,tweetsDF):
 	#Class C features = all features
 	userID = userRow['id']
-
 	features = get_single_class_A_features(userRow, usersDF,tweetsDF)
 
 	#Camisani Class B
@@ -253,7 +255,7 @@ def get_single_class_C_features(userRow,usersDF, friendsDF,followersDF,tweetsDF)
 	features[HIGH_TWEET_LINK_RATIO] = has_tweet_links_ratio(userRow, tweetsDF,0.9)
 
 	#Stringhini class B
-	features[NUMBER_OF_TWEETS_SENT]		= get_tweets_count(userID,tweetsDF)
+	features[NUMBER_OF_TWEETS_SENT]		= cache.get_tweets_count(userID,tweetsDF)
 	#features[TWEET_SIMILARITY] 		= get_tweet_similarity(userRow,tweetsDF)	#comment calculer?
 	features[URL_RATIO] 				= get_url_ratio(userRow, tweetsDF)
 	features[UNIQUE_FRIENDS_NAME_RATIO] = get_unique_friends_name_ratio(userID,usersDF,friendsDF)
@@ -263,12 +265,13 @@ def get_single_class_C_features(userRow,usersDF, friendsDF,followersDF,tweetsDF)
 	#features[API_URL_RATIO] 			= get_api_url_ratio(userRow)
 	#features[API_TWEET_SIMILARITY] 	= get_api_tweet_similarity(userRow)
 
+
 	#Yang class C
 	#features[BILINK_RATIO] 				= get_bilink_ratio(userRow, friendsDF, followersDF)
 	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userID,friendsDF,usersDF)
 	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, usersDF,friendsDF, tweetsDF)
 	#features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
-	
+
 	return features 
 
 def get_camisani_features(dataframes):
@@ -521,16 +524,19 @@ def get_single_user_stringhini_features(userRow, usersDF,friendsDF, tweetsDF):
 	features = {}
 
 	# Class A
+	timelog("Start stringhini class A")
 	features[NUMBER_OF_FRIENDS] 			= get_friends_count(userRow)
 	features[FRIENDS_TO_FOLLOWERS_RATIO] 	= get_stringhini_friends_to_followers_ratio(userRow)
-
+	timelog("Start class B")
 	# Class B
-	features[NUMBER_OF_TWEETS_SENT]	= get_tweets_count(userID,tweetsDF)
-	
+	features[NUMBER_OF_TWEETS_SENT]	= count_user_tweets(userID,tweetsDF)
+	timelog("count user tweets Ok")
 	#features[TWEET_SIMILARITY] 	= get_tweet_similarity(userRow,tweetsDF)	#comment calculer?
-	features[URL_RATIO] 		= get_url_ratio(userRow, tweetsDF)
+	features[URL_RATIO] 				= get_url_ratio(userRow, tweetsDF)
+	timelog("url ratio Ok")
 	features[UNIQUE_FRIENDS_NAME_RATIO] = get_unique_friends_name_ratio(userID,usersDF,friendsDF) 
-
+	timelog("unique friends Ok")
+	timelog("End class B")
 	return features
 
 def get_yang_features(dataframes):
@@ -572,11 +578,11 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweet
 	userID = userRow['id']
 
 	features = {}
-
+	timelog("Start processing")
 	# Class A features
 	features[ACCOUNT_AGE] 		= get_account_age(userRow)
 	#features[FOLLOWING_RATE] 	= get_following_rate(userRow) # What is following rate?
-
+	timelog("\tClass A finished")
 	# Class B features
 	#features[API_RATIO] 			= get_api_ratio(userRow)
 	#features[API_URL_RATIO] 		= get_api_url_ratio(userRow)
@@ -587,7 +593,7 @@ def get_single_user_yang_features(userRow, usersDF, friendsDF, followersDF,tweet
 	features[AVERAGE_NEIGHBORS_FOLLOWERS] 	= get_average_neighbors_followers(userID,friendsDF,usersDF)
 	features[AVERAGE_NEIGHBORS_TWEETS] 		= get_average_neighbors_tweets(userID, usersDF,friendsDF, tweetsDF)
 	#features[FOLLOWINGS_TO_MEDIAN_NEIGHBORS_FOLLOWERS] = get_followings_to_median(userRow)
-
+	timelog("\tClass C finished")
 	return features
 
 def get_dataframes(featureSetName, datasetDirectory):
@@ -861,7 +867,8 @@ def geolocalized(userRow,tweetsDF):
 		return 0
 	
 def is_favorite(userRow,tweetsDF):
-	tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	#tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	tweets = cache.get_user_tweets(int(userRow['id']),tweetsDF)
 	fav = tweets['favorite_count'] != 0
 	return not tweets[fav].empty
 
@@ -888,7 +895,8 @@ def uses_hashtag(userRow,tweetsDF):
 		return 0
 
 def uses_iphone(userRow,tweetsDF):
-	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	#all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	all_tweets = cache.get_user_tweets(int(userRow['id']),tweetsDF)
 	res =  "Iphone" in all_tweets['source'].str.cat()
 
 	if(res):
@@ -897,7 +905,8 @@ def uses_iphone(userRow,tweetsDF):
 		return 0
 
 def uses_android(userRow,tweetsDF):
-	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	#all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	all_tweets = cache.get_user_tweets(int(userRow['id']),tweetsDF)
 	res = "Android" in all_tweets['source'].str.cat()
 
 	if(res):
@@ -906,7 +915,8 @@ def uses_android(userRow,tweetsDF):
 		return 0
 
 def uses_foursquare(userRow,tweetsDF):
-	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	#all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	all_tweets = cache.get_user_tweets(int(userRow['id']),tweetsDF)
 	res = "foursquare" in all_tweets['source'].str.cat()
 
 	if(res):
@@ -915,7 +925,8 @@ def uses_foursquare(userRow,tweetsDF):
 		return 0
 
 def uses_instagram(userRow,tweetsDF):
-	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	#all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	all_tweets = cache.get_user_tweets(int(userRow['id']),tweetsDF)
 	res = "Instagram" in all_tweets['source'].str.cat()
 
 	if(res):
@@ -924,7 +935,8 @@ def uses_instagram(userRow,tweetsDF):
 		return 0
 
 def uses_twitterdotcom(userRow,tweetsDF):
-	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	#all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
+	all_tweets = cache.get_user_tweets(int(userRow['id']),tweetsDF)
 	res = "web" in all_tweets['source'].str.cat()
 
 	if(res):
@@ -1024,7 +1036,7 @@ def get_unique_friends_name_ratio(userID,usersDF,friendsDF):
 
 	#avoid division by zero, so we return a big number
 	if(unique_names_count == 0):
-		return sys.maxsize
+		unique_names_count = 0.001
 
 	return len(friends_with_name)/unique_names_count
 
@@ -1055,9 +1067,9 @@ def get_bilink_ratio(userRow, friendsDF, followersDF):
 
 	followersSeries = get_follower_ids(userID,followersDF)
 
-	bilinkList = followersSeries.isin(friends).tolist()
+	bilinkList = followersSeries.isin(friends)
 
-	bilink_count = len(bilinkList)
+	bilink_count = bilink.shap[0]
 	print("===== User ID = "+str(userID))
 	print("[Bilink count : {}][Official Friends count : {}][Official Followers count :  {}], [followers actually found : {} ]".format(bilink_count,friends_count,userRow['followers_count'], len(followersSeries)))
 	return bilink_count/friends_count
@@ -1093,7 +1105,12 @@ if(__name__ == "__main__"):
 	dataframes = get_dataframes(featureSetName, directory)
 
 	timelog("OK, ca passe")
+	print("=========== Getting features ===========")
+	print(time())
+	t0 = time()
 	features 	= pd.DataFrame(get_features(featureSetName, dataframes))
-
+	tf = time() - t0
+	print("========== Elapsed time ==========")
+	print(tf)
 	timelog("Features : ")
 	print(features)

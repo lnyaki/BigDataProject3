@@ -69,7 +69,17 @@ def decision_tree(train_features,train_labels,test_features,test_labels):
 	# random_state=None, max_leaf_nodes=None, 
 	# min_impurity_decrease=0.0, min_impurity_split=None, 
 	# class_weight=None, presort=False)
-	pass
+	# J48
+	clf = train_decision_tree(train_features,train_labels)
+	
+	result = cls.score(test_features, test_labels)
+
+	return clf
+
+def train_decision_tree(train_features, train_labels):
+	clf = tree.DecisionTreeClassifier()
+	clf = clf.fit(train_features, train_labels)
+
 
 def adaptive_boost(train_features,train_labels,test_features,test_labels):
 	# http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html
