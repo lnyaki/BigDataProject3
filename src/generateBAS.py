@@ -18,13 +18,28 @@ def save_features_in_file(path, featuresDF, featureSetName):
 	print("Filename : "+filename)
 	featuresDF.to_csv(filename,sep='\t')
 
+def labelize_features(featuresDF, label):
+	labelVal = 0
+
+	if(label == 'human'):
+		labelVal = 0
+	elif(label == 'bot'):
+		labelVal = 1
+		
+	featuresDF['label'] = label
+
+
 if(__name__ == "__main__"):
 	# Command example. Load class A : python3 src/main.py data/E13 A
 	# Command example. Load class C : python3 src/main.py data/E13 C
 
 	#Get the dataset name (E13, FAK, FSF,HUM,etc)
+	argsLen = len(sys.argv)
+
 	datasetDirectory 	= sys.argv[1]
-	featureSetName 	= sys.argv[2]
+	featureSetName 		= sys.argv[2]
+
+
 
 	dataframes  	= features.get_dataframes(featureSetName,datasetDirectory)
 
@@ -35,6 +50,10 @@ if(__name__ == "__main__"):
 	featuresData 	= features.get_features(featureSetName, dataframes)
 
 	featuresData = pd.DataFrame(featuresData)
+
+	if(argsLen > 3):
+		label 				= sys.argv[3]
+		labelize_features(featuresData,label)
 
 	tf = time() - t0
 	print("========== Elapsed time ==========")
