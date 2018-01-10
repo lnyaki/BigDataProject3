@@ -697,12 +697,12 @@ def bot_in_bio(userRow):
 	bot_list = map(''.join, itertools.product(*((c.upper(), c.lower()) for c in 'bot')))
 
 	res = 0
-	time("start")
+	timelog("start")
 	if isinstance(userRow['description'],str):
 		for bot_combination in bot_list:
 			if bot_combination in userRow['description']:
 				res = 1
-	time("end")
+	timelog("end")
 
 	return res
 
