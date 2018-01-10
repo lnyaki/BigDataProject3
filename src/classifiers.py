@@ -31,25 +31,25 @@
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
 
-def random_forest(features):
+def random_forest(train_features,train_labels,test_features,test_labels):
 	pass
 
-def decorate(features):
+def decorate(train_features,train_labels,test_features,test_labels):
 	pass
 
-def decision_tree(features):
+def decision_tree(train_features,train_labels,test_features,test_labels):
 	# J48
 	pass
 
-def adaptive_boost(features):
+def adaptive_boost(train_features,train_labels,test_features,test_labels):
 	pass
 
-def bayesian_network(features):
+def bayesian_network(train_features,train_labels,test_features,test_labels):
 	# http://pomegranate.readthedocs.io/en/latest/BayesianNetwork.html
 	# Careful with dependencies
 	pass
 
-def knn(features):
+def knn(train_features,train_labels,test_features,test_labels):
 	# http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
 	#
 	# neigh = KNeighborsClassifier(n_neighbors=3)
@@ -60,7 +60,7 @@ def knn(features):
 	#  p=2, metric=’minkowski’, metric_params=None, n_jobs=1, **kwargs)
 	pass
 
-def logistic_regression(features):
+def logistic_regression(train_features,train_labels,test_features,test_labels):
 	# http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
 	# http://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
 	# 
@@ -70,7 +70,7 @@ def logistic_regression(features):
 	# multi_class=’ovr’, verbose=0, warm_start=False, n_jobs=1)
 	pass
 
-def svm(features):
+def svm(train_features,train_labels,test_features,test_labels):
 	# clf = svm.SVC()
 	# clf.fit(X, y) 
 	# clf.predict([[2., 2.]])
