@@ -28,28 +28,57 @@
 # k parameter of the kNN classifier and the ridge penalizing parameter
 # of the LR model have been optimized via a cross validation parameter 
 # selection algorithm.
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
 
-def random_forest(features):
+
+def random_forest(train_features,train_labels,test_features,test_labels):
+	# http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
+	# 
+	# RandomForestClassifier(n_estimators=10, criterion=’gini’, 
+	# max_depth=None, min_samples_split=2, min_samples_leaf=1, 
+	# min_weight_fraction_leaf=0.0, max_features=’auto’, 
+	# max_leaf_nodes=None, min_impurity_decrease=0.0, 
+	# min_impurity_split=None, bootstrap=True, oob_score=False, 
+	# n_jobs=1, random_state=None, verbose=0, warm_start=False, 
+	# class_weight=None)
+	# 
+	# clf = RandomForestClassifier(max_depth=2, random_state=0)
+	# clf.fit(X, y)
+	# clf.predict([[0, 0, 0, 0]]))
 	pass
 
-def decorate(features):
-	pass
+def decorate(train_features,train_labels,test_features,test_labels):
+	# Install https://github.com/fracpete/python-weka-wrapper3
+	# 
+	# examples: https://github.com/fracpete/python-weka-wrapper3-examples/blob/master/src/wekaexamples/classifiers/classifiers.py
+	# pass
 
-def decision_tree(features):
+def decision_tree(train_features,train_labels,test_features,test_labels):
 	# J48
 	pass
 
-def adaptive_boost(features):
+def adaptive_boost(train_features,train_labels,test_features,test_labels):
+	# http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html
+	# 
+	# AdaBoostClassifier(base_estimator=None, n_estimators=50, 
+	# learning_rate=1.0, algorithm=’SAMME.R’, random_state=None)
+	#
+	# iris = load_iris()
+	# clf = AdaBoostClassifier(n_estimators=100)
+	# scores = cross_val_score(clf, iris.data, iris.target)
+	# scores.mean()   
 	pass
 
-def bayesian_network(features):
+def bayesian_network(train_features,train_labels,test_features,test_labels):
 	# http://pomegranate.readthedocs.io/en/latest/BayesianNetwork.html
 	# Careful with dependencies
 	pass
 
-def knn(features):
+def k_nearest_neighbors(train_features,train_labels,test_features,test_labels):
 	# http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
 	#
 	# neigh = KNeighborsClassifier(n_neighbors=3)
@@ -60,23 +89,45 @@ def knn(features):
 	#  p=2, metric=’minkowski’, metric_params=None, n_jobs=1, **kwargs)
 	pass
 
-def logistic_regression(features):
+def logistic_regression(train_features,train_labels,test_features,test_labels):
 	# http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
-	# http://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
 	# 
 	# LogisticRegression(penalty=’l2’, dual=False, tol=0.0001, C=1.0,
 	# fit_intercept=True, intercept_scaling=1, class_weight=None, 
 	# random_state=None, solver=’liblinear’, max_iter=100, 
 	# multi_class=’ovr’, verbose=0, warm_start=False, n_jobs=1)
+	# 
+	# clf = LogisticRegression()
+	# clf.fit(X, y)
+	# clf.predict(X)
+	# 
 	pass
 
-def svm(features):
+def support_vector_machine(train_features,train_labels,test_features,test_labels):
 	# clf = svm.SVC()
 	# clf.fit(X, y) 
 	# clf.predict([[2., 2.]])
+	# 
+	# Algo: libSVM
+	# kernel: rbf
+	# C 	: optimized 
+	# gamma : optimized 
+	# http://scikit-learn.org/stable/modules/grid_search.html
+	# http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV
+	# http://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html
 	# 
 	# SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
     # decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
     # max_iter=-1, probability=False, random_state=None, shrinking=True,
     # tol=0.001, verbose=False)
     pass
+
+def classify(features_dataframe):
+	pred_RF = random_forest(train_features,train_labels,test_features,test_labels)
+	pred_D = decorate(train_features,train_labels,test_features,test_labels)
+	pred_J48 = decision_tree(train_features,train_labels,test_features,test_labels)
+	pred_AB = adaptive_boost(train_features,train_labels,test_features,test_labels)
+	pred_BN = bayesian_network(train_features,train_labels,test_features,test_labels)
+	pred_kNN = k_nearest_neighbors(train_features,train_labels,test_features,test_labels)
+	pred_LR = logistic_regression(train_features,train_labels,test_features,test_labels)
+	pred_SVM = support_vector_machine(train_features,train_labels,test_features,test_labels)

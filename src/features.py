@@ -71,7 +71,6 @@ USES_DIFFERENT_CLIENTS 	= 'uses_different_clients'
 
 #State of Search
 DUPLICATE_SENTENCES_ACROSS_TWEETS 	= 'duplicate_sentences_across_tweets'
-DUPLICATE_SENTENCES_ACROSS_ACCOUNTS = 'duplicate_sentences_accross_accounts'
 API_TWEETS 							= 'api_tweets'
 
 # Socialbakers
@@ -307,80 +306,79 @@ def get_single_user_camisani_features(userRow, tweetsDF):
 	features = {}
 
 	# class A
-	time("start")
-	#t2 = time()
+	t0 = time()
+	t2 = time()
 	features[HAS_NAME] 			= has_name(userRow)
-	#print ("class A.1 camisani:", round(time()-t2, 3), "s")
-	#t3 = time()
+	print ("class A.1 camisani:", round(time()-t2, 3), "s")
+	t3 = time()
 	features[HAS_IMAGE] 		= has_image(userRow)
-	#print ("class A.2 camisani:", round(time()-t3, 3), "s")
-	#t4 = time()
+	print ("class A.2 camisani:", round(time()-t3, 3), "s")
+	t4 = time()
 	features[HAS_ADDRESS] 		= has_address(userRow)
-	#print ("class A.3 camisani:", round(time()-t4, 3), "s")
-	#t5 = time()
+	print ("class A.3 camisani:", round(time()-t4, 3), "s")
+	t5 = time()
 	features[HAS_BIO] 			= has_bio(userRow)
-	#print ("class A.4 camisani:", round(time()-t5, 3), "s")
-	#t6 = time()
+	print ("class A.4 camisani:", round(time()-t5, 3), "s")
+	t6 = time()
 	features[HAS_30_FOLLOWERS] 	= has_30_followers(userRow)
-	#print ("class A.5 camisani:", round(time()-t6, 3), "s")
-	#t7 = time()
+	print ("class A.5 camisani:", round(time()-t6, 3), "s")
+	t7 = time()
 	features[BELONGS_TO_A_LIST] = belongs_to_a_list(userRow)
-	#print ("class A.6 camisani:", round(time()-t7, 3), "s")
-	#t8 = time()
+	print ("class A.6 camisani:", round(time()-t7, 3), "s")
+	t8 = time()
 	features[HAS_50_TWEETS] 	= has_50_tweets(userRow)
-	#print ("class A.7 camisani:", round(time()-t8, 3), "s")
-	#t9 = time()
+	print ("class A.7 camisani:", round(time()-t8, 3), "s")
+	t9 = time()
 	features[URL_IN_PROFILE] 	= url_in_profile(userRow)
-	#print ("class A.8 camisani:", round(time()-t9, 3), "s")
-	#t10 = time()
+	print ("class A.8 camisani:", round(time()-t9, 3), "s")
+	t10 = time()
 	features[FOLLOWERS_TO_FRIENDS_RATIO_OVER_2] = followers_to_friends_ration_over_2(userRow)
-	#print ("class A.9 camisani:", round(time()-t10, 3), "s")
-	#print ("class A camisani:", round(time()-t2, 3), "s")
+	print ("class A.9 camisani:", round(time()-t10, 3), "s")
+	print ("class A camisani:", round(time()-t2, 3), "s")
 
 	# class B
-	#t1 = time()
-	#t10 = time()
+	t1 = time()
+	t10 = time()
 	features[GEOLOCALIZED] 				= geolocalized(userRow,tweetsDF)
-	#print ("class B.1 camisani:", round(time()-t10, 3), "s")
-	#t11 = time()
+	print ("class B.1 camisani:", round(time()-t10, 3), "s")
+	t11 = time()
 	features[IS_FAVORITE] 				= is_favorite(userRow,tweetsDF)
-	#print ("class B.2 camisani:", round(time()-t11, 3), "s")
-	#t12 = time()
+	print ("class B.2 camisani:", round(time()-t11, 3), "s")
+	t12 = time()
 	features[USES_PUNCTUATION] 			= uses_punctuation(userRow,tweetsDF)
-	#print ("class B.3 camisani:", round(time()-t12, 3), "s")
-	#t13 = time()
+	print ("class B.3 camisani:", round(time()-t12, 3), "s")
+	t13 = time()
 	features[USES_HASHTAG] 				= uses_hashtag(userRow,tweetsDF)
-	#print ("class B.4 camisani:", round(time()-t13, 3), "s")
-	#t14 = time()
+	print ("class B.4 camisani:", round(time()-t13, 3), "s")
+	t14 = time()
 	features[USES_IPHONE] 				= uses_iphone(userRow,tweetsDF)
-	#print ("class B.5 camisani:", round(time()-t14, 3), "s")
-	#t15 = time()
+	print ("class B.5 camisani:", round(time()-t14, 3), "s")
+	t15 = time()
 	features[USES_ANDROID] 				= uses_android(userRow,tweetsDF)
-	#print ("class B.6 camisani:", round(time()-t15, 3), "s")
-	#t16 = time()
+	print ("class B.6 camisani:", round(time()-t15, 3), "s")
+	t16 = time()
 	features[USES_FOURSQUARE] 			= uses_foursquare(userRow,tweetsDF)
-	#print ("class B.7 camisani:", round(time()-t16, 3), "s")
-	#t17 = time()
+	print ("class B.7 camisani:", round(time()-t16, 3), "s")	
+	t17 = time()
 	features[USES_INSTAGRAM] 			= uses_instagram(userRow,tweetsDF)
-	#print ("class B.8 camisani:", round(time()-t17, 3), "s")
-	#t18 = time()
+	print ("class B.8 camisani:", round(time()-t17, 3), "s")
+	t18 = time()
 	features[USES_TWITTERDOTCOM] 		= uses_twitterdotcom(userRow,tweetsDF)
-	#print ("class B.9 camisani:", round(time()-t18, 3), "s")
-	#t19 = time()
+	print ("class B.9 camisani:", round(time()-t18, 3), "s")
+	t19 = time()
 	features[USERID_IN_TWEET] 			= userid_in_tweet(userRow,tweetsDF)
-	#print ("class B.10 camisani:", round(time()-t19, 3), "s")
-	#t20 = time()
+	print ("class B.10 camisani:", round(time()-t19, 3), "s")
+	t20 = time()
 	features[TWEETS_WITH_URL] 			= tweets_with_url(userRow,tweetsDF)
-	#print ("class B.11 camisani:", round(time()-t20, 3), "s")
-	#t21 = time()
+	print ("class B.11 camisani:", round(time()-t20, 3), "s")
+	t21 = time()
 	features[RETWEET_OVER_1] 			= retweet_over_1(userRow,tweetsDF)
-	#print ("class B.12 camisani:", round(time()-t21, 3), "s")
-	#t22 = time()
+	print ("class B.12 camisani:", round(time()-t21, 3), "s")
+	t22 = time()
 	features[USES_DIFFERENT_CLIENTS] 	= uses_different_clients(userRow,tweetsDF)
-	#print ("class B.13 camisani:", round(time()-t22, 3), "s")
-	#print ("class B camisani:", round(time()-t1, 3), "s")
-	#print ("camisani:", round(time()-t0, 3), "s")
-	time("end")
+	print ("class B.13 camisani:", round(time()-t22, 3), "s")
+	print ("class B camisani:", round(time()-t1, 3), "s")
+	print ("camisani:", round(time()-t0, 3), "s")
 	return features
 
 def get_state_of_search_features(dataframes):
@@ -414,25 +412,25 @@ def get_single_user_state_of_search_features(userRow, usersDF, tweetsDF):
 	features = {}
 
 	# class A
-	#0 = time()
-	#t1 = time()
+	t0 = time()
+	t1 = time()
 	features[BOT_IN_BIO] 						= bot_in_bio(userRow)
-	#print ("class A.1 stateofsearch:", round(time()-t1, 3), "s")
-	#t2 = time()
+	print ("class A.1 stateofsearch:", round(time()-t1, 3), "s")
+	t2 = time()
 	features[FRIENDS_TO_FOLLOWERS_RATIO_IS_100] = friends_to_followers_ratio_is_100(userRow)
-	#print ("class A.2 stateofsearch:", round(time()-t2, 3), "s")
-	#t3 = time()
+	print ("class A.2 stateofsearch:", round(time()-t2, 3), "s")
+	t3 = time()
 	features[DUPLICATE_PROFILE_PICTURE] 		= duplicate_profile_picture(userRow,usersDF)
-	#print ("class A.3 stateofsearch:", round(time()-t3, 3), "s")
+	print ("class A.3 stateofsearch:", round(time()-t3, 3), "s")
 	
 	# class B
-	#t4 = time()
+	t4 = time()
 	features[DUPLICATE_SENTENCES_ACROSS_TWEETS] 	= duplicate_sentences_across_tweets(userRow,tweetsDF)
-	#print ("class B.1 stateofsearch:", round(time()-t4, 3), "s")
-	#t5 = time()
+	print ("class B.1 stateofsearch:", round(time()-t4, 3), "s")
+	t5 = time()
 	features[API_TWEETS] 							= api_tweets(userRow,tweetsDF)
-	#print ("class B.2 stateofsearch:", round(time()-t5, 3), "s")
-	#print ("stateofsearch:", round(time()-t0, 3), "s")
+	print ("class B.2 stateofsearch:", round(time()-t5, 3), "s")
+	print ("stateofsearch:", round(time()-t0, 3), "s")
 
 	return features
 
@@ -611,7 +609,6 @@ def get_dataframes(featureSetName, datasetDirectory):
 
 	if(featureSetName == CAMISANI):
 		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv'}
-
 	elif(featureSetName == STATEOFSEARCH):
 		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv'}
 
@@ -636,7 +633,7 @@ def get_dataframes(featureSetName, datasetDirectory):
 	for key, filename in fileNames.items():
 
 		totalPath = datasetDirectory + '/'+ filename
-		
+		print(totalPath)
 		timelog("Loading "+ totalPath)
 
 		try:
@@ -645,7 +642,6 @@ def get_dataframes(featureSetName, datasetDirectory):
 		except Exception as e:
 			print("Error while reading file "+totalPath)
 			print(e)
-
 	return dataframes 
 
 '''
@@ -977,17 +973,18 @@ def uses_different_clients(userRow,tweetsDF):
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
-def duplicate_sentences_across_accounts(userRow,tweetsDF):
-	return 0
 
 def duplicate_sentences_across_tweets(userRow,tweetsDF):
+	t0 = time()
 	res = False
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
 	counter = 0
 	for index, tweet in all_tweets.iterrows():
 		other_counter = 0
 		for other_index, other_tweet in all_tweets.iterrows():
-			if similar(tweet['text'],other_tweet['text']) > 0.7 and index != other_index :
+			if tweet['text'] == other_tweet['text'] and index != other_index :
+			# For more real similarity check
+			# if similar(tweet['text'],other_tweet['text']) > 0.7 and index != other_index :
 				res = True
 				break
 			if other_counter == 20:
@@ -995,8 +992,10 @@ def duplicate_sentences_across_tweets(userRow,tweetsDF):
 			other_counter+=1
 		if counter == 20:
 			break
-		counter+=1		
-	return res
+		counter+=1
+	print ("duplicate:", round(time()-t0, 3), "s")
+
+	return int(res)
 
 def api_tweets(userRow,tweetsDF):
 	all_tweets = get_tweets_dataframe_user(int(userRow['id']),tweetsDF)
@@ -1101,10 +1100,9 @@ To use (prototype) go to root directory:
 '''
 if(__name__ == "__main__"):
 	directory = sys.argv[1]
-
 	featureSetName = sys.argv[2]
-	dataframes = get_dataframes(featureSetName, directory)
 
+	dataframes = get_dataframes(featureSetName, directory)
 
 	timelog("OK, ca passe")
 	print("=========== Getting features ===========")
