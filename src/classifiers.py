@@ -167,10 +167,10 @@ def classify(features_dataframe):
 	predictions_dict = {}
 
 	classifiers_dict['RF'] = random_forest()
-	classifiers_dict['D'] = decorate()
+	#classifiers_dict['D'] = decorate()
 	classifiers_dict['J48'] = decision_tree()
 	classifiers_dict['AB'] = adaptive_boost()
-	classifiers_dict['BN'] = bayesian_network()
+	#classifiers_dict['BN'] = bayesian_network()
 	classifiers_dict['kNN'] = k_nearest_neighbors()
 	classifiers_dict['LR'] = logistic_regression()
 	classifiers_dict['SVM'] = support_vector_machine()
