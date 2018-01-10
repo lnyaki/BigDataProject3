@@ -106,6 +106,8 @@ STATEOFSEARCH	= 'stateofsearch'	#'State of search'
 SOCIALBAKERS 	= 'socialbakers'	#'SocialBakers'
 STRINGHINI 		= 'stringhini'		#'Stringhini et al'
 YANG 			= 'yang' 			#'Yang et al'
+CLASS_A 		= 'A'
+CLASS_C 		= 'C'
 
 def get_features(featureSetName, dataframes):
 	features = {}
@@ -560,11 +562,19 @@ def get_dataframes(datasetDirectory, featureSetName):
 		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv','friends': 'friends.csv'
 					,'followers': 'followers.csv'}
 
+	elif(featureSetName == CLASS_A):
+		fileNames = {'users' : 'users.csv'}
+
+	elif(featureSetName == CLASS_C):
+		fileNames = {'users' : 'users.csv', 'tweets' : 'tweets.csv','friends': 'friends.csv'
+					,'followers': 'followers.csv'}
+
 	# We load the dataframes from the files specified above, in a dataframe dictionary
 	for key, filename in fileNames.items():
+
 		totalPath = datasetDirectory + '/'+ filename
-		timelog("\tLoading datasets")
-		print("Loading "+ totalPath)
+		
+		timelog("Loading "+ totalPath)
 
 		try:
 			dataframes[key] = pd.read_csv(totalPath, encoding='latin-1').fillna('')
@@ -572,14 +582,6 @@ def get_dataframes(datasetDirectory, featureSetName):
 		except Exception as e:
 			print("Error while reading file "+totalPath)
 			print(e)
-
-		print(key)
-		try:
-			print(dataframes[key].head(5))
-		except UnicodeEncodeError:
-			pass
-
-		#print(dataframes[key].head(5))
 
 	return dataframes 
 
