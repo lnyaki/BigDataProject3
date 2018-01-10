@@ -37,13 +37,7 @@ First we describe the 19 features that will be part of the feature set. Then, we
 \section{Rule sets and Features set}
 In the paper, five rule sets and features set are analyzed. They come from  academic research, as well as technology bloggers and companies specialized in fake tweeter users detection.\\
 
-\begin{comment}
-====> Là j'ai défini un truc, mais je me rends compte que l'auteur du paper appelle aussi "features" des trucs que j'appelerais "rules".
 
-We define a rule as a function that takes a non boolean value as an input and returns a boolean output based on an arbitrary criteria. For instance: "the user has at least 30 friends", the number 30 being arbitrary.\\
-
-While a rule is a function, a feature is a value, boolean or otherwise. For example, a feature could be "the number of friends" of the user, without specifying whether it should be bigger or smaller than a certain number, as that will be for the \textit{machine learning} algorithms to decide.
-\end{comment}
 
 \subsection{Camisani-Calzolari rule set}
 The Camisani-Calzolari rule set is described as follows:
@@ -95,8 +89,19 @@ Comment : je teste le tabular au lieu de la liste, mais ça marche pas super. J'
 \subsection{Yang et al.}
 
 \subsection{Rules that were not implemented}
+The following features where not implemented,as knowing whether a tweet came from an API was far from obvious : \\
+
+\begin{itemize}
+\item get_api_url_ratio(): returns the ratio between the number of tweets containing a URL and the number of tweets sent from an API.
+\item get_api_tweet_similarity(): supposedly returns a value representing the similarity between tweets sent from an API.
+\end{itemize} 
+
+We tried using the \textit{grep} command with the keyword "API" on the tweets.csv files but only detected a few results who seemed unrelated.
 
 \section{Data extraction}
+To generate the final feature set, we extracted the class A features (data easily obtained through the user profile) as well as the class C features (all the features, ranging from the easiest to obtain to the hardest one, requiring many computations).\\
+
+The result was a features dataset that is ready to be used for training classifiers.
 
 \subsection{Available data}
 The researchers responsible for the paper Fame for sale made their 5 basic datasets available for future researchers.\\ 
