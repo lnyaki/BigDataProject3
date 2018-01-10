@@ -29,6 +29,7 @@
 # of the LR model have been optimized via a cross validation parameter 
 # selection algorithm.
 from sklearn.model_selection import cross_val_score
+ from sklearn.model_selection import cross_val_predict
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
@@ -37,7 +38,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
 
 
-def random_forest(train_features,train_labels,test_features,test_labels):
+def random_forest():
 	# http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
 	# 
 	# RandomForestClassifier(n_estimators=10, criterion=’gini’, 
@@ -53,13 +54,19 @@ def random_forest(train_features,train_labels,test_features,test_labels):
 	# clf.predict([[0, 0, 0, 0]]))
 	pass
 
-def decorate(train_features,train_labels,test_features,test_labels):
+def decorate():
 	# Install https://github.com/fracpete/python-weka-wrapper3
 	# 
 	# examples: https://github.com/fracpete/python-weka-wrapper3-examples/blob/master/src/wekaexamples/classifiers/classifiers.py
-	pass
+	# pass
+	# load a dataset
+    loader = Loader("weka.core.converters.ArffLoader")
 
-def decision_tree(train_features,train_labels,test_features,test_labels):
+    #evaluation
+    evaluation = Evaluation(train_features)
+
+
+def decision_tree():
 	# http://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier
 	# clf = DecisionTreeClassifier(random_state=0)
 	#
@@ -81,7 +88,7 @@ def train_decision_tree(train_features, train_labels):
 	clf = clf.fit(train_features, train_labels)
 
 
-def adaptive_boost(train_features,train_labels,test_features,test_labels):
+def adaptive_boost():
 	# http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html
 	# 
 	# AdaBoostClassifier(base_estimator=None, n_estimators=50, 
@@ -91,16 +98,17 @@ def adaptive_boost(train_features,train_labels,test_features,test_labels):
 	# clf = AdaBoostClassifier(n_estimators=100)
 	# scores = cross_val_score(clf, iris.data, iris.target)
 	# scores.mean()   
-	pass
+	clf = AdaBoostClassifier(n_estimators=100, learning_rate=0.1)
 
-def bayesian_network(train_features,train_labels,test_features,test_labels):
+
+def bayesian_network():
 	# http://pomegranate.readthedocs.io/en/latest/BayesianNetwork.html
 	# Careful with dependencies
 	# 
 	model = BayesianNetwork.from_samples(train_features, algorithm='exact')
 	model.predict(test_features)
 
-def k_nearest_neighbors(train_features,train_labels,test_features,test_labels):
+def k_nearest_neighbors():
 	# http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
 	#
 	# neigh = KNeighborsClassifier(n_neighbors=3)
@@ -111,7 +119,7 @@ def k_nearest_neighbors(train_features,train_labels,test_features,test_labels):
 	#  p=2, metric=’minkowski’, metric_params=None, n_jobs=1, **kwargs)
 	pass
 
-def logistic_regression(train_features,train_labels,test_features,test_labels):
+def logistic_regression():
 	# http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
 	# 
 	# LogisticRegression(penalty=’l2’, dual=False, tol=0.0001, C=1.0,
@@ -125,9 +133,9 @@ def logistic_regression(train_features,train_labels,test_features,test_labels):
 	# 
 	pass
 
-def support_vector_machine(train_features,train_labels,test_features,test_labels):
+def support_vector_machine():
 	clf = svm.SVC(kernel='rbf',C=1.0,gamma=auto)
-	clf.fit(train_features, train_labels) 
+	#clf.fit(train_features, train_labels) 
 	# clf.predict([[2., 2.]])
 	# 
 	# Algo: libSVM (SVC)
@@ -142,7 +150,7 @@ def support_vector_machine(train_features,train_labels,test_features,test_labels
     # decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
     # max_iter=-1, probability=False, random_state=None, shrinking=True,
     # tol=0.001, verbose=False)
-    pass
+    return clf
 
 def classify(features_dataframe):
 
@@ -153,14 +161,24 @@ def classify(features_dataframe):
 
 	features, labels = preprocess()
 
-	pred_RF = random_forest(train_features,train_labels,test_features,test_labels)
-	pred_D = decorate(train_features,train_labels,test_features,test_labels)
-	pred_J48 = decision_tree(train_features,train_labels,test_features,test_labels)
-	pred_AB = adaptive_boost(train_features,train_labels,test_features,test_labels)
-	pred_BN = bayesian_network(train_features,train_labels,test_features,test_labels)
-	pred_kNN = k_nearest_neighbors(train_features,train_labels,test_features,test_labels)
-	pred_LR = logistic_regression(train_features,train_labels,test_features,test_labels)
-	pred_SVM = support_vector_machine(train_features,train_labels,test_features,test_labels)
+	# dico with the classifiers 
+	classifiers_dict = {}
+	# dico with the predictions made with the 
+	predictions_dict = {}
+
+	classifiers_dict['RF'] = random_forest()
+	classifiers_dict['D'] = decorate()
+	classifiers_dict['J48'] = decision_tree()
+	classifiers_dict['AB'] = adaptive_boost()
+	classifiers_dict['BN'] = bayesian_network()
+	classifiers_dict['kNN'] = k_nearest_neighbors()
+	classifiers_dict['LR'] = logistic_regression()
+	classifiers_dict['SVM'] = support_vector_machine()
+
+	for key, value in classifiers_dict.items():
+		predictions_dict[key] = cross_val_predict(value, features, labels, cv=10)
+
+	return predictions_dict
 
 
 def preprocess():

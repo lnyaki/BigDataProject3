@@ -60,6 +60,8 @@ def get_tweets_strings(userID,tweetsDF):
 
 def get_tweets_with_url_ratio(userID, tweetsDF):
 	t0 = time()
+	print("ID ----"+str(userID))
+	print(tweetsDF.head())
 	user_tweets = tweetsDF['user_id'] == userID
 	#urlTweets 	= tweetsDF[user_tweets &(tweetsDF['text'].apply(lambda tweet: tweet_contains_url(tweet)))]
 	urlTweets 	= tweetsDF[user_tweets & tweetsDF['text']]
@@ -85,3 +87,19 @@ def get_api_tweets_count(userTweetsDF):
 	tweets = userTweetsDF[userTweetsDF['text'].apply(lambda tweet : tweet.count("API")>0)]
 
 	return len(tweets.tolist())
+
+def retweet_ratio(userID, tweetsDF):
+	tweets = tweetsDF[tweetsDF['user_id'] == userID]
+
+	tweetsCount = tweets.shape[0]
+
+	retweets = tweets[tweets['retweet_count']>0].shape[0]
+
+	if(tweetsCount == 0):
+		print("-----------------Retweet 0")
+		return 0
+
+	else:
+		res = retweets/tweetsCount
+		print("-----------------Retweet : "+str(res))
+		return res
