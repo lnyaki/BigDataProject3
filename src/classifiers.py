@@ -151,6 +151,7 @@ def classify(features_dataframe):
 	# from sklearn.model_selection import cross_val_predict
 	# pred = cross_val_predict(clf, test_features, test_labels)
 
+	features, labels = preprocess()
 
 	pred_RF = random_forest(train_features,train_labels,test_features,test_labels)
 	pred_D = decorate(train_features,train_labels,test_features,test_labels)
@@ -160,3 +161,9 @@ def classify(features_dataframe):
 	pred_kNN = k_nearest_neighbors(train_features,train_labels,test_features,test_labels)
 	pred_LR = logistic_regression(train_features,train_labels,test_features,test_labels)
 	pred_SVM = support_vector_machine(train_features,train_labels,test_features,test_labels)
+
+
+def preprocess():
+	# 1. charger les 2 datasets(labelisés)
+	# 2. concatener les 2
+	pass

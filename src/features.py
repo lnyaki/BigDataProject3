@@ -454,7 +454,7 @@ def get_socialbakers_features(dataframes):
 
 	return socialbakersFeatures
 
-def get_single_user_socialbakers_features(userRow, friendsDF,tweetsDF):
+def get_single_user_socialbakers_features(userRow,tweetsDF):
 	'''
 	Class A : followers ≥ 50, default image after 2
 		months, no bio, no location, friends ≥100, 0 tweets 
