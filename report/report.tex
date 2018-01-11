@@ -77,7 +77,7 @@ Here you can see some of the best ones: number of friends, number of tweets, $fr
 For class B: we only have a couple of ones: tweet similarity, URL ratio.
 This paper also tracked spam bots.
 
-\begin{tabular}{cc}
+\begin{tabular}{lc}
 \hline
 1. spambots do not have thousands of friends; & spambots have a high ratio of tweets containing urls\\
 2. spambots have sent less than 20 tweets; & spambots have a high ratio between the total number of tweets from friends and the square of their total followers (lower ratio means legitimate user)\\
@@ -196,31 +196,39 @@ In \textit{Cresci et al.} the following 8 classifiers are proposed: Random Fores
 For the sake of simplicity, we decided to focus on the following classifiers:Random Forest,  Decision Tree, Adaptive Boosting, k-Nearest Neighbors, Logistic Regression and Support Vector Machine.\\
 
 \subsection{Results}
-After training our classifiers, we obtain the following resutls:
+After training our classifierson our generated datasets, we obtain the following resutls:
 
 \begin{tabular}{lcccccc}
 	\hline
 	\textbf{Algorithm} 	& \textbf{Accuracy} 	& \textbf{Precision} & \textbf{Recall} &\textbf{F-M} 	& \textbf{MCC} & AUC\\
 	\hline
 	\textit{Class A}\\
-	SVM	&	0.682	&	0.999	&	0.364	& 0.533 & 0.47 & 0.68\\
-	AB	&	1		&	1		&	1		& 1 	&	1	& 1   \\
-	RF	&	1		&	1		&	1		& 1   	&	1	& 1  \\
-	kNN	&	0.947	&	0.94	&	0.956	& 0.948 & 0.895 & 0.947\\
+	
 	J48	&	1		&	1		&	1		& 1 	&	1	& 1   \\
-	LR	&	1		&	1		&	1		& 1 	&	1	& 1   \\
+	LR	&	0.997	&	0.997	&	0.997	& 0.997 &	0.994 & 0.997  \\
+	AB	&	1		&	1		&	1		& 1 	&	1	& 1   \\	
+	SVM	&	0.678	&	0.999	&	0.356	& 0.525 & 0.464 & 0.78\\
+	RF	&	0.999	&	1		&	0.999	& 0.999	&	0.999	& 0.999 \\
+	kNN	&	0.944	&	0.937	&	0.951	& 0.944 & 0.888 & 0.944\\
+	
 	\hline
-	\textbf{Algorithm} 	& \textbf{Accuracy} 	& \textbf{Precision} & \textbf{Recall} & \textbf{F-M} 	& \textbf{MCC} & \textbf{AUC}\\
-	\hline
-	SVM	&	0.503	&	1		&	0.006	& 0.012 &  0.056   & 0.503 \\
-	AB	&	1		&	1		&	1		& 1 	&	1		& 1   \\
-	RF	&	1		&	1		&	0.999	& 1   	&	0.999	& 1  	\\
-	kNN	&	0.892	&	0.853	&	0.949	& 0.898 &   0.79 	& 0.892 \\
-	J48	&	1		&	1		&	1		& 1 	&	1		& 1   	\\
-	LR	&	0.999	&	0.998	&	0.999	& 0.999 &	0.998	& 0.999   \\
-		
 \end{tabular}
 	
+	\paragraph{Accuracy}
+	Accuracy measure the percentage of samples correctly identified in both classe (human, bot). In our case, the accuracy seems very high, except for Support Vector Machines, for a reason that we do not explain.
+	
+	\paragraph{Precision}
+	A high precision indicates that the samples that were classified as bots actually are. Here, the precision seems very high for every classifier. The high precision of the SVM combined with its low accuracy indicates that when the classifier labels a sample as bot, it is very confident and is almost always right. But the classifier stays silent on many samples that are bot and fails to identify them as such.
+	
+	\paragraph{Recall}
+	
+	\paragraph{F-M}
+	
+	\paragraph{MCC}
+	
+	\paragraph{AUC}
+	
+	As you can see, the classifiers seem to 
 	Due to an execution error caused by a bad value, the results for class C couldn't be displayed
 	
 \section{Conclusion}
