@@ -47,10 +47,10 @@ We have devided the features by paper and in each section we have separated the 
 In this paper the features had as objective to focus on human accounts, but they can still be used to detect bots. \\
 We start with the class A section, for example a couple of straightforward ones: has name, has image, has address, has biography, belongs to a list.
 Pretty simple most human users will fill this type of information.\\
-The next ones assess that the account has been active and tries to find attributes that will correlate with humans: followers ≥ 30, tweets ≥ 50, URL
-in profile, 2 × followers ≥ friends.\\
+The next ones assess that the account has been active and tries to find attributes that will correlate with humans: followers $\geq$ 30, tweets $\geq$ 50, URL
+in profile, 2 $*$ followers $\geq$ friends.\\
 For the class B of this paper where we try to find information in the tweets of the user that can be relatable to humans. Some patterns that have been noticed that humans follow: geo-localized, is favorite, uses punctuation, uses hashtag. Another pattern that they noticed is that humans don't use the twitter api that much but rather a lot of different items available to us: uses iPhone, uses Android, uses Foursquare, uses Instagram, uses Twitter.com and using multiple clients. This last ones are some additional ones found to be done by humans: userID in tweet,
-tweets with URLs and retweet ≥ 1. 
+tweets with URLs and retweet $\geq$ 1. 
 
 The rule set contained the following classes of rules:
 
@@ -69,12 +69,11 @@ For class B: same sentence to many accounts, tweet from API.
 This features are actually extracted from spammer bots.
 
 \subsection{Socialbakers}
-We start finding a trend with some of the ratios for our class A: friends/followers ≥ 50, friends ≥100. Followed by some features resembling the ones in Camisani: default image after 2 months, no bio, no location, 0 tweets.\\
-For the Class B, we're only looking at ratios and tweets' similarities: tweets spam phrases, same tweet
-≥ 3, retweets ≥ 90\%, tweet-links≥ 90\%.
+We start finding a trend with some of the ratios for our class A: friends/followers $\geq$ 50, friends $\geq$ 100. Followed by some features resembling the ones in Camisani: default image after 2 months, no bio, no location, 0 tweets.\\
+For the Class B, we're only looking at ratios and tweets' similarities: tweets spam phrases, same tweet$\geq$ 3, retweets $\geq$ 90\%, tweet-links $\geq$ 90\%.
 \subsection{Stringhini et al.}
 The last 2 papers already have really strong features that we are going to use and see if we can improve the score they obtained by adding extra features.
-Here you can see some of the best ones: number of friends, number of tweets, $$friends/(followersˆ2)$$.\\
+Here you can see some of the best ones: number of friends, number of tweets, $friends/(followers^2)$.\\
 For class B: we only have a couple of ones: tweet similarity, URL ratio.
 This paper also tracked spam bots.
 
@@ -178,7 +177,7 @@ def is_favorite(userRow,tweetsDF):
 	fav = tweets['favorite_count'] != 0
 	return int(not tweets[fav].empty)
 \end{verbatim}
-\\Here we recover a dataframe with only the tweets of the user. We create a conditional variable that selects everthing different then 0. If we apply it to that dataframe we are going to get a Series with True and False values, by checking for tweets[fav].empty we are looking if at least one of the values isn't False.
+Here we recover a dataframe with only the tweets of the user. We create a conditional variable that selects everthing different then 0. If we apply it to that dataframe we are going to get a Series with True and False values, by checking for tweets[fav].empty we are looking if at least one of the values isn't False.
 \\ A last example: 
 \begin{verbatim}
 def uses_foursquare(userRow,tweetsDF):
