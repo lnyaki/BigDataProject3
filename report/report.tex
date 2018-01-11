@@ -221,6 +221,8 @@ After training our classifierson our generated datasets, we obtain the following
 	A high precision indicates that the samples that were classified as bots actually are. Here, the precision seems very high for every classifier. The high precision of the SVM combined with its low accuracy indicates that when the classifier labels a sample as bot, it is very confident and is almost always right. But the classifier stays silent on many samples that are bot and fails to identify them as such.
 	
 	\paragraph{Recall}
+	The recall identifies the relevant samples that have been missed by the classifier. As excpected, based on the accuracy and precision, the SVM classifier score low, meaning that when it sees a bot, it often doesn't recognizes it as such. The rest of the classifier perform very well.
+	
 	
 	\paragraph{F-M}
 	
